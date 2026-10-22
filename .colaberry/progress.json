@@ -5,8 +5,8 @@
     "stories_total": 32,
     "stories_verified": 0,
     "stories_submitted": 0,
-    "stories_in_progress": 0,
-    "stories_not_started": 32,
+    "stories_in_progress": 31,
+    "stories_not_started": 1,
     "criteria_total": 48,
     "criteria_passed": 0,
     "points_awarded": 0
@@ -27,7 +27,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -55,7 +55,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -83,7 +83,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -111,7 +111,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -139,7 +139,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -167,7 +167,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -195,7 +195,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -223,7 +223,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -251,7 +251,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -279,7 +279,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -307,7 +307,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -335,7 +335,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -363,7 +363,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -391,7 +391,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -419,7 +419,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -447,7 +447,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -475,7 +475,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -503,7 +503,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -531,7 +531,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -559,7 +559,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -587,7 +587,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -615,7 +615,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -643,7 +643,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -671,7 +671,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -699,7 +699,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
@@ -735,7 +735,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -773,7 +773,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -811,7 +811,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -849,7 +849,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -887,7 +887,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -925,7 +925,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
