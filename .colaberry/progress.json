@@ -3,13 +3,13 @@
   "project": "product_experience",
   "totals": {
     "stories_total": 32,
-    "stories_verified": 0,
+    "stories_verified": 1,
     "stories_submitted": 0,
-    "stories_in_progress": 31,
+    "stories_in_progress": 30,
     "stories_not_started": 1,
     "criteria_total": 48,
-    "criteria_passed": 0,
-    "points_awarded": 0
+    "criteria_passed": 3,
+    "points_awarded": 25
   },
   "stories": [
     {
@@ -775,19 +775,15 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "verified",
+        "criteria_passed": 3,
         "criteria_total": 3,
-        "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
-        "points_awarded": null,
-        "outstanding": [
-          "The document compares all five system classes (chatbot, fixed workflow, tool-using agent, agentic system, multi-agent system) and names which one this domain needs.",
-          "The choice cites this domain's own capability count and its human-reserved count, so the argument would change if those numbers changed.",
-          "The document states explicitly which class this domain does NOT need, and what would have to change to justify the next class up."
-        ]
+        "verified_at": "2026-10-22T05:42:09.470Z",
+        "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/13b9a1b1440d323eed5fbcd7e1f5afb492416899",
+        "commit_at": "2026-10-22T05:40:05Z",
+        "points_awarded": 25,
+        "outstanding": []
       }
     },
     {
