@@ -1,0 +1,976 @@
+{
+  "schema_version": 2,
+  "project": "product_experience",
+  "totals": {
+    "stories_total": 32,
+    "stories_verified": 0,
+    "stories_submitted": 0,
+    "stories_in_progress": 0,
+    "stories_not_started": 32,
+    "criteria_total": 48,
+    "criteria_passed": 0,
+    "points_awarded": 0
+  },
+  "stories": [
+    {
+      "id": "product_experience.CAP.brand_design_system_sync_review",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "The manager confirms the note format answers the question he actually has before merging.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The manager confirms the note format answers the question he actually has before merging."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.bundle_and_render_performance_review",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A manager-approved budget exists; until then every measurement is reported as unjudged.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A manager-approved budget exists; until then every measurement is reported as unjudged."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.color_contrast_regression_check",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written definition approved; the three historical failures are recorded as named regression cases.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written definition approved; the three historical failures are recorded as named regression cases."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.component_duplication_detection",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved definition distinguishing legitimate name reuse from real duplication.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved definition distinguishing legitimate name reuse from real duplication."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.dataviz_quality_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A written ownership decision exists; the fitness rule set is named and is either reused from the existing agent or explicitly extended.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written ownership decision exists; the fitness rule set is named and is either reused from the existing agent or explicitly extended."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.empty_error_loading_state_inventory",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved pattern per state; the deliberately-blank exception named.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved pattern per state; the deliberately-blank exception named."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.evidence_labeling_and_sample_data_aud",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved definition covering public and admin surfaces separately.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved definition covering public and admin surfaces separately."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.image_alt_and_media_accessibility_aud",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written, manager-approved rule covering decorative images and icon-only controls.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written, manager-approved rule covering decorative images and icon-only controls."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.keyboard_and_semantic_interaction_aud",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved pattern list, including the backdrop-dismissal exception.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved pattern list, including the backdrop-dismissal exception."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.manager_design_review_queue",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A written access plan exists naming either a scoped admin_users row or a specific alternative surface, and Mohammed Abdul Aleem confirms he can use it.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written access plan exists naming either a scoped admin_users row or a specific alternative surface, and Mohammed Abdul Aleem confirms he can use it."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.motion_and_reduced_motion_compliance_",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written decision on the reset's scope; per-file obligations stated.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written decision on the reset's scope; per-file obligations stated."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.multi_brand_surface_consistency_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.page_health_smoke_sweep",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved route list and threshold set, including exemptions for legitimately short pages.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved route list and threshold set, including exemptions for legitimately short pages."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.plain_language_interface_copy_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved per-surface audience definition; admin exceptions named.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved per-surface audience definition; admin exceptions named."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.public_copy_claims_compliance_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written rule ownership, with legal sign-off recorded for any regulatory rule.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written rule ownership, with legal sign-off recorded for any regulatory rule."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.responsive_and_touch_target_regressio",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.route_surface_inventory",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written, manager-approved counting rule; no inventory published under an undefined rule.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written, manager-approved counting rule; no inventory published under an undefined rule."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.screenshot_visual_review_packet",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved structure and cadence; the width cap and summary requirement restated as hard gates.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved structure and cadence; the width cap and summary requirement restated as hard gates."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.stylesheet_architecture_consolidation",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A written scope naming the stylesheets in play and the no-visual-change constraint.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written scope naming the stylesheets in play and the no-visual-change constraint."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.theme_and_dark_mode_readiness_assessm",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A written assessment scope; no implementation work proposed or begun.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written assessment scope; no implementation work proposed or begun."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.unrouted_page_detection",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Manager-approved definition, and a parked register seeded with at least the SignupV2 case already documented in App.tsx.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved definition, and a parked register seeded with at least the SignupV2 case already documented in App.tsx."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.ux_quality_exception_register",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A dated standard exists per surface class, with Mohammed Abdul Aleem recorded as its author of record, and every threshold either set or explicitly marked unknown.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A dated standard exists per surface class, with Mohammed Abdul Aleem recorded as its author of record, and every threshold either set or explicitly marked unknown."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.visual_change_approval_gate",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "Written, manager-approved classification and approver map; the fast path named or explicitly deferred.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written, manager-approved classification and approver map; the fast path named or explicitly deferred."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.wcag_aa_accessibility_audit",
+      "release": "r2",
+      "acceptance_total": 1,
+      "criteria": [
+        {
+          "text": "A written, manager-approved standard per surface class; no audit has run.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written, manager-approved standard per surface class; no audit has run."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.LEGACY-MIGRATION-PLAN",
+      "release": "r1",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "The plan accounts for every inherited legacy record for this domain, each one kept, merged or retired with a reason.",
+          "passed": false
+        },
+        {
+          "text": "The migration is described as replayable: running it twice leaves the same end state, with no duplicated side effects.",
+          "passed": false
+        },
+        {
+          "text": "The plan states what happens to a record the migration cannot classify, rather than assuming none exist.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The plan accounts for every inherited legacy record for this domain, each one kept, merged or retired with a reason.",
+          "The migration is described as replayable: running it twice leaves the same end state, with no duplicated side effects.",
+          "The plan states what happens to a record the migration cannot classify, rather than assuming none exist."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.RESEARCH-1-SYSTEM-CLASSES",
+      "release": "r0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "The document compares all five system classes (chatbot, fixed workflow, tool-using agent, agentic system, multi-agent system) and names which one this domain needs.",
+          "passed": false
+        },
+        {
+          "text": "The choice cites this domain's own capability count and its human-reserved count, so the argument would change if those numbers changed.",
+          "passed": false
+        },
+        {
+          "text": "The document states explicitly which class this domain does NOT need, and what would have to change to justify the next class up.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The document compares all five system classes (chatbot, fixed workflow, tool-using agent, agentic system, multi-agent system) and names which one this domain needs.",
+          "The choice cites this domain's own capability count and its human-reserved count, so the argument would change if those numbers changed.",
+          "The document states explicitly which class this domain does NOT need, and what would have to change to justify the next class up."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.RESEARCH-2-AGENT-ANATOMY",
+      "release": "r0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "All nine anatomy elements are addressed, with none left blank and none dismissed as not applicable without a stated reason.",
+          "passed": false
+        },
+        {
+          "text": "Each element names the concrete platform surface, tool or record it maps to, rather than describing the element in general terms.",
+          "passed": false
+        },
+        {
+          "text": "Any element that cannot be filled is recorded as a gap with what is missing, rather than omitted.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "All nine anatomy elements are addressed, with none left blank and none dismissed as not applicable without a stated reason.",
+          "Each element names the concrete platform surface, tool or record it maps to, rather than describing the element in general terms.",
+          "Any element that cannot be filled is recorded as a gap with what is missing, rather than omitted."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.RESEARCH-3-ROLE-AND-DA-TRANSITION",
+      "release": "r0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "The document names the accountable human for this domain and the specific responsibilities proposed to transition to the agent.",
+          "passed": false
+        },
+        {
+          "text": "Each transitioning responsibility states what evidence would show the agent is ready to hold it.",
+          "passed": false
+        },
+        {
+          "text": "Responsibilities that must stay human are listed separately, each with the reason it is reserved.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The document names the accountable human for this domain and the specific responsibilities proposed to transition to the agent.",
+          "Each transitioning responsibility states what evidence would show the agent is ready to hold it.",
+          "Responsibilities that must stay human are listed separately, each with the reason it is reserved."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.RESEARCH-4-MANAGER-INTERVIEW",
+      "release": "r0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "The interview plan fits 30 minutes, and every question is specific to this domain rather than reusable for any agent.",
+          "passed": false
+        },
+        {
+          "text": "A weekly check-in is proposed with a named day, a duration, and the three things it reviews.",
+          "passed": false
+        },
+        {
+          "text": "The plan states what to do with each answer, so a completed interview changes the build rather than only recording opinions.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The interview plan fits 30 minutes, and every question is specific to this domain rather than reusable for any agent.",
+          "A weekly check-in is proposed with a named day, a duration, and the three things it reviews.",
+          "The plan states what to do with each answer, so a completed interview changes the build rather than only recording opinions."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.RESEARCH-5-THREE-PROPOSED-TASKS",
+      "release": "r0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "Exactly three agent tasks are proposed, each with its boundary stated as what the agent must NOT do.",
+          "passed": false
+        },
+        {
+          "text": "Each task names the evidence that proves it completed, and that evidence is something other than the task being marked done.",
+          "passed": false
+        },
+        {
+          "text": "Each task names the human who approves it wherever approval is required.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Exactly three agent tasks are proposed, each with its boundary stated as what the agent must NOT do.",
+          "Each task names the evidence that proves it completed, and that evidence is something other than the task being marked done.",
+          "Each task names the human who approves it wherever approval is required."
+        ]
+      }
+    },
+    {
+      "id": "STORY-000",
+      "release": null,
+      "acceptance_total": 5,
+      "criteria": [
+        {
+          "text": "Given the Command Center, when it is opened, then every tab is reachable and every card drills down one level.",
+          "passed": false
+        },
+        {
+          "text": "Given sample mode, when any tab is shown, then the sample data is visibly labelled as sample.",
+          "passed": false
+        },
+        {
+          "text": "Given the Command Center, when any tab renders, then .colaberry/plan.json and .colaberry/progress.json are both committed in this repo and every tab reads its content from them at runtime rather than from hard-coded values.",
+          "passed": false
+        },
+        {
+          "text": "Given the Command Center, when any tab is shown, then .colaberry/manifest.json is committed in this repo and every tab shows how old that data is and warns when the age exceeds a week.",
+          "passed": false
+        },
+        {
+          "text": "Trust — no tab shows a number, a connection or a result the project has not actually produced.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": null
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-10-22T00:24:39.501Z",
+  "plan_version": 1,
+  "plan_sha256": "41b0a978d20181c875fbf60733a972eed30ac806993a64936dbf58d83af2d3e0",
+  "correlation_id": "a2946c6f-ed74-4610-8fc1-b97f22a9adbd",
+  "project_id": "4c05fd34-d826-5118-8161-d2a534ab9c2f",
+  "truth_revision": null,
+  "files": [
+    {
+      "path": "docs/REQUIREMENTS.md",
+      "sha256": "936eabd13794dea2e6cc395c2ffe3e4ab3b42e4dc4068a40948df0bb6cdfec86"
+    },
+    {
+      "path": "docs/STORIES.md",
+      "sha256": "c1fe264a643c2180d2e4e04c206d559d4feae1fcd9c022d89557e53177c49d08"
+    },
+    {
+      "path": "docs/TRACEABILITY.md",
+      "sha256": "204000cff55158915d761725d7f8299a240a75c8f97fc177e6ce90dcc4a5dcee"
+    },
+    {
+      "path": "docs/DATA_CONTRACT.md",
+      "sha256": "d56e89edcfe36725945d961cf3479b646507d1fa855bba0dcdfff3f8f8a658b0"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "2d011412fb0ac11d0aaedf880029594d5f1f7360d6c125e9007997eeb542a9e6"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.brand_design_system_sync_review.md",
+      "sha256": "ce25a060ca7e534d321277db7b700c85793218aab1e86e99b3ddb8759b5c4629"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.bundle_and_render_performance_review.md",
+      "sha256": "f2834fd95a0fbf495a3809e9239979e6e06128564a4ee8a4b953f00e99577999"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.color_contrast_regression_check.md",
+      "sha256": "15e44d1a9acb2e5e7ecc7f94c7aa2dbe89837d979dfec454dba6884ce78d09bc"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.component_duplication_detection.md",
+      "sha256": "b78903f9b2bc68f222bed724f9749958bc776cf5032de2d2f1f9d72d95de1f1e"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.dataviz_quality_audit.md",
+      "sha256": "143eddb99a97f7a46f93a4a94fef892308f7e02b0225f1dd639014b3aa68c283"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.design_token_drift_audit.md",
+      "sha256": "fc39b37f7530f1172f83235bbfbd7fcb37b8a25471347f5ec8011edcea8d675f"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.empty_error_loading_state_inventory.md",
+      "sha256": "47428cd98dc25842ca2d641c58d840c40b380896e8afef5c4097a96f368b6d66"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.evidence_labeling_and_sample_data_aud.md",
+      "sha256": "07c5e0b21915322151897892bec271c4c7da9da9e4c61552ca8c625f8eca3d78"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.image_alt_and_media_accessibility_aud.md",
+      "sha256": "21a5ce55d4bfa4821ba9a3df0215eee0a55726fb1050148407d8f381af4997e4"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.keyboard_and_semantic_interaction_aud.md",
+      "sha256": "37d95fa059e1d1e05f1f0b00cc96f0cb5b50d9fbb974790060a02843aaae1df4"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.manager_design_review_queue.md",
+      "sha256": "fdb7e286a3d86c13a2aae662c9a0ecb46c436f9e3827e1de8694a7cc0c8ca5df"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.motion_and_reduced_motion_compliance_.md",
+      "sha256": "c1e791d14c14f0637b82f7908a0680ba732edc8eee54c099c3b3986bbedb4068"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.multi_brand_surface_consistency_audit.md",
+      "sha256": "6fb183d520abe900b98971bd90d109f1e10a382111ddd955eee81f3ea39e73cb"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.page_health_smoke_sweep.md",
+      "sha256": "fd94e8f60eef7b9c050c526ba60ee0ec13673486ed926d4f96fb092a69881dc4"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.plain_language_interface_copy_audit.md",
+      "sha256": "9482f668fb1654c46eba528a1d021188ec07844cf667e931332c2f77bfd04234"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.public_copy_claims_compliance_audit.md",
+      "sha256": "c2777665a5b7d2c0a4fce0e25ac2107ea9304b14ddb1ee64f3cfd118eab14d99"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.responsive_and_touch_target_regressio.md",
+      "sha256": "320702bd435089b088f1573ee9a9af97dc5f4a334b70c01eae460dab79038e2c"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.route_surface_inventory.md",
+      "sha256": "1b119e0aa782da6000959ea0a9e6e0ed83014f70db1b0137f64a256aef29925e"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.screenshot_visual_review_packet.md",
+      "sha256": "d111eb2dcea915f794591ccc4b5e998d7890bd082926970d4f036f01263eea20"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.stylesheet_architecture_consolidation.md",
+      "sha256": "39219f036c52f3529fdd63b9cee43961b81df207c71dc64ebe4270daf5b85fd7"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.theme_and_dark_mode_readiness_assessm.md",
+      "sha256": "a48d63b5df1d7e02fcccca963430717e7e2765a36c0b1a3dc38342985d20f30d"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.unrouted_page_detection.md",
+      "sha256": "3ad066faf35070d8781fe08a05c9537f3d78531383e6e8b4c16c2b31eaffaf86"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.ux_quality_exception_register.md",
+      "sha256": "eef7f0b05deab78dcf1e1a4d37100b173108ecbdf87239aedd454e25b614fb02"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.visual_change_approval_gate.md",
+      "sha256": "b693e89824a6659d8381cbed7b954ff2a719ed08846bc055c875ce5c63ed6001"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.wcag_aa_accessibility_audit.md",
+      "sha256": "4fb192c75692c62cd8a67eb0cd26de3486eeead4454be2780d3c704389da9daa"
+    },
+    {
+      "path": "docs/stories/product_experience.LEGACY-MIGRATION-PLAN.md",
+      "sha256": "678bf8663a252458dcda3d8f1c19af55987b625ab4c204e522b62225b762bf34"
+    },
+    {
+      "path": "docs/stories/product_experience.RESEARCH-1-SYSTEM-CLASSES.md",
+      "sha256": "679cfe2539f80ef8de5ac0b93fab44457f17f582bdf227e69c8611aa6bf47098"
+    },
+    {
+      "path": "docs/stories/product_experience.RESEARCH-2-AGENT-ANATOMY.md",
+      "sha256": "7b31b19f8d77acaae630fb484aacda9de0973eb1d610617edf6b5727786e1b24"
+    },
+    {
+      "path": "docs/stories/product_experience.RESEARCH-3-ROLE-AND-DA-TRANSITION.md",
+      "sha256": "062230bd1eae286258243bc34dbcd5287cc3ed7d4f382e14d8ac1185438a3b4b"
+    },
+    {
+      "path": "docs/stories/product_experience.RESEARCH-4-MANAGER-INTERVIEW.md",
+      "sha256": "8c255892c1bd088285b42767b2570cae096210e0e76fa358741034f048d35a7a"
+    },
+    {
+      "path": "docs/stories/product_experience.RESEARCH-5-THREE-PROPOSED-TASKS.md",
+      "sha256": "56c09a9f213b017d30fa151b1c8bb25ade3bc9bba0fa29ffa642d8b80bd509cb"
+    },
+    {
+      "path": "docs/stories/STORY-000.md",
+      "sha256": "1172a0dfa9e16cd65ca8711774bca9b5adf59f256bbca918a91930b9233401e2"
+    },
+    {
+      "path": ".colaberry/plan.json",
+      "sha256": "a7a0801d0660c9a1c22de15069ace3abb9dd67593afb9b091486b713e798f817"
+    },
+    {
+      "path": ".colaberry/progress.json",
+      "sha256": "adc9bfa5b4c416fd85e05c78359e8be322c8bcb6d8d72a159114612f052aa1f6"
+    },
+    {
+      "path": ".colaberry/profile.json",
+      "sha256": "c37bf67d7e2b7fa34f440545f92a71c01d5c6b584279f69920838a59d1c9b50e"
+    }
+  ]
+}
