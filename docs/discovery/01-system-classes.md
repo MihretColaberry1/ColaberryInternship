@@ -4,6 +4,7 @@
 **Story:** `product_experience.RESEARCH-1-SYSTEM-CLASSES` · Release: Discovery and validation
 **Accountable human:** Mohammed Abdul Aleem
 **Prepared by:** Mihret Netsereab · 2026-10-21
+**Revised:** 2026-10-24. Corrected two claims (S8, S16) after RESEARCH-2 found a registered placeholder agent and a built manager-authorization check. The recommendation and figures are unchanged.
 **Status:** draft for manager review. Nothing here enables, configures or changes an agent.
 
 All platform citations refer to the public Colaberry platform repository,
@@ -24,7 +25,7 @@ read at commit `6ba8530`. Source tags such as **[S1]** point to the Sources tabl
 | Capabilities validated by the manager | **0** (all 25 are `draft`) | [S5] |
 | Highest autonomy ceiling on any capability | **R5 (shadow mode)**. None reach R6 (pilot) or R7 (automation) | [S6] |
 | Capabilities capped at R2 (answer questions only) | **5** | [S7] |
-| AI employee for this domain today | **none** (`agent_id: null`) | [S8] |
+| AI employee for this domain today | **a registered placeholder only**: `ProductExperienceDomainAgent`, disabled, no tools, no prompt, observe-only. Whether its row exists in the production database is unknown. The domain registry still shows `agent_id: null` | [S8] |
 | Can the manager reach an agent surface today | **no** (no admin login) | [S9] |
 
 The story brief is generated from these same fields: capability count, legacy count and
@@ -71,8 +72,9 @@ In ladder terms, that kind of self-directed, stateful action against real system
 
 A multi-agent system has several agents with separate roles, such as a planner, a doer and a
 reviewer, coordinating through messages or shared state. Its cost is coordination: hand-offs,
-conflicting outputs and harder tracing of who decided what. This domain has no agents to
-coordinate [S8], and whether the platform coordinates agents this way elsewhere is unknown.
+conflicting outputs and harder tracing of who decided what. This domain has one disabled
+placeholder agent and no second agent to coordinate with [S8], and whether the platform
+coordinates agents this way elsewhere is unknown.
 
 ---
 
@@ -115,8 +117,8 @@ the domain at "tool-using agent".
 
 ## What this domain does NOT need
 
-**It does not need a multi-agent system.** There is no agent yet [S8] and no legacy to divide
-[S4]. Every capability reports to the same one person [S1], and 20 of the 25 end at that
+**It does not need a multi-agent system.** The only agent is a disabled placeholder with no
+tools [S8], and there is no legacy to divide [S4]. Every capability reports to the same one person [S1], and 20 of the 25 end at that
 person [S2]. Splitting the work into a planner, auditor and reviewer adds hand-offs without
 adding a decision anyone is allowed to make, because the decision is reserved to a human
 either way.
@@ -133,8 +135,9 @@ agent cannot approve its own change under any setting [S7].
 
 All of these would have to be true. Each is a condition that can be checked:
 
-1. **The manager can actually supervise.** Mohammed Abdul Aleem needs an admin login and
-   manager-scoped authorization to open his agent's surface. Today he has neither [S9][S16].
+1. **The manager can actually supervise.** Mohammed Abdul Aleem needs an admin login. The
+   manager-scoped authorization check is already built, but it only runs after the normal
+   admin login check, and he has no admin login today [S9][S16].
 2. **The detection capabilities have earned R5.** At least the 5 detection-only capabilities
    [S3] have to agree with a human-reviewed reference inventory in shadow mode, with every
    disagreement itemised [S17].
@@ -162,7 +165,8 @@ separate roles that one agent can't hold. Nothing in this domain's record points
 - **`.loop-architect/` citations.** The domain's research file cites
   `.loop-architect/runs/20261007-school-agent-factory/verified-domain-registry.json` for the
   "no agent" and "no login" facts. That directory is not in the public repository, so I could
-  not read it. The same facts are confirmed elsewhere [S8][S9].
+  not read it. The "no login" fact is confirmed elsewhere [S9]. The "no agent" claim turned out
+  to be incomplete: a disabled placeholder agent is registered [S8].
 - **Stale line reference.** The research file cites `frontend/src/App.tsx:116-124` for the note
   that SignupV2 is kept on purpose. At commit `6ba8530` that note is at lines 147-157 [S19].
   The fact holds, but the line numbers have drifted.
@@ -189,7 +193,7 @@ All paths are in `ColaberryEnterprise_AI_LeadershipAccelerator` at commit `6ba85
 | S5 | All 25 are `draft` | `grep -c '"requirement_validation_state": "draft"' CAP` returns 25 |
 | S6 | Ceilings: 12 × R4, 8 × R5, 5 × R2; none above R5 | count of `max_permitted_autonomy` values in CAP; rationale at CAP:2926 |
 | S7 | 5 capabilities capped at R2; the gates' two safeguards (R2 cap and the no-self-approval negative test) | CAP:2124, CAP:2230, CAP:2339, CAP:2666, CAP:2778; CAP:2926 |
-| S8 | No AI employee for this domain | `backend/src/services/agentDomain/agentDomainRegistry.ts:137` (`agent_id: null`); CAP:2925 |
+| S8 | A disabled placeholder agent is registered; the domain registry still shows `agent_id: null`; production database state unknown | `backend/src/services/agentRegistry/domainAgents.ts:155-160` (entry), `:22-37` (disabled, no tools, observe); `backend/src/services/agentRegistry/__tests__/domainAgents.test.ts:51-64`, `:85-89` (tests); `backend/src/services/agentDomain/agentDomainRegistry.ts:137` (`agent_id: null`) |
 | S9 | Manager cannot reach a surface | `backend/src/services/agentDomain/agentDomainRegistry.ts:132` (`can_reach_surface: false`); `docs/architecture/ai-workforce-management/HUMAN_OWNERSHIP_MAP.md:13` |
 | S10 | Brief is generated from these fields | `backend/src/services/agentDomain/agentDomainStoryTemplates.ts:101-102`, `:125-127` |
 | S11 | Autonomy ladder definitions R0-R7 | `backend/src/services/agentDomain/autonomyLadder.ts:59-66` |
@@ -197,7 +201,7 @@ All paths are in `ColaberryEnterprise_AI_LeadershipAccelerator` at commit `6ba85
 | S13 | `PlatformInnovationArchitect` is granted five tools | `backend/src/services/agentRegistrySeed.ts:1973` (name), `:1981` (`tools_granted`) |
 | S14 | Deploy and protected-main push are default-denied | `backend/src/services/delivery/execution/executionPolicy.ts:33` |
 | S15 | Tool frequency (`repo_read` 23, `headless_browser_sandbox` 13, `typescript_ast_scan` 12); every capability declares 3 to 7 tools | count of `required_tools` across CAP capabilities |
-| S16 | No manager-scoped authorization exists | CAP:2924 (cites `docs/architecture/ai-workforce-management/MANAGER_AUTHORIZATION_MAP.md`) |
+| S16 | Manager-scoped authorization is built and gates the manager routes; it runs after the normal admin check | `backend/src/middlewares/agentManagerAuthMiddleware.ts:12-14`, `:50`; `backend/src/routes/admin/managerDirectiveRoutes.ts:12-14`. CAP:2924 and `MANAGER_AUTHORIZATION_MAP.md` still say it is not built; the code shows otherwise |
 | S17 | R5 acceptance = agreement with reference inventory | CAP:143-145 (example: design_token_drift_audit) |
 | S18 | Production needs a separately approved R6 pilot | `backend/src/services/agentDomain/autonomyLadder.ts:202-203` |
 | S19 | SignupV2 kept on purpose | `frontend/src/App.tsx:147-157` |
