@@ -3,13 +3,13 @@
   "project": "product_experience",
   "totals": {
     "stories_total": 32,
-    "stories_verified": 1,
+    "stories_verified": 2,
     "stories_submitted": 0,
-    "stories_in_progress": 30,
+    "stories_in_progress": 29,
     "stories_not_started": 1,
     "criteria_total": 48,
-    "criteria_passed": 3,
-    "points_awarded": 25
+    "criteria_passed": 6,
+    "points_awarded": 50
   },
   "stories": [
     {
@@ -811,19 +811,15 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "verified",
+        "criteria_passed": 3,
         "criteria_total": 3,
-        "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
-        "points_awarded": null,
-        "outstanding": [
-          "All nine anatomy elements are addressed, with none left blank and none dismissed as not applicable without a stated reason.",
-          "Each element names the concrete platform surface, tool or record it maps to, rather than describing the element in general terms.",
-          "Any element that cannot be filled is recorded as a gap with what is missing, rather than omitted."
-        ]
+        "verified_at": "2026-10-25T01:32:04.156Z",
+        "commit_sha": "b1c324004a3ab4b8e89e3d20d074256fc810e80c",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/b1c324004a3ab4b8e89e3d20d074256fc810e80c",
+        "commit_at": "2026-10-25T01:19:02Z",
+        "points_awarded": 25,
+        "outstanding": []
       }
     },
     {
