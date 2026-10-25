@@ -3,13 +3,13 @@
   "project": "product_experience",
   "totals": {
     "stories_total": 32,
-    "stories_verified": 2,
+    "stories_verified": 3,
     "stories_submitted": 0,
-    "stories_in_progress": 29,
+    "stories_in_progress": 28,
     "stories_not_started": 1,
     "criteria_total": 48,
-    "criteria_passed": 6,
-    "points_awarded": 50
+    "criteria_passed": 9,
+    "points_awarded": 75
   },
   "stories": [
     {
@@ -847,19 +847,15 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "verified",
+        "criteria_passed": 3,
         "criteria_total": 3,
-        "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
-        "points_awarded": null,
-        "outstanding": [
-          "The document names the accountable human for this domain and the specific responsibilities proposed to transition to the agent.",
-          "Each transitioning responsibility states what evidence would show the agent is ready to hold it.",
-          "Responsibilities that must stay human are listed separately, each with the reason it is reserved."
-        ]
+        "verified_at": "2026-10-25T21:38:23.374Z",
+        "commit_sha": "21fb8fb810b11af811fb4d4af55d9f33de62cd4c",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/21fb8fb810b11af811fb4d4af55d9f33de62cd4c",
+        "commit_at": "2026-10-25T21:13:41Z",
+        "points_awarded": 25,
+        "outstanding": []
       }
     },
     {
