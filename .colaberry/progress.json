@@ -3,13 +3,13 @@
   "project": "product_experience",
   "totals": {
     "stories_total": 32,
-    "stories_verified": 4,
+    "stories_verified": 5,
     "stories_submitted": 0,
-    "stories_in_progress": 27,
+    "stories_in_progress": 26,
     "stories_not_started": 1,
     "criteria_total": 48,
-    "criteria_passed": 12,
-    "points_awarded": 100
+    "criteria_passed": 15,
+    "points_awarded": 125
   },
   "stories": [
     {
@@ -919,19 +919,15 @@
       "notes": "Approvers named for every in-scope approval (Mohammed Abdul Aleem; dependency escalation to Ali Muwwakkil). Merge/deploy approver and access-creation approver are recorded as unknown: both sit outside the three tasks' boundaries.",
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "verified",
+        "criteria_passed": 3,
         "criteria_total": 3,
-        "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
-        "points_awarded": null,
-        "outstanding": [
-          "Exactly three agent tasks are proposed, each with its boundary stated as what the agent must NOT do.",
-          "Each task names the evidence that proves it completed, and that evidence is something other than the task being marked done.",
-          "Each task names the human who approves it wherever approval is required."
-        ]
+        "verified_at": "2026-10-27T23:04:44.201Z",
+        "commit_sha": "40bc69e13e3558ccc5d0df6580581ef21fe0910a",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/40bc69e13e3558ccc5d0df6580581ef21fe0910a",
+        "commit_at": "2026-10-27T23:04:23Z",
+        "points_awarded": 25,
+        "outstanding": []
       }
     },
     {
