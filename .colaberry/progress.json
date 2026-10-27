@@ -901,20 +901,22 @@
       "criteria": [
         {
           "text": "Exactly three agent tasks are proposed, each with its boundary stated as what the agent must NOT do.",
-          "passed": false
+          "passed": true
         },
         {
           "text": "Each task names the evidence that proves it completed, and that evidence is something other than the task being marked done.",
-          "passed": false
+          "passed": true
         },
         {
           "text": "Each task names the human who approves it wherever approval is required.",
-          "passed": false
+          "passed": true
         }
       ],
-      "files_touched": [],
+      "files_touched": [
+        "docs/discovery/05-three-proposed-tasks.md"
+      ],
       "tests_added": [],
-      "notes": null,
+      "notes": "Approvers named for every in-scope approval (Mohammed Abdul Aleem; dependency escalation to Ali Muwwakkil). Merge/deploy approver and access-creation approver are recorded as unknown: both sit outside the three tasks' boundaries.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
