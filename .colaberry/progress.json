@@ -3,13 +3,13 @@
   "project": "product_experience",
   "totals": {
     "stories_total": 32,
-    "stories_verified": 5,
+    "stories_verified": 6,
     "stories_submitted": 0,
-    "stories_in_progress": 26,
+    "stories_in_progress": 25,
     "stories_not_started": 1,
     "criteria_total": 48,
-    "criteria_passed": 15,
-    "points_awarded": 125
+    "criteria_passed": 18,
+    "points_awarded": 150
   },
   "stories": [
     {
@@ -737,19 +737,15 @@
       "notes": "Domain inherits 0 legacy records (re-verified from the CSV and the 11 tracked capability files at platform c96f6a68). Plan flags 5 source problems, including the brief's missing file:line citations, and the website-domain overlap as the first decision.",
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "verified",
+        "criteria_passed": 3,
         "criteria_total": 3,
-        "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
-        "points_awarded": null,
-        "outstanding": [
-          "The plan accounts for every inherited legacy record for this domain, each one kept, merged or retired with a reason.",
-          "The migration is described as replayable: running it twice leaves the same end state, with no duplicated side effects.",
-          "The plan states what happens to a record the migration cannot classify, rather than assuming none exist."
-        ]
+        "verified_at": "2026-10-28T02:13:06.932Z",
+        "commit_sha": "ae8a13d12330609c87e4d9aad0cb2ace320c4ec6",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/ae8a13d12330609c87e4d9aad0cb2ace320c4ec6",
+        "commit_at": "2026-10-28T02:12:59Z",
+        "points_awarded": 25,
+        "outstanding": []
       }
     },
     {
