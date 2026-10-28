@@ -719,20 +719,22 @@
       "criteria": [
         {
           "text": "The plan accounts for every inherited legacy record for this domain, each one kept, merged or retired with a reason.",
-          "passed": false
+          "passed": true
         },
         {
           "text": "The migration is described as replayable: running it twice leaves the same end state, with no duplicated side effects.",
-          "passed": false
+          "passed": true
         },
         {
           "text": "The plan states what happens to a record the migration cannot classify, rather than assuming none exist.",
-          "passed": false
+          "passed": true
         }
       ],
-      "files_touched": [],
+      "files_touched": [
+        "docs/migration/legacy-migration-plan.md"
+      ],
       "tests_added": [],
-      "notes": null,
+      "notes": "Domain inherits 0 legacy records (re-verified from the CSV at platform c96f6a68). Plan flags 4 source problems and a public-page overlap with the website domain as the first decision.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
