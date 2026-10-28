@@ -734,7 +734,7 @@
         "docs/migration/legacy-migration-plan.md"
       ],
       "tests_added": [],
-      "notes": "Domain inherits 0 legacy records (re-verified from the CSV at platform c96f6a68). Plan flags 4 source problems and a public-page overlap with the website domain as the first decision.",
+      "notes": "Domain inherits 0 legacy records (re-verified from the CSV and the 11 tracked capability files at platform c96f6a68). Plan flags 5 source problems, including the brief's missing file:line citations, and the website-domain overlap as the first decision.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
