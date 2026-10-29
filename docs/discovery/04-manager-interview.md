@@ -5,6 +5,10 @@
 **Accountable human:** Mohammed Abdul Aleem
 **Prepared by:** Mihret Netsereab · 2026-10-25
 **Status:** draft for manager review. Nothing here enables, configures or changes an agent, and every capability named below stays `draft`.
+**Updated 2026-10-28:** written answers from Ali Muwwakkil to Q1–Q4 are recorded in
+[Responses received](#responses-received). They are **Ali's recommendations, not Mohammed Abdul
+Aleem's approval.** The interview with Mohammed Abdul Aleem has not happened, and nothing in this
+domain is approved.
 
 > **This document schedules nothing.** It is an agenda and a set of questions. No invitation,
 > calendar entry, scheduling link or message has been sent, and no meeting is booked. Arranging
@@ -244,9 +248,77 @@ whether it happens.
 
 ---
 
-## Answers (fill in after the interview)
+## Responses received
 
-Left empty on purpose. After the interview this file becomes the record.
+### Ali Muwwakkil's written answers to Q1–Q4 (recommendations, not approval)
+
+- **Who answered:** Ali Muwwakkil, the platform DRI [M29]. He is **not** this domain's
+  accountable manager. Mohammed Abdul Aleem is [M3].
+- **How:** a written reply to four questions Mihret sent him. Recorded here on 2026-10-28 as
+  Mihret relayed it. The original message is not in this repository [M29].
+- **Mapping:** the four answers are recorded against Q1–Q4 of this plan, in order. That mapping is
+  Mihret's reading of the reply; Ali did not number them against this document.
+- **What they do not do:** they satisfy no acceptance criterion. Each R0 criterion names Mohammed
+  Abdul Aleem's sign-off. For example, the token-drift audit's criterion is "Mohammed Abdul Aleem
+  signs off a written scope and exception list" [M25][M30]. Every capability stays `draft`.
+
+| # | Ali's recommendation | Status | What is still open |
+|---|---|---|---|
+| Q1 | Build the **design-token drift audit on the admin portal** first, then **colour-contrast regression**. Route inventory, unrouted-page detection and page-health checks come later. | **Answered by Ali** | Aleem's confirmation. The token-drift capability is written as surface-wide ("all 445 route-reachable pages") [M30], so "admin portal only" is a scope narrowing that the R0 definition has to state and he has to sign. Which pages count as "the admin portal" is not defined. |
+| Q2 | **Don't build the review queue first.** Start with the detector and a simple report. Add the queue when managing findings becomes a bottleneck. | **Answered by Ali** | Aleem's confirmation. What counts as a "bottleneck", and who decides it has been reached, is not stated. |
+| Q3 | **Design approvals, brand design systems and logos stay human-controlled.** Email design decisions that involve **approval or sending** also stay human-controlled. | **Answered by Ali**, partly | Aleem's confirmation. Email design work that involves neither approval nor sending (for example, drafting a layout) is not covered. No time limit was stated either way, so "permanently" is not confirmed. |
+| Q4 | **Actions outside the company, brand changes, spending money, and changes affecting student records stay human-controlled.** Everything else follows: detect, run quietly, prove reliability, then consider automation. | **Answered by Ali** as a general rule | Aleem's confirmation. The rule is by category, not by capability, so which of the 20 human decisions [M13] are permanent is not yet mapped. The follow-up, **who** makes each decision, is not answered. Who decides that reliability is "proven" is not stated (see Q5). |
+
+### What the recommendations would change, if Mohammed Abdul Aleem confirms them
+
+These are consequences, not actions. Nothing below has been started.
+
+- **First build:** the R0 definition for `design_token_drift_audit`, scoped to the admin portal,
+  then for `color_contrast_regression_check`. The contrast check's R0 step is a written definition
+  with the three historical failures recorded as named regression cases [M31].
+- **Q5 and Q6 become the next questions to ask.** Q5's trust threshold now applies to the token-drift
+  audit. Q6's colour exceptions are exactly the "exception list" its R0 criterion needs [M25][M16].
+- **The review queue is deferred.** Reports go to him as plain reports until findings become hard
+  to manage.
+- **Brand stays with a human, which agrees with the capability records.** Both capabilities already
+  stop below automation because a colour fix "is a brand decision" [M30][M31].
+- **The progression in Q4 reads like the platform's existing ladder**, where shadow-mode agreement
+  comes before any automation [M15][M26]. That reading is mine, not Ali's.
+
+### Where this differs from earlier documents (flagged, not changed)
+
+- **RESEARCH-2** suggested starting with route inventory or unrouted-page detection (see Q1). Ali puts both later.
+- **RESEARCH-5** proposed three tasks: route inventory, the WCAG AA audit and the review queue
+  [M32]. Ali recommends two different capabilities first and defers the queue. RESEARCH-5 is not
+  edited here. Whether it should be revised waits on Aleem's answer.
+- **The website-domain overlap.** The migration plan lists route inventory and unrouted pages
+  (anywhere) and the WCAG and copy audits (public pages) as overlapping with the website domain
+  [M33]. Token drift is not on that list, so an admin-portal token-drift audit does not appear to
+  wait on that ownership decision. The website domain's public-page accessibility audit includes
+  contrast [M33], so contrast checks on **public** pages may overlap; the plan does not assess it.
+
+### Decisions that remain unresolved
+
+| Decision | Who decides | Why it is still open |
+|---|---|---|
+| Confirm, change or reject Ali's Q1–Q4 recommendations | Mohammed Abdul Aleem | He is the accountable manager; every R0 criterion names him |
+| Which pages make up "the admin portal" for the first token-drift scope | Mohammed Abdul Aleem | Not defined in Ali's answer or the capability record |
+| When findings count as a "bottleneck" that triggers the queue | Mohammed Abdul Aleem (**unknown** whether Ali expects to decide) | No measure or owner stated |
+| Email design work that involves neither approval nor sending | Mohammed Abdul Aleem | Not covered by Ali's answer |
+| Which of the 20 human decisions are permanent, and who makes each | Mohammed Abdul Aleem | Ali gave categories, not a per-capability list or names |
+| Who decides reliability is "proven" before automation is considered | **Unknown** | Q5's threshold is still unanswered |
+| Access route for Mohammed Abdul Aleem, and who approves it | Mohammed Abdul Aleem; approver **unknown** | The blocker was not among the four questions |
+| Q5 trust threshold, Q6 colour exceptions, Q7 stop behaviours, Q8 who switches off | Mohammed Abdul Aleem | Not asked yet |
+| Weekly check-in | Mohammed Abdul Aleem | Not asked yet |
+| Whether RESEARCH-5's three tasks should be revised | Mihret, after Aleem answers | Depends on whether he confirms Ali's order |
+
+---
+
+## Answers from Mohammed Abdul Aleem (fill in after the interview)
+
+Left empty on purpose. After the interview this file becomes the record. Ali Muwwakkil's answers
+are in [Responses received](#responses-received) and are deliberately **not** entered here,
+because this table records the accountable manager's answers only.
 
 **Interview date:**
 **Present:**
@@ -280,6 +352,9 @@ Left empty on purpose. After the interview this file becomes the record.
   classified `manager_defined` [M10]. The review queue's stated source is the domain's ownership
   record, not an interview with him. Whether he has seen any of the three is **unknown**.
 - **The check-in day and duration are my proposal**, not taken from any source.
+- **Ali Muwwakkil's answers are recorded as relayed, not quoted.** The original message isn't in
+  this repository [M29]. Adding it, or a link to it, would turn this from a reported fact into
+  evidence.
 
 ---
 
@@ -319,3 +394,8 @@ All paths are in `ColaberryEnterprise_AI_LeadershipAccelerator` at commit `2a139
 | M26 | Ceilings: 12 × R4, 8 × R5, 5 × R2, none above R5; production needs a separately approved R6 pilot | count of `max_permitted_autonomy` values in CAP; rationale at CAP:2926; SVC `agentDomain/autonomyLadder.ts:202-203` |
 | M27 | Copy audit R4 criteria: "Every finding cites file and line" | CAP:2578-2579 |
 | M28 | RESEARCH-2: no write tools at first; the four write tools come only with the gate capabilities | This repository: `docs/discovery/02-agent-anatomy.md:155-157` |
+| M29 | Ali Muwwakkil's written answers to four questions; Ali is the platform DRI | **Reported:** relayed by Mihret Netsereab on 2026-10-28; original message not in this repository. DRI: platform `CLAUDE.md:10` |
+| M30 | Token-drift audit is surface-wide (445 pages); R0 acceptance is Aleem's sign-off; ceiling stops below automation because repainting is a brand decision | This repository: `docs/stories/product_experience.CAP.design_token_drift_audit.md:65`, `:80`, `:83-86` |
+| M31 | Contrast check R0 acceptance; ceiling stops below automation because a colour change is a brand decision | This repository: `docs/stories/product_experience.CAP.color_contrast_regression_check.md:74`, `:77-80` |
+| M32 | RESEARCH-5's three proposed tasks | This repository: `docs/discovery/05-three-proposed-tasks.md` (task table) |
+| M33 | Website-domain overlaps, including contrast in the public-page accessibility audit | This repository: `docs/migration/legacy-migration-plan.md:211-223` |
