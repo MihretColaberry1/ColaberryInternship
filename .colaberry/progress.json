@@ -162,10 +162,12 @@
           "passed": false
         }
       ],
-      "files_touched": [],
+      "files_touched": [
+        "docs/definitions/design_token_drift_audit.R0.md"
+      ],
       "tests_added": [],
-      "notes": null,
-      "updated_at": null,
+      "notes": "R0 definition drafted for sign-off: admin-portal scope (Ali's Q1 recommendation), six-outcome classification, 11 colour values shared by two tokens each (classified exact-ambiguous), allow-list rules A1-A5, 7 decisions D1-D7. No scan run. Criterion NOT passed: Mohammed Abdul Aleem has not signed.",
+      "updated_at": "2026-10-30T00:00:00Z",
       "verification": {
         "state": "in_progress",
         "criteria_passed": 0,
