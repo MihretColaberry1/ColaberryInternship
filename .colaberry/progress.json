@@ -173,9 +173,9 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
+        "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/b196c1be10d0943b23f778f008a070c12dfb96f4",
+        "commit_at": "2026-10-30T19:28:08Z",
         "points_awarded": null,
         "outstanding": [
           "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
