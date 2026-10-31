@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "_how_to_use": "Drafts of SAFE requirements that are not yet in .colaberry/plan.json. This file only documents a draft: it never registers, approves or verifies anything, so do not add status fields here (a test rejects them). The Command Center reads registration from plan.json and sign-off and verification from progress.json. An enforcement check counts once its \"test\" names a test file that exists and passes. When the platform plan carries the requirement, keep the draft until the Guardrails tab shows it as registered, then remove it.",
+  "drafts": [
+    {
+      "id": "REQ-001",
+      "kind": "SAFE",
+      "priority": "must",
+      "cluster": "design-system governance",
+      "statement": "The agent may report that the product does not match the design system, but only a human decides what the design system is.",
+      "stories": [
+        "product_experience.CAP.design_token_drift_audit",
+        "product_experience.CAP.color_contrast_regression_check"
+      ],
+      "sources": [
+        "Ali Muwwakkil, email to Mihret asking for this to be typed as SAFE (the email is not stored in this repository)",
+        "docs/definitions/design_token_drift_audit.R0.md, section 5: a token-set gap is escalated as a design decision, never auto-substituted",
+        "docs/discovery/04-manager-interview.md, Q3: the agent reports differences but never proposes design-system changes"
+      ],
+      "enforcement": [
+        { "check": "Any scanner tool granted to the agent is read-only: no write path to token files, the design-system folder or brand-bridge.css", "test": null },
+        { "check": "A run fails if anything tries to apply, commit or push a proposed fix (R0 section 7.2)", "test": null },
+        { "check": "Only a human can add an exception-list entry; the agent can only propose one", "test": null },
+        { "check": "A finding stays proposed until a human accepts it; the agent cannot mark its own finding accepted", "test": null }
+      ]
+    }
+  ]
+}

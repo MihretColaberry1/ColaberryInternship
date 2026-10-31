@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "_how_to_use": "Add a decision or note as you go: {\"date\": \"YYYY-MM-DD\", \"title\": \"...\", \"text\": \"...\", \"source\": \"file or link that backs it\"}. Only record what actually happened; an approval belongs here only once it is recorded by the person who gave it.",
+  "notes": []
+}
