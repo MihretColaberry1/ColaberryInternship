@@ -1,0 +1,139 @@
+{
+  "pack_id": "admin-portal.draft.v1",
+  "title": "Draft rules for the admin-portal design review prototype",
+  "draft_notice": "UNAPPROVED DRAFT. Compiled by Mihret Netsereab from the cited platform files only. No rule here is an official design-system or accessibility requirement until Mohammed Abdul Aleem approves it.",
+  "approval": { "state": "unapproved", "approved_by": null, "approved_on": null },
+  "supplied_by": "Mihret Netsereab (draft, compiled from cited platform sources)",
+  "source_repo": "https://github.com/ColaberryIntern/ColaberryEnterprise_AI_LeadershipAccelerator",
+  "source_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+  "standard": {
+    "state": "pending_confirmation",
+    "candidates": ["WCAG 2.1 AA", "WCAG 2.2 AA"],
+    "decided_by": null,
+    "note": "The platform skill names WCAG 2.1 AA; the BRD draft names WCAG 2.2 AA. Aleem decides."
+  },
+  "token_file": "frontend/src/styles/tokens.css",
+  "token_file_sources": [
+    { "path": ".claude/skills/baseline-ui/SKILL.md", "line": 11, "quote": "This is the source of truth." }
+  ],
+  "rules": [
+    {
+      "id": "R1", "check": "hex_in_inline_style", "title": "No hex values in inline styles", "cited_wcag": null,
+      "sources": [{ "path": "frontend/CLAUDE.md", "line": 41, "quote": "never inline styles with hex values" }]
+    },
+    {
+      "id": "R2", "check": "hardcoded_hex", "title": "No hard-coded hex colour values", "cited_wcag": null,
+      "sources": [
+        { "path": ".claude/skills/baseline-ui/SKILL.md", "line": 42, "quote": "Never hardcode hex values." },
+        { "path": "frontend/CLAUDE.md", "line": 35, "quote": "Never hardcode hex values" }
+      ],
+      "scope_note": "frontend/CLAUDE.md:35 sits in the src/styles/ row of a folder table, so whether it covers .tsx files is unclear. baseline-ui:42 is the primary source."
+    },
+    {
+      "id": "R3", "check": "form_control_label", "title": "Form controls have a label or aria-label", "cited_wcag": "WCAG 1.3.1 and 3.3.2",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 47, "quote": "must have an associated `<label>`" }]
+    },
+    {
+      "id": "R4", "check": "img_alt", "title": "Images have an alt attribute", "cited_wcag": "WCAG 1.1.1",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 52, "quote": "descriptive `alt` attribute" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 53, "quote": "Decorative images" }
+      ]
+    },
+    {
+      "id": "R5", "check": "click_on_non_button", "title": "Clickable actions use <button>, not <span> or <div> with onClick", "cited_wcag": "WCAG 1.3.1",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 28, "quote": "not `<span>` or `<div>` with onClick" }]
+    },
+    {
+      "id": "R6", "check": "icon_button_name", "title": "Icon-only buttons have an aria-label", "cited_wcag": "WCAG 1.1.1",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 54, "quote": "Icons used as buttons: `aria-label` on the button" }]
+    },
+    {
+      "id": "R7", "check": "alert_announcement", "title": "Alert messages use role=\"alert\" or aria-live", "cited_wcag": "WCAG 4.1.3",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 73, "quote": "Toast/alert messages" }]
+    },
+    {
+      "id": "R8", "check": "spinner_live_region", "title": "Loading spinners sit in a live region", "cited_wcag": "WCAG 4.1.3",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 72, "quote": "Loading spinners: wrap with" }]
+    },
+    {
+      "id": "R9", "check": "heading_order", "title": "No skipped heading levels; one <h1> per page", "cited_wcag": "WCAG 1.3.1",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 78, "quote": "No skipped levels" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 77, "quote": "per page" }
+      ]
+    },
+    {
+      "id": "R10", "check": "modal_dialog_role", "title": "Modals have role=\"dialog\"", "cited_wcag": "WCAG 4.1.2",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 36, "quote": "Modals: `role=\"dialog\"`" }]
+    }
+  ],
+  "not_checked": [
+    {
+      "title": "Colour contrast",
+      "reason": "Needs the rendered page: colours computed from tokens are not proof of what is visible. The ratio thresholds are also standard-dependent, and the standard is pending confirmation.",
+      "sources": [{ "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 22, "quote": "Text on background must meet" }]
+    },
+    {
+      "title": "Touch-target size",
+      "reason": "Pending confirmation of the standard, and needs the rendered page. The source itself conflicts: it cites 2.5.8, a WCAG 2.2 criterion, but states 44x44px.",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 56, "quote": "Touch Targets (WCAG 2.5.8)" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 57, "quote": "Minimum 44x44px" }
+      ]
+    },
+    {
+      "title": "Keyboard navigation and visible focus",
+      "reason": "Needs a running page to tab through. Not checkable from files.",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 40, "quote": "All interactive elements reachable via Tab" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 44, "quote": "Visible focus indicator" }
+      ]
+    },
+    {
+      "title": "Reduced motion and high-contrast mode",
+      "reason": "Set in shared stylesheets and checked at runtime. This page imports no stylesheet, and the prototype reviews one file.",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 63, "quote": "no CSS animations bypass this media query" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 68, "quote": "custom styled components respect high contrast mode" }
+      ]
+    },
+    {
+      "title": "Skip navigation and landmarks",
+      "reason": "Belong to the app shell, not to one page component.",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 83, "quote": "skip link targets correct" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 31, "quote": "landmarks" }
+      ]
+    },
+    {
+      "title": "Error messages linked with aria-describedby, tables, tabs and other ARIA patterns",
+      "reason": "Not implemented in this prototype.",
+      "sources": [
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 49, "quote": "aria-describedby" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 30, "quote": "<thead>" },
+        { "path": ".claude/skills/fixing-accessibility/SKILL.md", "line": 37, "quote": "Tabs:" }
+      ]
+    },
+    {
+      "title": "Inline styles that contain no hex value",
+      "reason": "No cited source forbids them, so they are not reported.",
+      "sources": null
+    },
+    {
+      "title": "Layout, information hierarchy and brand voice",
+      "reason": "No approved rules exist for these judgment calls, and no model is used in this prototype.",
+      "sources": null
+    }
+  ],
+  "open_decisions": [
+    "Target product: InboxAuditLogPage.tsx is a temporary technical demo target, not the target-product decision (portal, design-system repository, or both).",
+    "Rules pack approval: every rule above is an unapproved draft.",
+    "Accessibility standard: WCAG 2.1 AA or WCAG 2.2 AA.",
+    "Colour exceptions: whether raw colours such as third-party brand colours are allowed (R0 decision D5).",
+    "Token authority: which token layer is authoritative (R0 definition, section 1.4) and whether near matches count (D4).",
+    "Severity: how findings are ranked. Nothing in this report assigns severity.",
+    "Scope of R5: whether clickable elements other than <span> and <div>, such as table rows, are covered.",
+    "Model use: whether any judgment-based check uses a model, and which one."
+  ]
+}
