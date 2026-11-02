@@ -254,20 +254,34 @@ whether it happens.
 
 - **Who answered:** Ali Muwwakkil, the platform DRI [M29]. He is **not** this domain's
   accountable manager. Mohammed Abdul Aleem is [M3].
-- **How:** a written reply to four questions Mihret sent him. Recorded here on 2026-10-28 as
-  Mihret relayed it. The original message is not in this repository [M29].
-- **Mapping:** the four answers are recorded against Q1–Q4 of this plan, in order. That mapping is
-  Mihret's reading of the reply; Ali did not number them against this document.
-- **What they do not do:** they satisfy no acceptance criterion. Each R0 criterion names Mohammed
-  Abdul Aleem's sign-off. For example, the token-drift audit's criterion is "Mohammed Abdul Aleem
-  signs off a written scope and exception list" [M25][M30]. Every capability stays `draft`.
+- **How:** an email reply to four questions Mihret sent him, dated Tuesday 2026-10-27, 7:08 AM
+  as shown in Mihret's mail client. Relayed into this file on 2026-10-28. The original message
+  is not in this repository; the short quotes below are taken from it [M29].
+- **Mapping:** Ali numbered his answers Q1–Q4, matching this plan's questions.
+- **His instruction on process, which he said matters more than the four answers:** do not wait
+  on Aleem to keep moving. Where a manager has not replied, make the call, write the assumption
+  down next to the question, and carry on. Ask Aleem for thirty minutes that week and copy Ali on
+  the invite; if Aleem could not meet by Thursday 2026-10-29, go with your own answers and mark
+  them as yours. The meeting then reviews the reasoning instead of being the thing that unblocks
+  it [M29]. That Thursday has passed. **Meeting status (Mihret, 2026-11-02): requested, not yet
+  held.** Its outcome and Aleem's sign-off are pending.
+- **What they do not do:** they satisfy no acceptance criterion. Ali's instruction lets work
+  continue on working answers; it does not stand in for Aleem's sign-off. Each R0 criterion names
+  Mohammed Abdul Aleem's sign-off. For example, the token-drift audit's criterion is "Mohammed
+  Abdul Aleem signs off a written scope and exception list" [M25][M30]. Every capability stays
+  `draft`.
 
-| # | Ali's recommendation | Status | What is still open |
-|---|---|---|---|
-| Q1 | Build the **design-token drift audit on the admin portal** first, then **colour-contrast regression**. Route inventory, unrouted-page detection and page-health checks come later. | **Answered by Ali** | Aleem's confirmation. The token-drift capability is written as surface-wide ("all 445 route-reachable pages") [M30], so "admin portal only" is a scope narrowing that the R0 definition has to state and he has to sign. Which pages count as "the admin portal" is not defined. |
-| Q2 | **Don't build the review queue first.** Start with the detector and a simple report. Add the queue when managing findings becomes a bottleneck. | **Answered by Ali** | Aleem's confirmation. What counts as a "bottleneck", and who decides it has been reached, is not stated. |
-| Q3 | **Design approvals, brand design systems and logos stay human-controlled.** Email design decisions that involve **approval or sending** also stay human-controlled. | **Answered by Ali**, partly | Aleem's confirmation. Email design work that involves neither approval nor sending (for example, drafting a layout) is not covered. No time limit was stated either way, so "permanently" is not confirmed. |
-| Q4 | **Actions outside the company, brand changes, spending money, and changes affecting student records stay human-controlled.** Everything else follows: detect, run quietly, prove reliability, then consider automation. | **Answered by Ali** as a general rule | Aleem's confirmation. The rule is by category, not by capability, so which of the 20 human decisions [M13] are permanent is not yet mapped. The follow-up, **who** makes each decision, is not answered. Who decides that reliability is "proven" is not stated (see Q5). |
+| # | Ali's recommendation | His reasoning | Status | What is still open |
+|---|---|---|---|---|
+| Q1 | Build the **design-token drift audit on the admin portal** first, then **colour-contrast regression**. Route inventory, unrouted-page detection and page-health checks come last. | A drift finding "cannot be argued with": a token matches the stylesheet or it does not, so the detector holds no judgment. The platform has already paid for not having it: the design system reference listed the primary colour as a navy for months while the real token in `tokens.css` was the Colaberry cherry, and a person reading the stylesheet caught it, not a check. Contrast is second for the same reason (a ratio, not an opinion), but costs more to build because it needs computed styles or rendered pixels rather than source. The three page checks go last because all depend on the complete set of pages, the list most likely to be wrong; a check built on a wrong inventory reports confidently about pages that do not exist and stays quiet about the ones that do. | **Answered by Ali** | Aleem's confirmation. The token-drift capability is written as surface-wide ("all 445 route-reachable pages") [M30], so "admin portal only" is a scope narrowing that the R0 definition has to state and he has to sign. Which pages count as "the admin portal" is not defined. |
+| Q2 | **No, the other way round.** Build the detector first, have it write findings somewhere plain, and add the queue when triage is actually the bottleneck. | An audit with nowhere to put its findings still works, because it can write a report; "a queue with nothing feeding it is furniture." A queue built first is designed around imagined findings, which are never the same shape as the ones the detector really produces. | **Answered by Ali** | Aleem's confirmation. What counts as triage being "the bottleneck", and who decides it has been reached, is not stated. |
+| Q3 | **Yes to approval, permanently. Yes to brand design systems and logos.** Email design splits on the same line: "Generating a layout is fine. Deciding to send it is not." | His principle, which he says settles most questions of this kind: "an agent may say this does not match the system. A human decides what the system is. Detection is fair game and should be relentless. Authorship of the brand is not." This is the source of draft SAFE requirement REQ-001, which is not registered in the platform plan. | **Answered by Ali** | Aleem's confirmation. |
+| Q4 | **Permanently human: anything that goes outside the company, changes the brand, spends money, or touches a student's record.** Ali: "Those four cover most of your twenty." Everything else becomes a candidate once the detection underneath it has earned trust: detect, run quiet, prove it, then automate. | "The test is not importance, it is reversibility and reach." Detection earns trust "by being right about things nobody acted on for a while." | **Answered by Ali** as a general rule | Aleem's confirmation. The rule is by category, not by capability, so which of the 20 human decisions [M13] are permanent is not yet mapped. The follow-up, **who** makes each decision, is not answered. How trust is earned is now described; **who** decides it has been earned is not stated (see Q5). |
+
+- **Ali's correction to how Q4 was framed:** twenty of twenty-five capabilities ending in a human
+  decision is not a weakness in Aleem's work, and the goal is not to get that number down. "A
+  system where the agent finds everything and decides nothing is the system we are trying to
+  build. Ending in a human decision is the feature." [M29]
 
 ### What the recommendations would change, if Mohammed Abdul Aleem confirms them
 
@@ -301,12 +315,13 @@ These are consequences, not actions. Nothing below has been started.
 
 | Decision | Who decides | Why it is still open |
 |---|---|---|
-| Confirm, change or reject Ali's Q1–Q4 recommendations | Mohammed Abdul Aleem | He is the accountable manager; every R0 criterion names him |
+| Confirm, change or reject Ali's Q1–Q4 recommendations | Mohammed Abdul Aleem | He is the accountable manager; every R0 criterion names him. Per Ali, work continues on recorded working answers meanwhile |
+| Outcome of the thirty-minute meeting with Aleem (Ali copied) | Mohammed Abdul Aleem | **Pending.** Mihret confirmed on 2026-11-02 that the meeting has been requested and has not taken place yet. No outcome and no sign-off exist until it does |
+| Whether Mihret's own working answers stand meanwhile, under Ali's Thursday 2026-10-29 rule | Mihret, to confirm | Not recorded in this repository |
 | Which pages make up "the admin portal" for the first token-drift scope | Mohammed Abdul Aleem | Not defined in Ali's answer or the capability record |
-| When findings count as a "bottleneck" that triggers the queue | Mohammed Abdul Aleem (**unknown** whether Ali expects to decide) | No measure or owner stated |
-| Email design work that involves neither approval nor sending | Mohammed Abdul Aleem | Not covered by Ali's answer |
-| Which of the 20 human decisions are permanent, and who makes each | Mohammed Abdul Aleem | Ali gave categories, not a per-capability list or names |
-| Who decides reliability is "proven" before automation is considered | **Unknown** | Q5's threshold is still unanswered |
+| When triage counts as "the bottleneck" that triggers the queue | Mohammed Abdul Aleem (**unknown** whether Ali expects to decide) | No measure or owner stated |
+| Which of the 20 human decisions are permanent, and who makes each | Mohammed Abdul Aleem | Ali gave categories, not a per-capability list or names; he says the four categories cover most of the twenty |
+| Who decides that detection has earned trust before automation is considered | **Unknown** | Ali described how trust is earned (being right about things nobody acted on for a while), not who judges it or the threshold; Q5 is still unanswered |
 | Access route for Mohammed Abdul Aleem, and who approves it | Mohammed Abdul Aleem; approver **unknown** | The blocker was not among the four questions |
 | Q5 trust threshold, Q6 colour exceptions, Q7 stop behaviours, Q8 who switches off | Mohammed Abdul Aleem | Not asked yet |
 | Weekly check-in | Mohammed Abdul Aleem | Not asked yet |
@@ -394,7 +409,7 @@ All paths are in `ColaberryEnterprise_AI_LeadershipAccelerator` at commit `2a139
 | M26 | Ceilings: 12 × R4, 8 × R5, 5 × R2, none above R5; production needs a separately approved R6 pilot | count of `max_permitted_autonomy` values in CAP; rationale at CAP:2926; SVC `agentDomain/autonomyLadder.ts:202-203` |
 | M27 | Copy audit R4 criteria: "Every finding cites file and line" | CAP:2578-2579 |
 | M28 | RESEARCH-2: no write tools at first; the four write tools come only with the gate capabilities | This repository: `docs/discovery/02-agent-anatomy.md:155-157` |
-| M29 | Ali Muwwakkil's written answers to four questions; Ali is the platform DRI | **Reported:** relayed by Mihret Netsereab on 2026-10-28; original message not in this repository. DRI: platform `CLAUDE.md:10` |
+| M29 | Ali Muwwakkil's written answers to four questions; Ali is the platform DRI | **Reported:** email from Ali Muwwakkil to Mihret Netsereab, Tuesday 2026-10-27, 7:08 AM as shown in Mihret's mail client; relayed into this file on 2026-10-28; original message not in this repository. DRI: platform `CLAUDE.md:10` |
 | M30 | Token-drift audit is surface-wide (445 pages); R0 acceptance is Aleem's sign-off; ceiling stops below automation because repainting is a brand decision | This repository: `docs/stories/product_experience.CAP.design_token_drift_audit.md:65`, `:80`, `:83-86` |
 | M31 | Contrast check R0 acceptance; ceiling stops below automation because a colour change is a brand decision | This repository: `docs/stories/product_experience.CAP.color_contrast_regression_check.md:74`, `:77-80` |
 | M32 | RESEARCH-5's three proposed tasks | This repository: `docs/discovery/05-three-proposed-tasks.md` (task table) |
