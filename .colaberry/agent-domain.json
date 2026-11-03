@@ -1,0 +1,211 @@
+{
+  "schema": "colaberry.agent-domain/v1",
+  "domain_key": "product_experience",
+  "sources": {
+    "agent": "GET /api/admin/agent-domains-mine",
+    "capabilities": "GET /api/admin/agent-domains/product_experience",
+    "governance": "GET /api/admin/agent-domain-change-requests-mine"
+  },
+  "autonomy_models": {
+    "agent_level": "observe | suggest | act_audited | communicate -- a property of the employee",
+    "capability_ladder": "autonomy:R0 .. autonomy:R9 -- a property of each capability",
+    "warning": "These are different scales on different objects. Never render one as a position on the other, and never compare them."
+  },
+  "staleness_note": "This file deliberately carries no timestamp: a clock here would make every sync commit a file whose only change is the time. Read `generated_at` from `.colaberry/manifest.json` and label it \"last changed\", not \"last checked\".",
+  "agent": {
+    "exists": true,
+    "agent_id": "7b72d4ed-0876-40a6-9571-78473ace091f",
+    "display_name": "Maru",
+    "enabled": false,
+    "autonomy_level": "observe",
+    "autonomy_level_set_at": "2026-10-18T16:08:12.440Z",
+    "autonomy_level_source": "auto",
+    "autonomy_level_set_by": null,
+    "tools_granted": [],
+    "tools_granted_count": 0
+  },
+  "authority": [
+    {
+      "capability_id": "product_experience.brand_design_system_sync_review",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.bundle_and_render_performance_review",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.color_contrast_regression_check",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": []
+    },
+    {
+      "capability_id": "product_experience.component_duplication_detection",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.dataviz_quality_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.design_token_drift_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": []
+    },
+    {
+      "capability_id": "product_experience.empty_error_loading_state_inventory",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.evidence_labeling_and_sample_data_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.image_alt_and_media_accessibility_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.keyboard_and_semantic_interaction_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.manager_design_review_queue",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.motion_and_reduced_motion_compliance_review",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.multi_brand_surface_consistency_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.page_health_smoke_sweep",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": []
+    },
+    {
+      "capability_id": "product_experience.plain_language_interface_copy_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.public_copy_claims_compliance_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.responsive_and_touch_target_regression_check",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.route_surface_inventory",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": []
+    },
+    {
+      "capability_id": "product_experience.screenshot_visual_review_packet",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.stylesheet_architecture_consolidation_proposal",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.theme_and_dark_mode_readiness_assessment",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.unrouted_page_detection",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": []
+    },
+    {
+      "capability_id": "product_experience.ux_quality_exception_register",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.visual_change_approval_gate",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    },
+    {
+      "capability_id": "product_experience.wcag_aa_accessibility_audit",
+      "effective_autonomy": "autonomy:R0",
+      "reasons": [
+        "human_decision_required_at_every_level"
+      ]
+    }
+  ],
+  "authority_rule": {
+    "rule": "A capability approved above autonomy:R2 with no granted tools is forced back down to autonomy:R2, with the reason no_tool_grants. Tool grants are the throttle.",
+    "approved_above_r2": 0,
+    "binds_nothing": true,
+    "note": "When this binds nothing, say so in words. It means no capability in this domain has been approved above autonomy:R2 yet, not that the rule is absent or that the panel failed."
+  },
+  "governance": {
+    "disclosure": "A filed request grants nothing. Status is what a named human decided, and a pending row means nobody has decided yet.",
+    "requests": [],
+    "pending": 0
+  },
+  "not_recorded": [
+    {
+      "field": "agent.autonomy_level_set_by",
+      "reason": "The platform does not store who set an agent's autonomy level. `ai_agents` carries `autonomy_level_set_at` and `autonomy_level_source` but no `set_by` column, so the time and whether a person chose it are known and the identity is not. Do not render a name here."
+    }
+  ]
+}
