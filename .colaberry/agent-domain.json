@@ -30,165 +30,290 @@
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "The workflow's own comment states these are live brand styles and that the pull request IS the review. An agent that could merge it would delete the control the workflow was built to create, so the ceiling sits at multi-step sandbox analysis with a written recommendation and no merge authority."
     },
     {
       "capability_id": "product_experience.bundle_and_render_performance_review",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Performance work trades against features and visual richness, so the trade is a human call. Without an agreed budget there is no reference outcome to shadow against, which keeps this below autonomy:R5 until a budget exists."
     },
     {
       "capability_id": "product_experience.color_contrast_regression_check",
       "effective_autonomy": "autonomy:R0",
-      "reasons": []
+      "reasons": [],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "A measured ratio is an objective fact with a reference answer, so shadow mode against human-confirmed results is reachable. It stays below automation because the fix for a contrast failure is a colour change, and a colour change is a brand decision."
     },
     {
       "capability_id": "product_experience.component_duplication_detection",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Whether two similar components should become one is an architecture judgement with a real blast radius, and the contract routes larger refactors to escalation. The agent detects and proposes only."
     },
     {
       "capability_id": "product_experience.dataviz_quality_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Changing a chart changes what a customer reads from their data, which is a product and brand decision. The agent audits and proposes; it stays below shadow mode because no approved reference set of correct product charts exists yet."
     },
     {
       "capability_id": "product_experience.design_token_drift_audit",
       "effective_autonomy": "autonomy:R0",
-      "reasons": []
+      "reasons": [],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Detection and reporting have no customer-visible effect, so shadow mode against a human-reviewed reference inventory (autonomy:R5) is the honest ceiling. It stops below autonomy:R6/autonomy:R7 because the remediation this audit proposes repaints the product, and repainting the product is a brand decision a human makes."
     },
     {
       "capability_id": "product_experience.empty_error_loading_state_inventory",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "What an empty or failed state should say is design and copy work, so a human decides it. The agent inventories the gaps and stays below shadow mode because no approved reference set of correct states exists."
     },
     {
       "capability_id": "product_experience.evidence_labeling_and_sample_data_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "How honest the product looks is a brand and trust decision. The agent finds unlabelled figures and indistinguishable modes; a human decides the label and the visual treatment."
     },
     {
       "capability_id": "product_experience.image_alt_and_media_accessibility_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Writing alt text is authoring customer-facing copy, so it is a human decision. The agent can find gaps and draft candidates but stays below shadow mode because there is no approved reference set of correct alt text to shadow against."
     },
     {
       "capability_id": "product_experience.keyboard_and_semantic_interaction_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Detection is objective and shadow-comparable. Remediation converts markup and can move layout, so the agent proposes and a human ships."
     },
     {
       "capability_id": "product_experience.manager_design_review_queue",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R2",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "This capability exists to carry a human's decision, so the agent's share of it is presenting evidence and recording an answer. It cannot rise above answering from approved knowledge without becoming the decision-maker it was built to serve."
     },
     {
       "capability_id": "product_experience.motion_and_reduced_motion_compliance_review",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Motion is a felt, expressive property of the brand, and the right answer is often a judgement rather than a threshold. The agent reports and proposes; a designer decides. No approved reference motion set exists to shadow against, so it stays below autonomy:R5."
     },
     {
       "capability_id": "product_experience.multi_brand_surface_consistency_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Whether two brands should look alike is a positioning decision, not a lint result. The agent can only compare and report; the intent against which divergence is judged comes from a human, so it stays below shadow mode until that reference exists."
     },
     {
       "capability_id": "product_experience.page_health_smoke_sweep",
       "effective_autonomy": "autonomy:R0",
-      "reasons": []
+      "reasons": [],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "The checks are objective, already written, and comparable against a known-good run, so shadow mode fits. It stays below automation because every remedy is a code or layout change that a human reviews."
     },
     {
       "capability_id": "product_experience.plain_language_interface_copy_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Interface copy is what the customer reads, so a human approves every word. The agent detects and drafts, and stays below shadow mode because no approved reference copy set exists to shadow against."
     },
     {
       "capability_id": "product_experience.public_copy_claims_compliance_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Published copy is customer-facing and carries regulatory exposure, so a human decides every wording change. The agent stays at multi-step sandbox analysis; it does not even reach shadow mode for rule authorship, because no approved reference set of correct copy exists to shadow against."
     },
     {
       "capability_id": "product_experience.responsive_and_touch_target_regression_check",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Overflow and box size are measurable facts, shadow-comparable against an accepted baseline. Remediation changes layout, which is what the customer sees, so a human ships it."
     },
     {
       "capability_id": "product_experience.route_surface_inventory",
       "effective_autonomy": "autonomy:R0",
-      "reasons": []
+      "reasons": [],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "An inventory is a read-only derived fact, shadow-comparable against a human-checked list. No customer-visible change follows directly from it, but it stops below automation because its consumers are the audits that do propose changes."
     },
     {
       "capability_id": "product_experience.screenshot_visual_review_packet",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R4",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "The packet exists so a human can make the visual judgement, so the capability is complete at preparing it. Automating the judgement would defeat the purpose of the artefact, which keeps this below autonomy:R5."
     },
     {
       "capability_id": "product_experience.stylesheet_architecture_consolidation_proposal",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R2",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Restructuring the styling layer is an architecture change with a product-wide blast radius, which the repository contract routes to escalation. The agent's ceiling is mapping and proposing from approved knowledge."
     },
     {
       "capability_id": "product_experience.theme_and_dark_mode_readiness_assessment",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R2",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "This is an assessment that informs a product decision, not a change. Its ceiling is answering the readiness question from measured evidence; the decision it informs is not the agent's to make."
     },
     {
       "capability_id": "product_experience.unrouted_page_detection",
       "effective_autonomy": "autonomy:R0",
-      "reasons": []
+      "reasons": [],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Reachability is a computed fact with a checkable reference answer, so shadow mode is appropriate. It stops below automation because acting on a finding means deleting or routing a page, which changes the product."
     },
     {
       "capability_id": "product_experience.ux_quality_exception_register",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R2",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "The standard is the manager's own statement of what good looks like. The agent may draft it and apply it, never ratify it, so it cannot rise above answering from approved knowledge."
     },
     {
       "capability_id": "product_experience.visual_change_approval_gate",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R2",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "A gate whose own autonomy could rise would stop being a gate. The agent prepares the evidence and records the outcome, and never holds the approving authority, at any rung."
     },
     {
       "capability_id": "product_experience.wcag_aa_accessibility_audit",
       "effective_autonomy": "autonomy:R0",
       "reasons": [
         "human_decision_required_at_every_level"
-      ]
+      ],
+      "approved_autonomy": "autonomy:R0",
+      "approved_autonomy_note": null,
+      "max_permitted_autonomy": "autonomy:R5",
+      "max_permitted_autonomy_note": null,
+      "ceiling_reason": "Auditing is safe and shadow-mode comparable against a human-reviewed reference audit, so autonomy:R5. It stops below automation because almost every remediation alters rendered markup or visible styling, and what the customer sees is a human decision."
     }
   ],
   "authority_rule": {
@@ -201,6 +326,1341 @@
     "disclosure": "A filed request grants nothing. Status is what a named human decided, and a pending row means nobody has decided yet.",
     "requests": [],
     "pending": 0
+  },
+  "verification": {
+    "known": true,
+    "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
+    "summary": {
+      "stories": 99,
+      "checked": 32,
+      "verified": 6,
+      "awaiting_criteria": 26,
+      "outstanding_criteria": 31
+    },
+    "stories": [
+      {
+        "story_id": "product_experience.CAP.brand_design_system_sync_review",
+        "title": "Review the vendored design-system drift pull request",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.brand_design_system_sync_review and changes a file. Commit your work with a `Story: product_experience.CAP.brand_design_system_sync_review` trailer (or product_experience.CAP.brand_design_system_sync_review in the subject line) and push."
+        ],
+        "outstanding": [
+          "The manager confirms the note format answers the question he actually has before merging."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R0",
+        "title": "Review the vendored design-system drift pull request · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R2",
+        "title": "Review the vendored design-system drift pull request · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R4",
+        "title": "Review the vendored design-system drift pull request · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.bundle_and_render_performance_review",
+        "title": "Bundle size and render performance review",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.bundle_and_render_performance_review and changes a file. Commit your work with a `Story: product_experience.CAP.bundle_and_render_performance_review` trailer (or product_experience.CAP.bundle_and_render_performance_review in the subject line) and push."
+        ],
+        "outstanding": [
+          "A manager-approved budget exists; until then every measurement is reported as unjudged."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R0",
+        "title": "Bundle size and render performance review · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R1",
+        "title": "Bundle size and render performance review · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R4",
+        "title": "Bundle size and render performance review · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.color_contrast_regression_check",
+        "title": "Rendered colour-contrast regression check",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.color_contrast_regression_check and changes a file. Commit your work with a `Story: product_experience.CAP.color_contrast_regression_check` trailer (or product_experience.CAP.color_contrast_regression_check in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written definition approved; the three historical failures are recorded as named regression cases."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R0",
+        "title": "Rendered colour-contrast regression check · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R1",
+        "title": "Rendered colour-contrast regression check · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R5",
+        "title": "Rendered colour-contrast regression check · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.component_duplication_detection",
+        "title": "Component duplication and divergence detection",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.component_duplication_detection and changes a file. Commit your work with a `Story: product_experience.CAP.component_duplication_detection` trailer (or product_experience.CAP.component_duplication_detection in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved definition distinguishing legitimate name reuse from real duplication."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R0",
+        "title": "Component duplication and divergence detection · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R1",
+        "title": "Component duplication and divergence detection · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R4",
+        "title": "Component duplication and divergence detection · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.dataviz_quality_audit",
+        "title": "Data-visualisation quality audit on product surfaces",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.dataviz_quality_audit and changes a file. Commit your work with a `Story: product_experience.CAP.dataviz_quality_audit` trailer (or product_experience.CAP.dataviz_quality_audit in the subject line) and push."
+        ],
+        "outstanding": [
+          "A written ownership decision exists; the fitness rule set is named and is either reused from the existing agent or explicitly extended."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.dataviz_quality_audit.autonomy:R0",
+        "title": "Data-visualisation quality audit on product surfaces · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.dataviz_quality_audit.autonomy:R4",
+        "title": "Data-visualisation quality audit on product surfaces · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit",
+        "title": "Design-token drift audit across every styled surface",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet."
+        ],
+        "outstanding": [
+          "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
+        ],
+        "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4"
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R0",
+        "title": "Design-token drift audit across every styled surface · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R1",
+        "title": "Design-token drift audit across every styled surface · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R2",
+        "title": "Design-token drift audit across every styled surface · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R5",
+        "title": "Design-token drift audit across every styled surface · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.empty_error_loading_state_inventory",
+        "title": "Empty, error and loading state inventory",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.empty_error_loading_state_inventory and changes a file. Commit your work with a `Story: product_experience.CAP.empty_error_loading_state_inventory` trailer (or product_experience.CAP.empty_error_loading_state_inventory in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved pattern per state; the deliberately-blank exception named."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.empty_error_loading_state_inventory.autonomy:R0",
+        "title": "Empty, error and loading state inventory · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.empty_error_loading_state_inventory.autonomy:R4",
+        "title": "Empty, error and loading state inventory · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit",
+        "title": "Evidence-class and sample-data labelling audit",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.evidence_labeling_and_sample_data_aud and changes a file. Commit your work with a `Story: product_experience.CAP.evidence_labeling_and_sample_data_aud` trailer (or product_experience.CAP.evidence_labeling_and_sample_data_aud in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved definition covering public and admin surfaces separately."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit.autonomy:R0",
+        "title": "Evidence-class and sample-data labelling audit · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit.autonomy:R4",
+        "title": "Evidence-class and sample-data labelling audit · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit",
+        "title": "Image, media and icon alternative-text audit",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.image_alt_and_media_accessibility_aud and changes a file. Commit your work with a `Story: product_experience.CAP.image_alt_and_media_accessibility_aud` trailer (or product_experience.CAP.image_alt_and_media_accessibility_aud in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written, manager-approved rule covering decorative images and icon-only controls."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit.autonomy:R0",
+        "title": "Image, media and icon alternative-text audit · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit.autonomy:R4",
+        "title": "Image, media and icon alternative-text audit · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit",
+        "title": "Keyboard and semantic-interaction audit",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.keyboard_and_semantic_interaction_aud and changes a file. Commit your work with a `Story: product_experience.CAP.keyboard_and_semantic_interaction_aud` trailer (or product_experience.CAP.keyboard_and_semantic_interaction_aud in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved pattern list, including the backdrop-dismissal exception."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R0",
+        "title": "Keyboard and semantic-interaction audit · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R1",
+        "title": "Keyboard and semantic-interaction audit · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R5",
+        "title": "Keyboard and semantic-interaction audit · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.manager_design_review_queue",
+        "title": "Manager-reachable design review and decision queue",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.manager_design_review_queue and changes a file. Commit your work with a `Story: product_experience.CAP.manager_design_review_queue` trailer (or product_experience.CAP.manager_design_review_queue in the subject line) and push."
+        ],
+        "outstanding": [
+          "A written access plan exists naming either a scoped admin_users row or a specific alternative surface, and Mohammed Abdul Aleem confirms he can use it."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.manager_design_review_queue.autonomy:R0",
+        "title": "Manager-reachable design review and decision queue · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.manager_design_review_queue.autonomy:R2",
+        "title": "Manager-reachable design review and decision queue · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review",
+        "title": "Motion and reduced-motion compliance review",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.motion_and_reduced_motion_compliance_ and changes a file. Commit your work with a `Story: product_experience.CAP.motion_and_reduced_motion_compliance_` trailer (or product_experience.CAP.motion_and_reduced_motion_compliance_ in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written decision on the reset's scope; per-file obligations stated."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review.autonomy:R0",
+        "title": "Motion and reduced-motion compliance review · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review.autonomy:R4",
+        "title": "Motion and reduced-motion compliance review · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit",
+        "title": "Cross-brand consistency audit across the platform and the three public apps",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.multi_brand_surface_consistency_audit and changes a file. Commit your work with a `Story: product_experience.CAP.multi_brand_surface_consistency_audit` trailer (or product_experience.CAP.multi_brand_surface_consistency_audit in the subject line) and push."
+        ],
+        "outstanding": [
+          "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit.autonomy:R0",
+        "title": "Cross-brand consistency audit across the platform and the three public apps · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit.autonomy:R4",
+        "title": "Cross-brand consistency audit across the platform and the three public apps · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.page_health_smoke_sweep",
+        "title": "Page-health smoke sweep on direct load and client-side navigation",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.page_health_smoke_sweep and changes a file. Commit your work with a `Story: product_experience.CAP.page_health_smoke_sweep` trailer (or product_experience.CAP.page_health_smoke_sweep in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved route list and threshold set, including exemptions for legitimately short pages."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R0",
+        "title": "Page-health smoke sweep on direct load and client-side navigation · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R1",
+        "title": "Page-health smoke sweep on direct load and client-side navigation · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R4",
+        "title": "Page-health smoke sweep on direct load and client-side navigation · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R5",
+        "title": "Page-health smoke sweep on direct load and client-side navigation · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.plain_language_interface_copy_audit",
+        "title": "Plain-language audit of interface copy",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.plain_language_interface_copy_audit and changes a file. Commit your work with a `Story: product_experience.CAP.plain_language_interface_copy_audit` trailer (or product_experience.CAP.plain_language_interface_copy_audit in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved per-surface audience definition; admin exceptions named."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.plain_language_interface_copy_audit.autonomy:R0",
+        "title": "Plain-language audit of interface copy · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.plain_language_interface_copy_audit.autonomy:R4",
+        "title": "Plain-language audit of interface copy · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit",
+        "title": "Public copy and claims compliance audit",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.public_copy_claims_compliance_audit and changes a file. Commit your work with a `Story: product_experience.CAP.public_copy_claims_compliance_audit` trailer (or product_experience.CAP.public_copy_claims_compliance_audit in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written rule ownership, with legal sign-off recorded for any regulatory rule."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R0",
+        "title": "Public copy and claims compliance audit · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R1",
+        "title": "Public copy and claims compliance audit · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R2",
+        "title": "Public copy and claims compliance audit · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R4",
+        "title": "Public copy and claims compliance audit · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check",
+        "title": "Responsive layout and touch-target regression check",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.responsive_and_touch_target_regressio and changes a file. Commit your work with a `Story: product_experience.CAP.responsive_and_touch_target_regressio` trailer (or product_experience.CAP.responsive_and_touch_target_regressio in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R0",
+        "title": "Responsive layout and touch-target regression check · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R1",
+        "title": "Responsive layout and touch-target regression check · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R5",
+        "title": "Responsive layout and touch-target regression check · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.route_surface_inventory",
+        "title": "Route and surface inventory with review-coverage map",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.route_surface_inventory and changes a file. Commit your work with a `Story: product_experience.CAP.route_surface_inventory` trailer (or product_experience.CAP.route_surface_inventory in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written, manager-approved counting rule; no inventory published under an undefined rule."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R0",
+        "title": "Route and surface inventory with review-coverage map · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R2",
+        "title": "Route and surface inventory with review-coverage map · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R5",
+        "title": "Route and surface inventory with review-coverage map · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.screenshot_visual_review_packet",
+        "title": "Assemble the screenshot-based design review packet",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.screenshot_visual_review_packet and changes a file. Commit your work with a `Story: product_experience.CAP.screenshot_visual_review_packet` trailer (or product_experience.CAP.screenshot_visual_review_packet in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved structure and cadence; the width cap and summary requirement restated as hard gates."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R0",
+        "title": "Assemble the screenshot-based design review packet · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R3",
+        "title": "Assemble the screenshot-based design review packet · R3",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R4",
+        "title": "Assemble the screenshot-based design review packet · R4",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal",
+        "title": "Stylesheet architecture consolidation proposal",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.stylesheet_architecture_consolidation and changes a file. Commit your work with a `Story: product_experience.CAP.stylesheet_architecture_consolidation` trailer (or product_experience.CAP.stylesheet_architecture_consolidation in the subject line) and push."
+        ],
+        "outstanding": [
+          "A written scope naming the stylesheets in play and the no-visual-change constraint."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal.autonomy:R0",
+        "title": "Stylesheet architecture consolidation proposal · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal.autonomy:R2",
+        "title": "Stylesheet architecture consolidation proposal · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment",
+        "title": "Theme and dark-mode readiness assessment",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.theme_and_dark_mode_readiness_assessm and changes a file. Commit your work with a `Story: product_experience.CAP.theme_and_dark_mode_readiness_assessm` trailer (or product_experience.CAP.theme_and_dark_mode_readiness_assessm in the subject line) and push."
+        ],
+        "outstanding": [
+          "A written assessment scope; no implementation work proposed or begun."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment.autonomy:R0",
+        "title": "Theme and dark-mode readiness assessment · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment.autonomy:R2",
+        "title": "Theme and dark-mode readiness assessment · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.unrouted_page_detection",
+        "title": "Unrouted and orphaned page detection",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.unrouted_page_detection and changes a file. Commit your work with a `Story: product_experience.CAP.unrouted_page_detection` trailer (or product_experience.CAP.unrouted_page_detection in the subject line) and push."
+        ],
+        "outstanding": [
+          "Manager-approved definition, and a parked register seeded with at least the SignupV2 case already documented in App.tsx."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R0",
+        "title": "Unrouted and orphaned page detection · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R1",
+        "title": "Unrouted and orphaned page detection · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R5",
+        "title": "Unrouted and orphaned page detection · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.ux_quality_exception_register",
+        "title": "UX quality standard and exception register",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.ux_quality_exception_register and changes a file. Commit your work with a `Story: product_experience.CAP.ux_quality_exception_register` trailer (or product_experience.CAP.ux_quality_exception_register in the subject line) and push."
+        ],
+        "outstanding": [
+          "A dated standard exists per surface class, with Mohammed Abdul Aleem recorded as its author of record, and every threshold either set or explicitly marked unknown."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.ux_quality_exception_register.autonomy:R0",
+        "title": "UX quality standard and exception register · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.ux_quality_exception_register.autonomy:R2",
+        "title": "UX quality standard and exception register · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.visual_change_approval_gate",
+        "title": "Visual and brand change approval gate",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.visual_change_approval_gate and changes a file. Commit your work with a `Story: product_experience.CAP.visual_change_approval_gate` trailer (or product_experience.CAP.visual_change_approval_gate in the subject line) and push."
+        ],
+        "outstanding": [
+          "Written, manager-approved classification and approver map; the fast path named or explicitly deferred."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.visual_change_approval_gate.autonomy:R0",
+        "title": "Visual and brand change approval gate · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.visual_change_approval_gate.autonomy:R2",
+        "title": "Visual and brand change approval gate · R2",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit",
+        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "reasons": [
+          "None of the 1 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.wcag_aa_accessibility_audit and changes a file. Commit your work with a `Story: product_experience.CAP.wcag_aa_accessibility_audit` trailer (or product_experience.CAP.wcag_aa_accessibility_audit in the subject line) and push."
+        ],
+        "outstanding": [
+          "A written, manager-approved standard per surface class; no audit has run."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R0",
+        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R0",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R1",
+        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R1",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R3",
+        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R3",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R5",
+        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R5",
+        "status": "not_started",
+        "verification_state": null,
+        "verified": false,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.LEGACY-MIGRATION-PLAN",
+        "title": "Legacy migration plan",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "ae8a13d12330609c87e4d9aad0cb2ace320c4ec6"
+      },
+      {
+        "story_id": "product_experience.RESEARCH-1-SYSTEM-CLASSES",
+        "title": "Compare the five system classes, and place this domain among them",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899"
+      },
+      {
+        "story_id": "product_experience.RESEARCH-2-AGENT-ANATOMY",
+        "title": "Map the nine anatomy elements onto this domain's agent",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "b1c324004a3ab4b8e89e3d20d074256fc810e80c"
+      },
+      {
+        "story_id": "product_experience.RESEARCH-3-ROLE-AND-DA-TRANSITION",
+        "title": "Document Mohammed Abdul Aleem's role, and which DA responsibilities transition",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "21fb8fb810b11af811fb4d4af55d9f33de62cd4c"
+      },
+      {
+        "story_id": "product_experience.RESEARCH-4-MANAGER-INTERVIEW",
+        "title": "Prepare a 30-minute interview with Mohammed Abdul Aleem and propose a weekly check-in",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "78a6b96258a69174c2239953b04c8344288c7b97"
+      },
+      {
+        "story_id": "product_experience.RESEARCH-5-THREE-PROPOSED-TASKS",
+        "title": "Capture three proposed agent tasks with boundaries and completion evidence",
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 3,
+        "criteria_total": 3,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": "40bc69e13e3558ccc5d0df6580581ef21fe0910a"
+      },
+      {
+        "story_id": "product_experience.STORY-000",
+        "title": "STORY-000 · Build your Command Center",
+        "status": "not_started",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 6,
+        "reasons": [
+          "None of the 6 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.STORY-000 and changes a file. Commit your work with a `Story: product_experience.STORY-000` trailer (or product_experience.STORY-000 in the subject line) and push."
+        ],
+        "outstanding": [
+          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.",
+          "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
+          "Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.",
+          "Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.",
+          "Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.",
+          "Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced."
+        ],
+        "commit_sha": null
+      }
+    ]
   },
   "not_recorded": [
     {
