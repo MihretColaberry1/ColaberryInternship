@@ -857,28 +857,56 @@
         },
         {
           "text": "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
-          "passed": false
+          "passed": true,
+          "evidence": "Panel 2 on real data is 'empty' and says 'No change or tool requests are filed'; loading panels say 'Loading…' and are aria-busy; with no data Panels 1 and 2 show 'Not available'. Tests: console.test.mjs 'an empty governance queue says so, instead of an empty table', 'criterion 2: a loading panel says \"Loading\"…', 'with neither a snapshot nor the platform sync…'; agent-domain-platform-sync.test.mjs 'Panel 2 on real data: empty, said in words…'. Commit a56004f."
         },
         {
           "text": "Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.",
-          "passed": false
+          "passed": true,
+          "evidence": "Panel 4 lists all ten rungs in the wording of AUTONOMY_MEANINGS (autonomyLadder.ts) and marks 'Ceiling for N of 25' on R2, R4 and R5; rungs above a ceiling read 'unreachable', R8 'unreachable by fact'. Tests: agent-domain-authority.test.mjs 'the ladder is ten namespaced rungs in order, with the owner wording…'; agent-domain.test.mjs 'rungs above a ceiling are unreachable, and R8 is never drawn as reachable', 'the rung summary has all ten rungs…'. Commit a56004f."
         },
         {
           "text": "Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.",
-          "passed": false
+          "passed": true,
+          "evidence": "Panel 4 shows 'autonomy:R0 for all 25: Starting rung — no human approval yet' from effectiveAuthority(), never the ceiling, and 'Tool-grant cap in force; constrains nothing today: it holds 0 of 25 capabilities', matching approved_above_r2: 0 in .colaberry/agent-domain.json. Tests: agent-domain-tool-rule.test.mjs 'today, on the real file: autonomy:R0, no human approval, and the cap constrains nothing, for all 25', 'the rule block names the rule and says, in words, that it constrains nothing today', 'approved above R2 with no tool grants…' with its control. Commit a56004f."
         },
         {
           "text": "Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.",
-          "passed": false
+          "passed": true,
+          "evidence": "Verified with a test fixture, because no real change or tool request exists today (the synced queue is empty). With that fixture, a tool request row renders 'Grants: Nothing: a request is not a grant', and Panel 2's headline states 'Filing a request grants nothing'. Tests: agent-domain-platform-sync.test.mjs 'Panel 2 on real data: empty, said in words, read from the synced copy, and a request is never a grant'; code panel-governance.js requestTable. Commit a56004f."
         },
         {
           "text": "Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced.",
-          "passed": false
+          "passed": true,
+          "evidence": "Established by these tests: no console module imports a sample data generator (agent-domain.test.mjs); with no approval recorded, authority is effectiveAuthority() of the starting rung, autonomy:R0, never the ceiling (agent-domain.test.mjs); no page a visitor can reach shows a UUID-shaped record id (record-id-exposure.test.mjs); Panel 1 shows an agent field only when its source returned it, and the one field the platform does not store is labelled 'Not recorded by the platform' (agent-domain-employee.test.mjs); the synced agent data is labelled 'Platform sync' with its last-changed time, and a missing time reads 'last changed: not recorded' (agent-domain-platform-sync.test.mjs). Commit a56004f."
         }
       ],
-      "files_touched": [],
-      "tests_added": [],
-      "notes": null,
+      "files_touched": [
+        "index.html",
+        "command-center/console.js",
+        "command-center/authority.js",
+        "command-center/agent-domain-data.js",
+        "command-center/agent-domain-model.js",
+        "command-center/agent-domain-ui.js",
+        "command-center/panel-employee.js",
+        "command-center/panel-governance.js",
+        "command-center/panel-inventory.js",
+        "command-center/panel-ladder.js",
+        "command-center/panel-behaviour.js",
+        "command-center/panel-gaps.js"
+      ],
+      "tests_added": [
+        "tests/console.test.mjs",
+        "tests/agent-domain.test.mjs",
+        "tests/agent-domain-authority.test.mjs",
+        "tests/agent-domain-tool-rule.test.mjs",
+        "tests/agent-domain-employee.test.mjs",
+        "tests/agent-domain-redact.test.mjs",
+        "tests/agent-domain-link.test.mjs",
+        "tests/agent-domain-platform-sync.test.mjs",
+        "tests/record-id-exposure.test.mjs"
+      ],
+      "notes": "Criteria 2-6 confirmed against the code and tests at commit a56004f (node --test tests/*.test.mjs, 155 of 155). Criterion 1 left false: Panels 1, 2 and 6 read the platform's synced copy of their endpoints (.colaberry/agent-domain.json), but Panels 3 to 5 (capability inventory, autonomy ladder, per-rung behaviour) show values from the pinned research file, because GET /api/admin/agent-domains/product_experience and /coverage are not in the synced file and have not been captured. Each panel names its endpoint, but those three did not read it. Mohammed Abdul Aleem reviews the page; ticking these lines is not his sign-off.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
