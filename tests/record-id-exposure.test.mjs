@@ -65,7 +65,7 @@ async function everyPage() {
     ...matrix.capabilities.map((c) => [`capability ${c.capability_id}`, ['capability', c.capability_id], domain]),
     ...AUTONOMY_STAGES.map((s) => [`rung ${s}`, ['rung', s], domain]),
     ...['capture', 'requests', 'refresh'].map((g) => [`guide ${g}`, ['guide', g], domain]),
-    ['story STORY-000', ['story', 'STORY-000'], domain],
+    ['story product_experience.STORY-000', ['story', 'product_experience.STORY-000'], domain],
   ] };
 }
 
