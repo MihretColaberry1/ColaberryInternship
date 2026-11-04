@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>State matrix · Command Center evidence</title>
+  <link rel="stylesheet" href="../../command-center/styles.css">
+  <style>
+    .fixture-banner { border: 2px solid var(--warn-accent); background: var(--warn-soft); color: var(--warn-text); padding: 8px 12px; border-radius: 8px; font-weight: 650; }
+    .matrix td, .matrix th { text-align: center; }
+    .matrix th[scope="row"] { text-align: left; }
+    .scenario { margin-top: 36px; }
+  </style>
+</head>
+<body>
+  <main id="main">
+    <h1>State matrix: every panel in every state</h1>
+    <p class="fixture-banner" role="note">Review page. Except the "Today" row, every scenario uses FIXTURE endpoint responses written to put a panel into a state. None of it is this domain's data, and the console never loads this page.</p>
+    <p>Each cell is read from the rendered panel's <code>data-state</code>, not typed by hand. A dash means the panel cannot reach that state from that scenario; the reasons are in <code>docs/evidence/state-matrix.md</code>.</p>
+    <div id="matrix" aria-live="polite"><p>Rendering…</p></div>
+    <div id="scenarios"></div>
+  </main>
+  <script type="module">
+    import { h } from '../../command-center/dom.js';
+    import { loadAgentDomainData } from '../../command-center/agent-domain-data.js';
+    import { loadProjectData } from '../../command-center/data.js';
+    import { buildOverviewModel } from '../../command-center/model.js';
+    import { PANEL_ORDER, consoleInputs, renderPanels } from '../../command-center/console.js';
+    import { PANEL_STATES } from '../../command-center/console-ui.js';
+    import { SCENARIOS } from './state-fixtures.js';
+
+    const base = '../../';
+    const real = await loadAgentDomainData({ base });
+    const data = await loadProjectData({ base });
+    const project = { status: 'loaded', data, model: buildOverviewModel(data, new Date()), error: null };
+    const results = {};
+    const sections = SCENARIOS.map((s) => {
+      const panels = renderPanels(consoleInputs(s.domain(real.source)), s.id === 'loading' ? null : project);
+      results[s.id] = Object.fromEntries(PANEL_ORDER.map((id) => [id, panels[id].dataset.state]));
+      // The same panels appear once per scenario: suffix their ids so ids and landmark names stay unique.
+      for (const id of PANEL_ORDER) {
+        const p = panels[id];
+        for (const el of [p, ...p.querySelectorAll('[id]')]) el.id = `${el.id}--${s.id}`;
+        p.setAttribute('aria-labelledby', `${p.getAttribute('aria-labelledby')}--${s.id}`);
+        p.querySelector('h2').append(` (${s.title})`);
+      }
+      return h('section', { class: 'scenario', id: `scenario-${s.id}`, 'aria-labelledby': `t-${s.id}` },
+        h('h2', { id: `t-${s.id}` }, s.title), h('p', { class: s.id === 'today' ? 'muted' : 'fixture-banner' }, s.what),
+        h('div', { class: 'console' }, PANEL_ORDER.map((id) => panels[id])));
+    });
+    document.getElementById('scenarios').replaceChildren(...sections);
+    const title = { employee: 'Your employee', governance: 'Your governance queue', inventory: 'Capability inventory', ladder: 'Autonomy ladder', behaviour: 'Per-rung behaviour', gaps: 'What is not available' };
+    document.getElementById('matrix').replaceChildren(h('div', { class: 'table-wrap' }, h('table', { class: 'matrix' },
+      h('thead', {}, h('tr', {}, h('th', { scope: 'col' }, 'Panel'), Object.keys(PANEL_STATES).map((st) => h('th', { scope: 'col' }, PANEL_STATES[st])))),
+      h('tbody', {}, PANEL_ORDER.map((id) => h('tr', {}, h('th', { scope: 'row' }, title[id]),
+        Object.keys(PANEL_STATES).map((st) => {
+          const where = SCENARIOS.filter((s) => results[s.id][id] === st).map((s) => s.title);
+          return h('td', {}, where.length ? h('a', { href: `#scenario-${SCENARIOS.find((s) => s.title === where[0]).id}` }, where.join('; ')) : '—');
+        })))))));
+    window.__stateMatrix = results;
+    document.body.dataset.ready = 'true';
+  </script>
+</body>
+</html>

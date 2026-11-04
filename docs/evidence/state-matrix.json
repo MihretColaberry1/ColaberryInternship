@@ -1,0 +1,67 @@
+{
+  "captured_at": "2026-11-04T01:38:51.376Z",
+  "base_url": "http://127.0.0.1:8765/",
+  "tools": {
+    "playwright-core": "1.48.2",
+    "axe-core": "4.10.2"
+  },
+  "chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "matrix": {
+    "loading": {
+      "employee": "loading",
+      "governance": "loading",
+      "inventory": "loading",
+      "ladder": "loading",
+      "behaviour": "loading",
+      "gaps": "loading"
+    },
+    "today": {
+      "employee": "not_available",
+      "governance": "not_available",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "gaps": "ready"
+    },
+    "captured-empty": {
+      "employee": "ready",
+      "governance": "empty",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "gaps": "ready"
+    },
+    "captured-data": {
+      "employee": "ready",
+      "governance": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "gaps": "ready"
+    },
+    "refused": {
+      "employee": "error",
+      "governance": "error",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "gaps": "ready"
+    },
+    "source-missing": {
+      "employee": "not_available",
+      "governance": "not_available",
+      "inventory": "error",
+      "ladder": "error",
+      "behaviour": "error",
+      "gaps": "ready"
+    },
+    "source-empty": {
+      "employee": "not_available",
+      "governance": "not_available",
+      "inventory": "empty",
+      "ladder": "empty",
+      "behaviour": "empty",
+      "gaps": "ready"
+    }
+  }
+}

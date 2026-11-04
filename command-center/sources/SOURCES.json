@@ -1,0 +1,60 @@
+{
+  "_what_this_is": "Where each file in command-center/sources/ came from. These are SOURCE FILES copied from the public platform repository, not endpoint responses and not approvals. A test recomputes the git blob hash of each file and fails if it no longer matches.",
+  "files": [
+    {
+      "file": "command-center/sources/product_experience.capabilities.json",
+      "kind": "source_file",
+      "platform_repo": "https://github.com/ColaberryIntern/ColaberryEnterprise_AI_LeadershipAccelerator",
+      "platform_path": "backend/src/services/agentDomain/capabilities/product_experience.json",
+      "platform_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+      "git_blob": "baac2d30c88e96b6ba7d04efd959e149e17a096e",
+      "file_last_changed_in": "6ba85308",
+      "copied_on": "2026-10-31",
+      "note": "The capability research file the platform's agent-domain routes read. Every capability in it is requirement_validation_state draft: nobody has agreed it."
+    }
+  ],
+  "platform_code": [
+    {
+      "used_in": "command-center/authority.js",
+      "platform_path": "backend/src/services/agentDomain/autonomyLadder.ts",
+      "platform_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+      "what": "AUTONOMY_MEANINGS (the ten rungs, owner's wording) and effectiveAuthority(), ported line for line."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/services/agentDomain/agentDomainRegistry.ts",
+      "platform_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+      "what": "The product_experience registry entry: agent_id null, can_reach_surface false, and its blocker text."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/services/agentDomain/coverageMatrix.ts",
+      "platform_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+      "what": "rowFor() sets effective_authority to null for every capability: no approval is recorded anywhere."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/services/agentDomain/agentDomainCommandCenterStory.ts",
+      "platform_commit": "9d9aa3c3dcd2a8cecd5e3a2ab5109fb82f217a50",
+      "what": "Coordinated handoff between two agents does not exist in the platform today, so autonomy:R8 is unreachable by fact."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/services/agentDomain/agentDomainSnapshot.ts",
+      "platform_commit": "992e0e01780b025023b90fab330d79dcc5b124d1",
+      "what": "sources.capabilities names GET /api/admin/agent-domains/<domain> as the source of capability records (CAPABILITY_SOURCE_NOTE, PANEL_ENDPOINTS)."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/routes/admin/agentDomainRoutes.ts",
+      "platform_commit": "992e0e01780b025023b90fab330d79dcc5b124d1",
+      "what": "GET /api/admin/agent-domains/:domainKey returns the domain view, accountable human, releases and story count, but not the capability records, so panels 2-4 show source-file values. GET /api/admin/agent-domains-mine returns not_recorded (autonomy_level_set_by)."
+    },
+    {
+      "used_in": "command-center/agent-domain-facts.js",
+      "platform_path": "backend/src/services/agentDomain/agentDomainProvisionedReader.ts",
+      "platform_commit": "992e0e01780b025023b90fab330d79dcc5b124d1",
+      "what": "The agent fields each agent-domains-mine row carries since AF3.9 (MINE_AGENT_FIELDS); all null when no ai_agents row is linked."
+    }
+  ]
+}

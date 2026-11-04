@@ -1,0 +1,175 @@
+# Product Experience & UI/UX: Command Center
+
+The Command Center for the `product_experience` agent domain: a six-panel console for the human
+who governs this domain's agent. **A human governs agents; this console is designed to support
+that.** It is read-only. It shows what the platform has actually produced and says, in words, what
+it cannot show yet.
+
+- **Current brief:** [docs/stories/STORY-000.md](docs/stories/STORY-000.md) (2026-11-03). The earlier
+  nine-tab brief is kept as [superseded](docs/stories/STORY-000.superseded-2026-10.md).
+- **Evidence for review:** [docs/evidence/](docs/evidence/): the
+  [traceability table](docs/evidence/traceability.md), the [state matrix](docs/evidence/state-matrix.md),
+  [screenshots](docs/evidence/screenshots/), the [accessibility pass](docs/evidence/a11y/README.md) and the
+  [design rationale](docs/evidence/design-rationale.md).
+
+## Run it and review it
+
+The page is static HTML and JavaScript modules. It needs a local web server, because browsers block
+a page opened from disk from reading its data files.
+
+```bash
+# from the repository root
+python -m http.server 8000
+# then open http://localhost:8000/
+```
+
+- No sign-in is needed to view it, and it never calls the platform.
+- **Theme:** the System / Light / Dark switch is in the top right. The choice is remembered in this
+  browser only.
+- **Widths:** to review at phone, tablet and desktop widths, use the browser's device toolbar
+  (390, 820 and 1440 px are the widths in the evidence).
+- **Detail pages:**
+  - `#/capability/<id>`, for example `#/capability/product_experience.design_token_drift_audit`;
+  - `#/rung/autonomy:R1`;
+  - `#/story/STORY-000`;
+  - the operator guides `#/guide/capture`, `#/guide/requests` and `#/guide/refresh`.
+- **State matrix:** `http://localhost:8000/docs/evidence/state-matrix.html` renders every panel in every
+  state from labelled fixtures.
+
+**Published link:** not published yet. GitHub Pages is not enabled on this repository, and
+publishing waits for Mihret's approval and a choice of branch (see "Publishing" below).
+
+## The six panels, in the order the operator needs them
+
+| # | Panel | Question | Brief panel | One primary action |
+|---|---|---|---|---|
+| 1 | Your employee | Does it exist, and what is it allowed to do? | 1 | Capture this panel with your own sign-in (today) |
+| 2 | Your governance queue | What am I waiting on a human for? | 5 | Capture this panel with your own sign-in (today) |
+| 3 | Your capability inventory | What am I actually building? | 2 | Review a draft capability |
+| 4 | The autonomy ladder | Where is this going? | 3 | See how the R2 cap would apply |
+| 5 | Per-rung behaviour | What does the next rung require of me? | 4 | Read what autonomy:R1 requires |
+| 6 | What is not available | What would I be lying about? | 6 | Refresh the data from the portal |
+
+Each panel shows:
+- a state chip: Loading, Ready, Empty, Not available or Error;
+- a one-line headline and a few at-a-glance facts;
+- the endpoints it reads;
+- its long content in collapsed disclosures.
+
+The primary action changes with the state. For example, once a snapshot exists, Panel 1's action
+becomes "See what is blocking an agent". Why this order, and every other choice, is in the
+[design rationale](docs/evidence/design-rationale.md).
+
+## Content inventory: the nine tabs, mapped to six panels
+
+Every element of the old console (commit `f572e88` plus the uncommitted Agent domain tab), and
+where it went. **Dropped** items are gone from the page; the reason is given.
+
+| Old tab | Element | Now | Why |
+|---|---|---|---|
+| Header | "Data as of" stamp and the over-a-week warning | Header, unchanged | Every panel's age depends on it |
+| Header | Sample / Real switch | **Dropped** | Aleem: do not invent values. Sample data looked like data. Every placeholder is now labelled where it appears |
+| Header | Tab bar | **Dropped** | Aleem: panels at a glance, not hidden behind tabs, and not kept side by side |
+| Overview | Stories verified, criteria passed, points awarded | 3 Inventory: glance line, and "Stories, criteria and points" | What is being built |
+| Overview | Project plan (name, repository, plan version and hash) | Header title; plan version **dropped** | The console is about one domain; the plan hash adds nothing an operator acts on |
+| Overview | Schedule and milestones | 3 Inventory: "Schedule and milestones" | |
+| Overview | Release cards and progress bars | 3 Inventory: "Release timeline" | One timeline replaces three cards |
+| Overview | "What is live: agents and systems" | 1 Employee ("Runs: none recorded") and 6 Not available (systems) | |
+| Overview | Story, criteria and points detail pages | Merged into one stories table; the story page stays at `#/story/<id>` | Three tables of the same rows became one |
+| Outcomes | Measures (none in the plan) | 6 Not available: "Not in the project plan yet" | An empty tab is a named gap |
+| Users and use case | Roles (none in the plan) | 6 Not available | Same |
+| Guardrails | SAFE requirements (none in the plan) | 2 Governance: "Guardrails waiting on a human" | A guardrail is a human decision |
+| Guardrails | Draft REQ-001 and its five-step status | 2 Governance: same disclosure, and the glance line "Sign-off waiting" | It waits on Aleem's R0 sign-off |
+| Systems | Systems named in the plan (none) | 6 Not available | |
+| Project management | Release Gantt | 3 Inventory: "Release timeline" | |
+| Project management | Every-task table (due, first given, change, past due) | 3 Inventory: "Stories, criteria and points" | |
+| AI agents | Story-owner roster ("owners, not agents") | **Dropped** | Beside "Your employee" it read as a second agent list. The real agent is Panel 1 |
+| AI agents | "No runs recorded" | 1 Employee: glance line | |
+| Knowledge base | "Ask about this project" (keyword questions) | **Dropped** | It answered by naming tabs that no longer exist. Everything it answered is now visible at a glance |
+| Knowledge base | Requirements and traceability | 3 Inventory: "Requirements and which stories cover them" | |
+| Knowledge base | Stories table | Merged into the stories table | Duplicate |
+| Knowledge base | Decisions and notes (`notes.json`) | 2 Governance: "Decisions recorded in this repo" | |
+| Data model | Domain tables (none derived) | 6 Not available | |
+| Data model | "The data behind this Command Center" cards | **Dropped** from the page; documented under "Data dependencies" below | Contract documentation, not something an operator governs |
+| Agent domain | Panels 1 to 6, the capability, rung and source-tag pages | The console itself | |
+
+## Data dependencies
+
+| Source | Feeds | State today |
+|---|---|---|
+| `.colaberry/plan.json`, `progress.json`, `manifest.json` (written by the platform on "Sync from GitHub") | Header stamp; Inventory stories, releases, requirements, schedule; Governance guardrails; Not available plan gaps | Committed. Data as of 30 October 2026 (see the header). `progress.json` still holds the earlier five STORY-000 criteria: a sync should bring the six |
+| `command-center/sources/product_experience.capabilities.json`, pinned at platform `9d9aa3c3` and checked against its git blob by a test | Inventory, Ladder, Behaviour, the capability and rung pages | Committed |
+| `command-center/notes.json`, `command-center/draft-guardrails.json` | Governance | Committed |
+| `command-center/snapshots/product_experience.endpoint-snapshots.json`: a redacted capture, git-ignored until reviewed | Panels 1 and 5, and the `/coverage` check | **Not captured** |
+
+### Whether an agent is linked: the live endpoint, not the registry
+
+The platform registry (`agentDomainRegistry.ts`) still has `agent_id: null` for product_experience.
+That is a **seed value the platform does not keep current** for this domain:
+- it fills the value only for learner_success and curriculum;
+- it deliberately does not write the other domains' agent ids back, because they differ per
+  environment (`agentDomainAgentLink.ts`, lines 9 to 22, at platform `cc1ebc55`).
+
+The platform links the agent in `agent_domain_projects.agent_id`, and
+`GET /api/admin/agent-domains-mine` reads that column. So the console treats the endpoint as the only
+source for whether an agent is linked:
+
+| Case | What the console says |
+|---|---|
+| The endpoint returns an `agent_id` | Linked |
+| The endpoint returns `null` | Not linked |
+| Not captured, or this domain is not in your list | "Not captured" or "Unknown"; never "none" |
+
+The registry value is shown only with the label "Registry seed value, not kept current for Product
+Experience & UI/UX".
+
+**Linking an agent grants nothing.** It does not change the agent's enabled state, autonomy level or
+tools. Every capability stays at `autonomy:R0` until a named human approves otherwise.
+
+This repository never edits the registry and never writes an agent id into it.
+
+### Record IDs are withheld on the page
+
+The pinned research file's `manager_has_no_admin_login` blocker includes a staff member's internal
+`org_members` record ID. The page shows it as "[record ID withheld]". Only the display changes: the
+research file is kept exactly as the platform wrote it, because a test checks it against the
+platform's copy. `tests/record-id-exposure.test.mjs` renders every page a visitor can reach and fails
+if any UUID-shaped value appears.
+
+The same ID is also in files the platform's sync writes (`.colaberry/plan.json` and the capability
+story files), and those are already on `main`. Removing it there is the platform's decision: see
+question 8 in [the plan](docs/stories/STORY-000-agent-domain-plan.md#5-questions-still-open).
+
+### Missing endpoints and fields
+
+| What | Waiting for | Panel shows now |
+|---|---|---|
+| `GET /api/admin/agent-domains-mine` | A capture with the reviewed v4 snippet, under Mihret's own sign-in (Ali Muwwakkil approved the method on 2026-11-02, with two conditions) | 1: "Not available" |
+| `GET /api/admin/agent-domain-change-requests-mine` | The same capture | 2: "Not available" |
+| `GET /api/admin/agent-domains/product_experience/coverage` | Not in Ali's approval. The v4 capture does not read it | 3: "/coverage check: Not captured yet" |
+| `GET /api/admin/agent-domains/product_experience` | Not in Ali's approval. Its response does not carry the capability records anyway | Values come from the pinned source file, and each panel says so |
+| The agent's seven fields (enabled, autonomy level, tools granted, when set, how set) | The v4 capture keeps only whether an agent is linked. Adding them (a v5 capture) needs Ali's approval | 1: "Not captured: not in the captured response" once captured; "Tools granted: Not captured" on Panels 1 and 2 |
+| Request titles and dates | Same: v4 keeps only kind and status | 2: "not captured" in those columns |
+| Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 2: "withheld: identifies a person" |
+| `autonomy_level_set_by` | The platform has no column for it | 1: "Not recorded by the platform" |
+| An approved autonomy level for any capability | A named human approving one | 4: `autonomy:R0`, "Starting rung — no human approval yet" |
+| The employee's current rung | A verified source that records an agent's rung on this ladder. None exists: the agent's `autonomy_level` is a different scale | 4: "Unknown: no source records an agent's rung on this ladder" |
+
+## Tests
+
+```bash
+node --test tests/*.test.mjs
+```
+
+Pure logic and rendered panels are tested under Node with a small fake DOM (`tests/fake-dom.mjs`). The
+evidence capture (screenshots, axe, keyboard) is `tests/evidence/capture-evidence.mjs`. Its header
+explains how to run it with tools installed outside this repository.
+
+## Publishing
+
+GitHub Pages is not enabled. Publishing needs three things, each waiting on Mihret's approval:
+1. The work committed and pushed.
+2. A choice of which branch Pages serves.
+3. Pages turned on for that branch.
+
+Aleem asked that branch updates be published to Pages. Until then, review locally as described above.

@@ -1,0 +1,102 @@
+{
+  "captured_at": "2026-11-04T01:38:51.376Z",
+  "base_url": "http://127.0.0.1:8765/",
+  "tools": {
+    "playwright-core": "1.48.2",
+    "axe-core": "4.10.2"
+  },
+  "chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "runs": [
+    {
+      "label": "console, phone, light, disclosures closed",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 41,
+      "incomplete": []
+    },
+    {
+      "label": "console, phone, light, every disclosure open",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 50,
+      "incomplete": []
+    },
+    {
+      "label": "console, desktop, light, disclosures closed",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 41,
+      "incomplete": []
+    },
+    {
+      "label": "console, desktop, light, every disclosure open",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 49,
+      "incomplete": []
+    },
+    {
+      "label": "console, phone, dark, disclosures closed",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 41,
+      "incomplete": []
+    },
+    {
+      "label": "console, phone, dark, every disclosure open",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 50,
+      "incomplete": []
+    },
+    {
+      "label": "console, desktop, dark, disclosures closed",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 41,
+      "incomplete": []
+    },
+    {
+      "label": "console, desktop, dark, every disclosure open",
+      "url": "http://127.0.0.1:8765/",
+      "violations": [],
+      "passes": 49,
+      "incomplete": []
+    },
+    {
+      "label": "detail #/capability/product_experience.design_token_drift_audit, desktop light",
+      "url": "http://127.0.0.1:8765/#/capability/product_experience.design_token_drift_audit",
+      "violations": [],
+      "passes": 45,
+      "incomplete": []
+    },
+    {
+      "label": "detail #/rung/autonomy:R1, desktop light",
+      "url": "http://127.0.0.1:8765/#/rung/autonomy:R1",
+      "violations": [],
+      "passes": 39,
+      "incomplete": []
+    },
+    {
+      "label": "detail #/guide/capture, desktop light",
+      "url": "http://127.0.0.1:8765/#/guide/capture",
+      "violations": [],
+      "passes": 36,
+      "incomplete": []
+    },
+    {
+      "label": "detail #/story/STORY-000, desktop light",
+      "url": "http://127.0.0.1:8765/#/story/STORY-000",
+      "violations": [],
+      "passes": 38,
+      "incomplete": []
+    },
+    {
+      "label": "state matrix page (fixtures), desktop light",
+      "url": "http://127.0.0.1:8765/docs/evidence/state-matrix.html",
+      "violations": [],
+      "passes": 41,
+      "incomplete": []
+    }
+  ]
+}
