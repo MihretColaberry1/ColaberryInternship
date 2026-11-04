@@ -4,7 +4,7 @@ import { h } from './dom.js';
 import { badge } from './ui.js';
 import { formatCentral } from './model.js';
 import { PLATFORM_COMMIT } from './authority.js';
-import { SNAPSHOT_FILE } from './agent-domain-data.js';
+import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE } from './agent-domain-data.js';
 import { CAPABILITY_SOURCE_NOTE, ENDPOINTS, PANEL_ENDPOINTS } from './agent-domain-facts.js';
 
 const SOURCE_FILE_NAME = 'capabilities/product_experience.json';
@@ -13,6 +13,7 @@ const SOURCE_FILE_NAME = 'capabilities/product_experience.json';
 export function sourceTag(kind, detail) {
   const labels = {
     endpoint: 'Endpoint',
+    platform_sync: 'Platform sync',
     source_file: 'Source file',
     platform_code: 'Platform code',
     unavailable: 'Unavailable',
@@ -69,8 +70,25 @@ export function endpointNotice(path, e) {
     e.message && e.state !== 'failed' ? h('p', { class: 'muted' }, `The platform said: ${e.message}`) : null);
 }
 
+/** The tag for a value that came from endpoint `path`, by how it reached this page. */
+export function valueTag(path, e) {
+  return e?.origin === 'platform_sync'
+    ? sourceTag('platform_sync', `${PLATFORM_SYNC_FILE} · GET ${path}`)
+    : sourceTag('endpoint', `GET ${path}`);
+}
+
+/** "Last changed" for the platform sync: when the platform last rewrote the files, never when it checked. */
+export function lastChangedWords(iso) {
+  return iso ? `last changed ${centralTime(iso)}` : 'last changed: not recorded (manifest has no generated_at)';
+}
+
 /** A line saying which endpoint a panel read, and when, for a panel that has data. */
 export function endpointRead(path, e) {
+  if (e.origin === 'platform_sync') {
+    return h('p', { class: 'reads' }, valueTag(path, e),
+      ` The platform's synced copy of GET ${path}, ${lastChangedWords(e.last_changed)}.`,
+      ' Read from this repository; this page did not call the endpoint.');
+  }
   return h('p', { class: 'reads' }, sourceTag('endpoint', `GET ${path}`),
     ` HTTP ${e.status}, captured ${centralTime(e.fetched_at)}`);
 }

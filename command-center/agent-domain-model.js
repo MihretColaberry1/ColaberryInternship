@@ -33,8 +33,17 @@ export function agentLink(endpoints) {
   }
   const tools = state === 'linked' && Array.isArray(row?.agent_tools_granted) ? row.agent_tools_granted : null;
   const count = state === 'linked' && Number.isInteger(row?.agent_tools_granted_count) ? row.agent_tools_granted_count : null;
-  return { state, source, reason: state === 'unknown' ? mine.state : null,
+  const origin = source === 'mine' ? mine.origin ?? 'endpoint' : source === 'domain' ? domain.origin ?? 'endpoint' : null;
+  return { state, source, origin, reason: state === 'unknown' ? mine.state : null,
     tools_granted: tools, tools_granted_count: count ?? (tools ? tools.length : null) };
+}
+
+/**
+ * Who "records" a value, in words: the endpoint itself, or the platform sync (its copy of the endpoint).
+ * Kept short because it sits in narrow summary columns; the tag beside it names the file and endpoint.
+ */
+export function recordedBy(origin) {
+  return origin === 'platform_sync' ? 'the platform sync' : 'the endpoint';
 }
 
 /**
@@ -50,10 +59,11 @@ export function grantedToolsFor(link) {
 
 /** "Tools granted" in words, for every panel that states it. Never "None" unless a source says so. */
 export function toolGrantWords(link) {
-  if (link.state === 'not_linked') return 'None: the endpoint links no agent to this domain';
+  const by = recordedBy(link.origin);
+  if (link.state === 'not_linked') return `None: ${by} links no agent to this domain`;
   if (link.state === 'linked') {
-    if (link.tools_granted_count === 0) return 'None: the endpoint records 0 tools granted';
-    if (link.tools_granted_count != null) return `${link.tools_granted_count} granted, as the endpoint records`;
+    if (link.tools_granted_count === 0) return `None: ${by} records 0 tools granted`;
+    if (link.tools_granted_count != null) return `${link.tools_granted_count} granted, as ${by} records`;
     return 'Not captured: the snapshot records only that an agent is linked';
   }
   if (link.state === 'not_in_list') return 'Unknown: this domain is not in your list on the platform';
@@ -227,6 +237,7 @@ export function employeeView(endpoints) {
     link: agentLink(endpoints),
     registry_agent_id: REGISTRY_ENTRY.agent_id,
     mine: { state: mine.state, status: mine.status, fetched_at: mine.fetched_at ?? null, message: mine.message ?? null,
+      origin: mine.origin ?? 'endpoint', last_changed: mine.last_changed ?? null,
       in_list: mine.state === 'ok' ? row !== null : null,
       note: mine.state === 'ok' ? mine.body.note ?? null : null,
       agent_id: row ? row.agent_id ?? null : null,
@@ -262,5 +273,7 @@ export function gapList(rows, endpoints) {
     no_behaviour: noBehaviour,
     unavailable: UNAVAILABLE_FIELDS,
     endpoints_not_ready: notReady.map(([key, e]) => ({ key, state: e.state, status: e.status ?? null })),
+    endpoints_synced: Object.entries(endpoints).filter(([, e]) => e.state === 'ok' && e.origin === 'platform_sync')
+      .map(([key, e]) => ({ key, last_changed: e.last_changed ?? null })),
   };
 }

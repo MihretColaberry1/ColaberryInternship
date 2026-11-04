@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
-import { SNAPSHOT_FILE, loadAgentDomainData } from '../command-center/agent-domain-data.js';
+import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE, loadAgentDomainData } from '../command-center/agent-domain-data.js';
 import { ENDPOINTS, PANEL_ENDPOINTS } from '../command-center/agent-domain-facts.js';
 import { loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
@@ -29,8 +29,11 @@ async function diskFetch(url) {
   }
 }
 
-async function realInputs() {
-  const domain = { status: 'loaded', ...(await loadAgentDomainData({ fetchImpl: diskFetch })) };
+// `sync: false` makes the platform-synced file answer 404, to render the page without it.
+async function realInputs({ sync = true } = {}) {
+  const fetchImpl = sync ? diskFetch
+    : async (url) => (url === PLATFORM_SYNC_FILE ? { ok: false, status: 404, json: async () => null } : diskFetch(url));
+  const domain = { status: 'loaded', ...(await loadAgentDomainData({ fetchImpl })) };
   const data = await loadProjectData({ fetchImpl: diskFetch });
   return { domain, project: { status: 'loaded', data, model: buildOverviewModel(data, new Date('2026-11-03T18:00:00Z')), error: null } };
 }
@@ -67,8 +70,16 @@ test('criterion 1: each panel names, as whole tags, every endpoint the brief ass
   for (const k of Object.keys(ENDPOINTS)) assert.ok(endpointsNamed(panels.gaps).has(GET(k)), `gaps does not name ${GET(k)}`);
 });
 
-test('today, with no snapshot: Panels 1 and 5 are "Not available", the other four are ready', async () => {
+test('today, from the platform sync: Panel 1 is ready, Panel 2 is empty (no requests), the other four are ready', async () => {
   const { domain, project } = await realInputs();
+  const panels = byId(renderPanels(domain, project));
+  const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
+  assert.deepEqual(states, { employee: 'ready', governance: 'empty', inventory: 'ready', ladder: 'ready', behaviour: 'ready', gaps: 'ready' });
+  for (const id of ['employee', 'governance']) assert.equal(findAll(panels[id], hasClass('not-available')).length, 0, id);
+});
+
+test('with neither a snapshot nor the platform sync: Panels 1 and 2 are "Not available", the other four are ready', async () => {
+  const { domain, project } = await realInputs({ sync: false });
   const panels = byId(renderPanels(domain, project));
   const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
   assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'ready', ladder: 'ready', behaviour: 'ready', gaps: 'ready' });

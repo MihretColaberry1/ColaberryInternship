@@ -222,6 +222,7 @@ tbody tr:hover td { background: var(--surface-alt); }
 }
 .src-detail { font-weight: 400; }
 .src-endpoint { border-color: var(--berry-blue); color: var(--berry-blue); }
+.src-platform_sync { border-color: var(--berry-blue); border-style: double; border-width: 3px; color: var(--berry-blue); }
 .src-source_file { border-color: var(--warn-accent); color: var(--warn-text); }
 .src-platform_code { border-color: var(--muted); }
 .src-plan { border-color: var(--berry-green); color: var(--berry-green); }

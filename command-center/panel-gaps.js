@@ -5,7 +5,7 @@ import { h } from './dom.js';
 import { table } from './ui.js';
 import { AGENT_LINK_SOURCE, ENDPOINTS, NO_APPROVALS_RECORDED, R8_UNREACHABLE, REGISTRY_ENTRY } from './agent-domain-facts.js';
 import { toolGrantWords } from './agent-domain-model.js';
-import { endpointTags, platformTag, sourceFileTag, sourceTag, unavailableTag } from './agent-domain-ui.js';
+import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
 import { consolePanel, loadingBlock } from './console-ui.js';
 import { planGaps } from './project-sections.js';
 
@@ -22,10 +22,10 @@ export function agentGapItem(agent) {
     const grants = link.tools_granted_count == null
       ? 'Its enabled state, autonomy level and tool grants were not captured, so this console does not say whether any tool is granted.'
       : `Tools granted: ${toolGrantWords(link)}.`;
-    return [sourceTag('endpoint', `GET ${ENDPOINTS.mine}`), `An agent is linked to this domain. ${grants} ${seed}`];
+    return [valueTag(ENDPOINTS.mine, link), `An agent is linked to this domain. ${grants} ${seed}`];
   }
   if (link.state === 'not_linked') {
-    return [sourceTag('endpoint', `GET ${ENDPOINTS.mine}`), 'The captured response links no agent to this domain, so no agent holds a tool grant.'];
+    return [valueTag(ENDPOINTS.mine, link), 'The captured response links no agent to this domain, so no agent holds a tool grant.'];
   }
   return [platformTag(AGENT_LINK_SOURCE.source.path, AGENT_LINK_SOURCE.source.commit),
     `Whether an agent is linked to this domain is not captured. ${seed}`];
@@ -62,6 +62,7 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project } 
     : sourceState === 'error' ? [[sourceFileTag(), 'The capability source file could not be read, so no capability gap can be counted.'],
       ...gapItems(gaps).filter((_, i) => i === 0 || i >= 3)] : [];
   const endpointsDown = gaps?.endpoints_not_ready ?? [];
+  const synced = gaps?.endpoints_synced ?? [];
   return consolePanel({
     id: 'gaps', order, state,
     headline: state === 'ready' ? `${items.length} things this console cannot show or cannot claim, each with the source that proves it.` : null,
@@ -69,6 +70,8 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project } 
     question: 'What would I be lying about?',
     glance: state === 'ready' ? [
       ['Endpoints with no usable response', `${endpointsDown.length} of ${Object.keys(ENDPOINTS).length}`],
+      ['Endpoints read from the platform sync', `${synced.length} of ${Object.keys(ENDPOINTS).length}`
+        + (synced.length ? `, ${lastChangedWords(synced[0].last_changed)}` : '')],
       ['Fields with no verified source', String(gaps.unavailable.length)],
     ] : null,
     body: state === 'loading' ? loadingBlock()
@@ -80,6 +83,10 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project } 
         ? h('ul', { class: 'gap-list' }, endpointsDown.map((e) => h('li', {}, sourceTag('endpoint', `GET ${ENDPOINTS[e.key]}`),
           h('p', {}, ENDPOINT_WORDS[e.state] ?? `Not read (${e.state}${e.status ? `, HTTP ${e.status}` : ''}): left blank.`))))
         : h('p', {}, 'Every endpoint returned a response in the captured snapshot.') },
+      synced.length ? { title: 'Endpoints read from the platform sync', count: synced.length, body: [
+        h('p', { class: 'muted' }, 'The platform writes these into this repository. "Last changed" is when it last rewrote them, not when anything was checked.'),
+        h('ul', { class: 'gap-list' }, synced.map((e) => h('li', {}, valueTag(ENDPOINTS[e.key], { origin: 'platform_sync' }),
+          h('p', {}, `Read from this repository, ${lastChangedWords(e.last_changed)}.`))))] } : null,
       { title: 'Fields left blank because no verified source exists', count: gaps.unavailable.length, body: table([
         { label: 'Panel', cell: (f) => f.panel }, { label: 'Field', cell: (f) => h('code', {}, f.field) },
         { label: 'Value', cell: () => unavailableTag() }, { label: 'Why', cell: (f) => f.why }], gaps.unavailable) },

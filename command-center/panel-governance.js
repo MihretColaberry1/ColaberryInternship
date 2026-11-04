@@ -7,8 +7,8 @@ import { ENDPOINTS, REQUEST_RULE } from './agent-domain-facts.js';
 import { centralTime, endpointRead, endpointTags, platformTag, sourceFileTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock, notAvailable } from './console-ui.js';
 import { guardrailsSection, notesSection, pendingSignoffs } from './project-sections.js';
-import { CAPTURE_ACTION } from './panel-employee.js';
-import { toolGrantWords } from './agent-domain-model.js';
+import { CAPTURE_ACTION, unusableSource } from './panel-employee.js';
+import { recordedBy, toolGrantWords } from './agent-domain-model.js';
 
 /** One required tool's grant status: known only when the endpoint recorded the agent's grants. */
 function grantBadge(tool, link) {
@@ -18,8 +18,8 @@ function grantBadge(tool, link) {
 }
 
 function grantSentence(link) {
-  if (link.state === 'not_linked') return ' The research lists them; the captured response links no agent to this domain, so none is granted.';
-  if (link.tools_granted) return ' The research lists them; each is marked against the grants the endpoint records.';
+  if (link.state === 'not_linked') return ` The research lists them; ${recordedBy(link.origin)} links no agent to this domain, so none is granted.`;
+  if (link.tools_granted) return ` The research lists them; each is marked against the grants ${recordedBy(link.origin)} records.`;
   return ' The research lists them. Whether the agent holds any of them was not captured.';
 }
 
@@ -37,8 +37,8 @@ function requestTable(items, isTool) {
   ].filter(Boolean), items, isTool ? 'No tool requests filed.' : 'No change requests filed.');
 }
 
-export function governanceState(groups, snapshotStatus) {
-  if (snapshotStatus === 'invalid') return 'error';
+export function governanceState(groups, snapshot) {
+  if (unusableSource(snapshot, groups.endpoint ?? groups)) return 'error';
   if (groups.state === 'loading') return 'loading';
   if (groups.state === 'not_captured') return 'not_available';
   if (groups.state !== 'ok') return 'error';
@@ -50,7 +50,7 @@ const count = (groups, key) => (groups.state === 'ok' ? String(groups[key].lengt
 const UNKNOWN_LINK = Object.freeze({ state: 'unknown', reason: 'not_captured', tools_granted: null, tools_granted_count: null });
 
 export function renderGovernancePanel(groups, rows, { order, snapshot, project, link = UNKNOWN_LINK } = {}) {
-  const state = governanceState(groups, snapshot?.status);
+  const state = governanceState(groups, snapshot);
   const tools = [...new Set(rows.flatMap((r) => r.required_tools))];
   const signoffs = project?.data ? pendingSignoffs(project.data, project.model) : [];
 
@@ -68,13 +68,14 @@ export function renderGovernancePanel(groups, rows, { order, snapshot, project, 
   }
   if (state === 'error') {
     body = errorBlock({
-      what: snapshot?.status === 'invalid' ? `The snapshot file could not be used: ${snapshot.error}` : `GET ${ENDPOINTS.requests}: ${groups.state}`,
+      what: unusableSource(snapshot, groups.endpoint ?? groups) ?? `GET ${ENDPOINTS.requests}: ${groups.state}`,
       why: groups.endpoint?.message ? `The platform said: ${groups.endpoint.message}` : 'Nothing from this endpoint is shown, and nothing is assumed in its place.',
       action: CAPTURE_ACTION,
     });
   }
   if (state === 'empty') {
-    headline = 'No change or tool requests are filed. Nothing is waiting on a human decision from this endpoint.';
+    headline = `No change or tool requests are filed, as ${recordedBy(groups.endpoint.origin)} records. `
+      + 'Nothing is waiting on a human decision from this endpoint.';
     body = endpointRead(ENDPOINTS.requests, groups.endpoint);
     action = { href: '#/guide/requests', label: 'How to file a tool request' };
   }

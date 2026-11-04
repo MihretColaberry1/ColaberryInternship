@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import {
-  CAPABILITY_FILE, SNAPSHOT_FILE, SNAPSHOT_SCHEMA, endpointState, loadAgentDomainData, readSnapshot,
+  CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_FILE, SNAPSHOT_SCHEMA, endpointState, loadAgentDomainData, readSnapshot,
 } from '../command-center/agent-domain-data.js';
 import { ENDPOINTS, UNAVAILABLE_FIELDS } from '../command-center/agent-domain-facts.js';
 import {
@@ -19,11 +19,13 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 // Reads repo files from disk. The snapshot path always answers 404 unless a test supplies one,
 // so a snapshot sitting in your local (git-ignored) folder cannot change these results.
-function diskFetch(snapshot = null) {
+// `sync: false` makes the platform-synced file answer 404 too, to test the page without it.
+function diskFetch(snapshot = null, { sync = true } = {}) {
   return async (url) => {
     if (url === SNAPSHOT_FILE) {
       return snapshot ? { ok: true, status: 200, json: async () => snapshot } : { ok: false, status: 404, json: async () => null };
     }
+    if (url === PLATFORM_SYNC_FILE && !sync) return { ok: false, status: 404, json: async () => null };
     try {
       const text = await readFile(path.join(ROOT, url), 'utf8');
       return { ok: true, status: 200, json: async () => JSON.parse(text) };
@@ -103,10 +105,20 @@ test('the rung summary has all ten rungs and every behaviour lands under exactly
 
 // ---- Endpoint snapshot states ----
 
-test('with no snapshot, all four endpoints are "not captured", not empty and not loading', async () => {
+test('with neither a snapshot nor the platform sync, all four endpoints are "not captured", not empty and not loading', async () => {
+  const d = await loadAgentDomainData({ fetchImpl: diskFetch(null, { sync: false }) });
+  assert.equal(d.snapshot.status, 'not_captured');
+  assert.equal(d.snapshot.sync.status, 'not_synced');
+  assert.deepEqual(Object.values(d.snapshot.endpoints).map((e) => e.state), ['not_captured', 'not_captured', 'not_captured', 'not_captured']);
+});
+
+test('with no snapshot, the real platform sync answers mine and requests; domain and coverage stay not captured', async () => {
   const d = await loadAgentDomainData({ fetchImpl: diskFetch() });
   assert.equal(d.snapshot.status, 'not_captured');
-  assert.deepEqual(Object.values(d.snapshot.endpoints).map((e) => e.state), ['not_captured', 'not_captured', 'not_captured', 'not_captured']);
+  assert.equal(d.snapshot.sync.status, 'synced');
+  const { mine, requests, domain, coverage } = d.snapshot.endpoints;
+  assert.deepEqual([mine.state, mine.origin, requests.state, requests.origin], ['ok', 'platform_sync', 'ok', 'platform_sync']);
+  assert.deepEqual([domain.state, coverage.state], ['not_captured', 'not_captured']);
 });
 
 test('endpoint states: 200 ok, 403 refused, 401 refused, no response failed, 500 error, missing not captured', () => {
@@ -130,7 +142,7 @@ test('a snapshot of the wrong shape is reported invalid and shows nothing as cap
 });
 
 test('a captured snapshot is read per endpoint, and an absent entry stays not captured', async () => {
-  const d = await loadAgentDomainData({ fetchImpl: diskFetch(snap([entry('coverage', 403, { error: 'Forbidden' }), entry('mine', 200, { domains: [] })])) });
+  const d = await loadAgentDomainData({ fetchImpl: diskFetch(snap([entry('coverage', 403, { error: 'Forbidden' }), entry('mine', 200, { domains: [] })]), { sync: false }) });
   assert.equal(d.snapshot.status, 'captured');
   assert.equal(d.snapshot.endpoints.coverage.state, 'refused');
   assert.equal(d.snapshot.endpoints.mine.state, 'ok');
@@ -185,7 +197,9 @@ test('gaps: draft count, empty release_behaviour, unavailable fields and unready
   assert.deepEqual(gaps.drafts, { count: 25, total: 25 });
   assert.equal(gaps.no_behaviour.length, rows.filter((r) => r.behaviours.length === 0).length);
   assert.equal(gaps.unavailable, UNAVAILABLE_FIELDS);
-  assert.equal(gaps.endpoints_not_ready.length, 4);
+  // The platform sync answers mine and requests; the two capability endpoints are still not captured.
+  assert.deepEqual(gaps.endpoints_not_ready.map((e) => e.key), ['domain', 'coverage']);
+  assert.deepEqual(gaps.endpoints_synced.map((e) => e.key), ['mine', 'requests']);
   assert.equal(gaps.r8.rung, 'autonomy:R8');
 });
 

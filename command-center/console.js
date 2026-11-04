@@ -4,11 +4,11 @@
 // the next rung require, and what can this page not tell me.
 import { h } from './dom.js';
 import { ENDPOINTS } from './agent-domain-facts.js';
-import { CAPABILITY_FILE } from './agent-domain-data.js';
+import { CAPABILITY_FILE, PLATFORM_SYNC_FILE } from './agent-domain-data.js';
 import {
   agentLink, capabilityRows, coverageCheck, employeeView, gapList, grantedToolsFor, requestGroups, rungSummary,
 } from './agent-domain-model.js';
-import { sourceTag } from './agent-domain-ui.js';
+import { lastChangedWords, sourceTag } from './agent-domain-ui.js';
 import { backToConsole } from './console-ui.js';
 import { renderEmployeePanel } from './panel-employee.js';
 import { renderGovernancePanel } from './panel-governance.js';
@@ -36,15 +36,23 @@ export function consoleInputs(domain) {
     checks: coverageCheck(rows, endpoints.coverage), snapshot: d.snapshot ?? null };
 }
 
+function syncText(sync) {
+  if (!sync || sync.status === 'not_synced') return '';
+  if (sync.status === 'invalid') return ` The platform-synced file ${PLATFORM_SYNC_FILE} could not be used: ${sync.error}`;
+  return ` Panels 1 and 2 read ${PLATFORM_SYNC_FILE}, the platform's synced copy of its endpoints, ${lastChangedWords(sync.last_changed)}.`;
+}
+
 function intro(inputs) {
   const snap = inputs.snapshot;
   const snapText = !snap ? 'Endpoint snapshot: loading.'
-    : snap.status === 'captured' ? `Endpoint snapshot captured ${snap.captured_at ?? '(time not recorded)'}.`
+    : (snap.status === 'captured' ? `Endpoint snapshot captured ${snap.captured_at ?? '(time not recorded)'}.`
       : snap.status === 'invalid' ? `Endpoint snapshot could not be used: ${snap.error}`
-        : 'Endpoint snapshot: not captured yet, so Panels 1 and 5 say "Not available".';
+        : snap.sync?.status === 'synced' ? 'Endpoint snapshot: not captured.'
+          : 'Endpoint snapshot: not captured yet, so Panels 1 and 2 say "Not available".') + syncText(snap.sync);
   return h('section', { class: 'console-intro', 'aria-label': 'About this console' },
     h('p', { class: 'job' }, 'A human governs agents. This console shows what you govern, what is waiting on you, and what it cannot show yet.'),
     h('p', { class: 'muted' }, 'Every value is tagged: ', sourceTag('endpoint'), ' a response you captured with your own sign-in; ',
+      sourceTag('platform_sync'), ' the platform\'s own copy of an endpoint, synced into this repository; ',
       sourceTag('source_file'), ' the platform research file, pinned to a commit; ', sourceTag('platform_code'),
       ' a rule or constant in platform code; ', sourceTag('unavailable'), ' no verified source exists.'),
     h('p', { class: 'muted' }, 'Progress shown here is never authority. A named human promotes one rung at a time, on evidence. ', snapText));

@@ -4,8 +4,8 @@
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
 import { AGENT_AUTONOMY_SCALE, AGENT_LINK_SOURCE, ENDPOINTS, REGISTRY_ENTRY, SET_BY_NOT_RECORDED } from './agent-domain-facts.js';
-import { toolGrantWords } from './agent-domain-model.js';
-import { centralTime, endpointRead, endpointTags, platformTag, sourceTag } from './agent-domain-ui.js';
+import { recordedBy, toolGrantWords } from './agent-domain-model.js';
+import { centralTime, endpointRead, endpointTags, platformTag, valueTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock, notAvailable } from './console-ui.js';
 
 const NOT_READ_TEXT = { not_captured: 'Not captured yet', loading: 'Loading…', refused: 'Refused' };
@@ -30,19 +30,19 @@ function fieldValue(f) {
   }
 }
 
-function fieldSource(f) {
-  if (f.state !== 'not_recorded') return sourceTag('endpoint', `GET ${ENDPOINTS.mine}`);
-  return f.from_endpoint ? sourceTag('endpoint', `GET ${ENDPOINTS.mine} · not_recorded`)
+function fieldSource(f, v) {
+  if (f.state !== 'not_recorded') return valueTag(ENDPOINTS.mine, v.mine);
+  return f.from_endpoint ? valueTag(`${ENDPOINTS.mine} · not_recorded`, v.mine)
     : platformTag(SET_BY_NOT_RECORDED.source.path, SET_BY_NOT_RECORDED.source.commit);
 }
 
 function fieldTable(v) {
-  return [h('p', { class: 'muted' }, 'Each value says where it came from. A value is shown only when the endpoint returned it.'),
+  return [h('p', { class: 'muted' }, `Each value says where it came from. A value is shown only when ${recordedBy(v.mine.origin)} returned it.`),
     table([
       { label: 'Field', cell: (f) => h('code', {}, f.key) },
       { label: 'Value', cell: fieldValue },
       { label: 'What it is', cell: (f) => (f.key === 'agent_autonomy_level' ? [f.label, h('div', { class: 'muted' }, AGENT_AUTONOMY_SCALE)] : f.label) },
-      { label: 'Source', cell: fieldSource },
+      { label: 'Source', cell: (f) => fieldSource(f, v) },
     ], v.fields)];
 }
 
@@ -54,13 +54,29 @@ function registryDetail() {
   h('p', {}, REGISTRY_ENTRY.blocker)];
 }
 
-/** "Agent linked" in words, from the live endpoint only. */
-const LINK_WORDS = {
-  linked: 'Yes, as the endpoint records',
-  not_linked: 'No, as the endpoint records',
-  not_in_list: 'Unknown: this domain is not in your list on the platform',
-  unknown: 'Not captured yet',
-};
+/** "Agent linked" in words, from the live endpoint (or the platform's synced copy of it) only. */
+function linkWords(link) {
+  if (link.state === 'linked') return `Yes, as ${recordedBy(link.origin)} records`;
+  if (link.state === 'not_linked') return `No, as ${recordedBy(link.origin)} records`;
+  if (link.state === 'not_in_list') return 'Unknown: this domain is not in your list on the platform';
+  return 'Not captured yet';
+}
+
+/** Showing the agent's state is never permission to change it. */
+export const NOT_AN_APPROVAL = 'Showing this is not approval to change it. Enabling the agent, raising its autonomy '
+  + 'or granting it a tool is a decision a named human makes on the platform; nothing on this page does any of those.';
+
+/** The agent's own state in one sentence, from recorded fields only. */
+function agentStateWords(v) {
+  const rec = (key) => v.fields.find((f) => f.key === key && f.state === 'recorded');
+  const enabled = rec('agent_enabled');
+  const level = rec('agent_autonomy_level');
+  if (!enabled && !level) return null;
+  const parts = [];
+  if (enabled) parts.push(enabled.value === false ? 'It is disabled' : enabled.value === true ? 'It is enabled' : `Enabled: ${enabled.value}`);
+  if (level) parts.push(`its per-agent autonomy level is ${level.value}`);
+  return `${parts.join(', and ')}, as ${recordedBy(v.mine.origin)} records.`;
+}
 
 /** The headline when the endpoint answered. An absent detail is said to be not captured, never none. */
 function readyHeadline(v) {
@@ -76,9 +92,20 @@ function readyHeadline(v) {
   return 'The captured response does not say whether an agent is linked to this domain.';
 }
 
+/**
+ * A source file that exists but cannot be used is an error, never "not available". Each file only
+ * counts against an endpoint it was meant to supply: a broken capture does not hide good synced data.
+ */
+export function unusableSource(snapshot, e) {
+  if (e?.state === 'ok') return null;
+  if (snapshot?.status === 'invalid') return `The snapshot file could not be used: ${snapshot.error}`;
+  if (snapshot?.sync?.status === 'invalid') return `The platform-synced file could not be used: ${snapshot.sync.error}`;
+  return null;
+}
+
 /** Which of the five states the panel is in, from the endpoint state alone. */
-export function employeeState(v, snapshotStatus) {
-  if (snapshotStatus === 'invalid') return 'error';
+export function employeeState(v, snapshot) {
+  if (unusableSource(snapshot, v.mine)) return 'error';
   const s = v.mine.state;
   if (s === 'loading') return 'loading';
   if (s === 'not_captured') return 'not_available';
@@ -89,7 +116,7 @@ export function employeeState(v, snapshotStatus) {
 export const CAPTURE_ACTION = Object.freeze({ href: '#/guide/capture', label: 'Capture this panel with your own sign-in' });
 
 export function renderEmployeePanel(v, { order, snapshot } = {}) {
-  const state = employeeState(v, snapshot?.status);
+  const state = employeeState(v, snapshot);
   // The live endpoint decides. The registry's agent_id is a stale seed value and never counts.
   const agentLinked = v.link.state === 'linked';
   const registryLine = [h('code', {}, 'agent_id: null'), ' ', badge('warn', 'Stale seed value'),
@@ -111,14 +138,17 @@ export function renderEmployeePanel(v, { order, snapshot } = {}) {
   if (state === 'error') {
     headline = 'The employee record could not be read.';
     body = errorBlock({
-      what: snapshot?.status === 'invalid' ? `The snapshot file could not be used: ${snapshot.error}` : `GET ${ENDPOINTS.mine}: ${v.mine.state}${v.mine.status ? `, HTTP ${v.mine.status}` : ''}`,
+      what: unusableSource(snapshot, v.mine) ?? `GET ${ENDPOINTS.mine}: ${v.mine.state}${v.mine.status ? `, HTTP ${v.mine.status}` : ''}`,
       why: v.mine.message ? `The platform said: ${v.mine.message}` : 'Nothing from this endpoint is shown, and nothing is assumed in its place.',
       action: CAPTURE_ACTION,
     });
   }
   if (state === 'ready') {
     headline = readyHeadline(v);
-    body = endpointRead(ENDPOINTS.mine, v.mine);
+    const stateLine = agentLinked ? agentStateWords(v) : null;
+    body = [endpointRead(ENDPOINTS.mine, v.mine),
+      stateLine ? h('p', {}, stateLine) : null,
+      agentLinked ? h('p', { class: 'muted not-approval' }, NOT_AN_APPROVAL) : null];
     action = agentLinked ? { href: '#/panel/ladder', label: 'See what it is allowed to do' } : { href: '#/panel/gaps', label: 'See what this console cannot show' };
   }
 
@@ -127,7 +157,7 @@ export function renderEmployeePanel(v, { order, snapshot } = {}) {
     title: 'Your employee',
     question: 'Does it exist, and what is it allowed to do?',
     glance: [
-      ['Agent linked (live endpoint)', LINK_WORDS[v.link.state]],
+      [v.link.origin === 'platform_sync' ? 'Agent linked (platform sync)' : 'Agent linked (live endpoint)', linkWords(v.link)],
       ['Tools granted', toolGrantWords(v.link)],
       ['Agent in the platform registry', registryLine],
       ['Runs', 'None recorded; not checked from here'],

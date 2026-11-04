@@ -1,9 +1,12 @@
-// Loads what the Agent domain tab reads. Two inputs, kept apart and never merged:
+// Loads what the Agent domain tab reads. Three inputs, each kept with its own provenance:
 //   - the SOURCE FILE copied from the platform repo (command-center/sources/), with its provenance
 //   - the ENDPOINT SNAPSHOT you captured with your own session, if one is present locally
+//   - the PLATFORM SYNC: .colaberry/agent-domain.json, which the platform writes into this repo from
+//     the same endpoints, dated by .colaberry/manifest.json's generated_at ("last changed")
 // No DOM access, so the same code runs in the browser and under `node --test`.
-import { DataLoadError, loadJson } from './data.js';
-import { ENDPOINTS } from './agent-domain-facts.js';
+import { DATA_FILES, DataLoadError, loadJson } from './data.js';
+import { DOMAIN_KEY, ENDPOINTS } from './agent-domain-facts.js';
+import { redactSnapshot } from './agent-domain-redact.js';
 
 export const CAPABILITY_FILE = 'command-center/sources/product_experience.capabilities.json';
 export const SOURCES_FILE = 'command-center/sources/SOURCES.json';
@@ -71,7 +74,71 @@ async function loadSnapshot(options) {
   }
 }
 
+export const PLATFORM_SYNC_FILE = '.colaberry/agent-domain.json';
+export const PLATFORM_SYNC_SCHEMA = 'colaberry.agent-domain/v1';
+
+/**
+ * The platform's synced copy, as endpoint states for the two endpoints it carries (mine, requests).
+ * It goes through the same allow-list as a captured snapshot, so the agent id becomes PRESENT and no
+ * person's identity is kept. The file has no clock of its own; `last_changed` is the manifest's
+ * generated_at, which says when the platform last rewrote these files, not when anything was checked.
+ */
+export function readPlatformSync(json, lastChanged) {
+  const valid = json && json.schema === PLATFORM_SYNC_SCHEMA && json.domain_key === DOMAIN_KEY
+    && json.agent && typeof json.agent === 'object' && Array.isArray(json.governance?.requests);
+  if (!valid) return { status: 'invalid', error: `${PLATFORM_SYNC_FILE} is not a "${PLATFORM_SYNC_SCHEMA}" file for ${DOMAIN_KEY}`, endpoints: {} };
+  const a = json.agent;
+  const row = {
+    domain_key: DOMAIN_KEY,
+    agent_id: a.exists === true ? a.agent_id ?? null : null,
+    agent_display_name: a.display_name ?? null,
+    agent_enabled: a.enabled ?? null,
+    agent_autonomy_level: a.autonomy_level ?? null,
+    agent_autonomy_level_set_at: a.autonomy_level_set_at ?? null,
+    agent_autonomy_level_source: a.autonomy_level_source ?? null,
+    agent_tools_granted: Array.isArray(a.tools_granted) ? a.tools_granted : null,
+    agent_tools_granted_count: Number.isInteger(a.tools_granted_count) ? a.tools_granted_count : null,
+  };
+  const raw = { snapshots: [
+    { endpoint: ENDPOINTS.mine, http_status: 200, body: { domains: [row], not_recorded: json.not_recorded ?? [] } },
+    { endpoint: ENDPOINTS.requests, http_status: 200, body: { change_requests: json.governance.requests } },
+  ] };
+  const { snapshot } = redactSnapshot(raw);
+  const endpoints = {};
+  for (const s of snapshot.snapshots) {
+    const key = Object.keys(ENDPOINTS).find((k) => ENDPOINTS[k] === s.endpoint);
+    endpoints[key] = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null, body: s.body };
+  }
+  return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints };
+}
+
+async function loadPlatformSync(options) {
+  const base = options.base ?? '';
+  try {
+    const [json, manifest] = await Promise.all([
+      loadJson(base + PLATFORM_SYNC_FILE, options),
+      loadJson(base + DATA_FILES.manifest, options).catch(() => null),
+    ]);
+    return readPlatformSync(json, typeof manifest?.generated_at === 'string' ? manifest.generated_at : null);
+  } catch (err) {
+    if (is404(err)) return { status: 'not_synced', error: null, endpoints: {} };
+    return { status: 'invalid', error: err.message, endpoints: {} };
+  }
+}
+
+/**
+ * Your own capture wins wherever it answered; the platform sync fills only the endpoints the capture
+ * did not answer. Endpoints neither source carries keep the capture's state (not captured, refused...).
+ */
+export function combineEndpoints(snapshot, sync) {
+  const out = { ...snapshot.endpoints };
+  for (const [key, e] of Object.entries(sync?.endpoints ?? {})) {
+    if (out[key]?.state !== 'ok') out[key] = e;
+  }
+  return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null } };
+}
+
 export async function loadAgentDomainData(options = {}) {
-  const [source, snapshot] = await Promise.all([loadSource(options), loadSnapshot(options)]);
-  return { source, snapshot };
+  const [source, snapshot, sync] = await Promise.all([loadSource(options), loadSnapshot(options), loadPlatformSync(options)]);
+  return { source, snapshot: combineEndpoints(snapshot, sync) };
 }
