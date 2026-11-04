@@ -5,8 +5,8 @@
     "stories_total": 32,
     "stories_verified": 6,
     "stories_submitted": 0,
-    "stories_in_progress": 18,
-    "stories_not_started": 8,
+    "stories_in_progress": 19,
+    "stories_not_started": 7,
     "criteria_total": 49,
     "criteria_passed": 18,
     "points_awarded": 150
@@ -881,7 +881,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 6,
         "verified_at": null,
