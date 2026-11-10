@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-04T01:38:51.376Z",
+  "captured_at": "2026-11-10T01:27:02.375Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -9,58 +9,66 @@
   "matrix": {
     "loading": {
       "employee": "loading",
-      "governance": "loading",
       "inventory": "loading",
       "ladder": "loading",
       "behaviour": "loading",
+      "governance": "loading",
       "gaps": "loading"
     },
     "today": {
-      "employee": "not_available",
-      "governance": "not_available",
+      "employee": "ready",
       "inventory": "ready",
       "ladder": "ready",
       "behaviour": "ready",
+      "governance": "empty",
+      "gaps": "ready"
+    },
+    "nothing-captured": {
+      "employee": "not_available",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "not_available",
       "gaps": "ready"
     },
     "captured-empty": {
       "employee": "ready",
-      "governance": "empty",
       "inventory": "ready",
       "ladder": "ready",
       "behaviour": "ready",
+      "governance": "empty",
       "gaps": "ready"
     },
     "captured-data": {
       "employee": "ready",
-      "governance": "ready",
       "inventory": "ready",
       "ladder": "ready",
       "behaviour": "ready",
+      "governance": "ready",
       "gaps": "ready"
     },
     "refused": {
       "employee": "error",
-      "governance": "error",
       "inventory": "ready",
       "ladder": "ready",
       "behaviour": "ready",
+      "governance": "error",
       "gaps": "ready"
     },
     "source-missing": {
       "employee": "not_available",
-      "governance": "not_available",
       "inventory": "error",
       "ladder": "error",
       "behaviour": "error",
+      "governance": "not_available",
       "gaps": "ready"
     },
     "source-empty": {
       "employee": "not_available",
-      "governance": "not_available",
       "inventory": "empty",
       "ladder": "empty",
       "behaviour": "empty",
+      "governance": "not_available",
       "gaps": "ready"
     }
   }

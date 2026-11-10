@@ -1,65 +1,57 @@
 /* ---------------------------------------------------------------------------
-   Colaberry palette. Every colour on the page comes from these tokens, in a light
-   and a dark set. The three berry colours are close approximations: the colour logo
-   was not available to sample (colaberry.com serves only white and black versions).
+   Colours, type and spacing come from the Colaberry design system, loaded before this file
+   from command-center/vendor/colaberry-ds/tokens/ (pinned: command-center/sources/SOURCES.json).
+   This block only maps the page's names onto the system's tokens; no colour value is written
+   here, and tests/design-system.test.mjs fails if one is.
+
+   Light theme only. The system's dark set is partial (it has no dark --status-*-bg values), so a
+   dark theme would need invented values; the page never sets data-theme, so it never applies.
+
+   Contrast, measured on the system's own values (tests/design-system.test.mjs):
+     filled button     white on --red-600 4.73:1, on --red-700 (hover) 6.22:1. The brand cherry
+                       --red-500 is 3.85:1 with white, so it is never a text background here.
+     links, headings   --text-link (--blue-600) 5.96:1 on white, 5.26:1 on --surface-blue-subtle
+     ready / success   --green-800 6.01:1 on --status-success-bg. Leaf --green-600 is 3.02:1, so it
+                       appears only as a border or a decorative stripe, never as text.
+     error             --red-700 5.62:1 on --status-danger-bg
+     warning           body text on --status-warning-bg 12.65:1. The system's amber (--amber-500)
+                       is 2.2:1, so it marks borders only and the word carries the state.
    --------------------------------------------------------------------------- */
 :root {
   color-scheme: light;
   /* Brand accents */
-  --cherry: #c8102e;        /* cherry red: primary action, today marker */
-  --cherry-hover: #a50d26;
-  --cherry-soft: #fce8eb;
-  --berry-blue: #1d4f91;    /* berry blue: navigation, links, controls, section headings */
-  --berry-blue-soft: #e8eff8;
-  --pressed: #1d4f91;       /* background of a pressed control; white text sits on it */
-  --berry-green: #2b7530;   /* verified / confirmed states only (darkened for AA text contrast) */
-  --berry-green-soft: #e6f2e7;
-  --on-accent: #ffffff;
+  --cherry: var(--brand-primary);          /* decorative only: brand stripe, today marker */
+  --action-fill: var(--red-600);           /* filled buttons: white text at 4.73:1 */
+  --action-fill-hover: var(--red-700);
+  --on-accent: var(--text-on-accent);
+  --berry-blue: var(--text-link);          /* links, controls, section headings, table headers */
+  --berry-blue-soft: var(--surface-blue-subtle);
+  --berry-green: var(--green-800);         /* verified / ready text */
+  --berry-green-soft: var(--status-success-bg);
+  --focus: var(--border-focus);
 
-  /* Status (not brand) */
-  --warn-text: #8a4b00;
-  --warn-accent: #d97706;
-  --warn-soft: #fff4d6;
-  --danger: #b42318;
-  --danger-soft: #fee4e2;
+  /* Status */
+  --warn-text: var(--text-body);
+  --warn-accent: var(--status-warning);
+  --warn-soft: var(--status-warning-bg);
+  --danger: var(--red-700);
+  --danger-soft: var(--status-danger-bg);
 
-  /* Neutrals */
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-alt: #fafbfc;
-  --text: #1f2328;
-  --muted: #57606a;
-  --border: #d8dee4;
-  --grey: #8c959f;
-  --track: #eef1f4;
+  /* Surfaces, text and lines */
+  --bg: var(--surface-page);
+  --surface: var(--surface-card);
+  --surface-alt: var(--surface-subtle);
+  --text: var(--text-body);
+  --heading: var(--text-strong);
+  --muted: var(--text-muted);
+  --border: var(--border-default);
+  --grey: var(--neutral-500);
+  --track: var(--surface-sunken);
 
-  --radius: 10px;
-  --gutter: 16px;
-  --shadow: 0 1px 2px rgba(31, 35, 40, 0.06);
-}
-
-/* Dark: used when the system asks for it (unless the viewer chose Light), or when chosen. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --cherry: #c8102e; --cherry-hover: #e0233f; --cherry-soft: #3a1219;
-    --berry-blue: #8ab4f0; --berry-blue-soft: #15263c; --pressed: #2a5fa0;
-    --berry-green: #7cc983; --berry-green-soft: #14301a; --on-accent: #ffffff;
-    --warn-text: #f2b84b; --warn-accent: #d97706; --warn-soft: #33260a;
-    --danger: #ff9b91; --danger-soft: #3d1714;
-    --bg: #0e1116; --surface: #161b22; --surface-alt: #1c222b; --text: #e6edf3; --muted: #a2adb8;
-    --border: #343c46; --grey: #7d8590; --track: #222a33; --shadow: none;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --cherry: #c8102e; --cherry-hover: #e0233f; --cherry-soft: #3a1219;
-  --berry-blue: #8ab4f0; --berry-blue-soft: #15263c; --pressed: #2a5fa0;
-  --berry-green: #7cc983; --berry-green-soft: #14301a; --on-accent: #ffffff;
-  --warn-text: #f2b84b; --warn-accent: #d97706; --warn-soft: #33260a;
-  --danger: #ff9b91; --danger-soft: #3d1714;
-  --bg: #0e1116; --surface: #161b22; --surface-alt: #1c222b; --text: #e6edf3; --muted: #a2adb8;
-  --border: #343c46; --grey: #7d8590; --track: #222a33; --shadow: none;
+  /* Shape. --page-gutter is this page's side margin; the system's own --gutter (24px) is left alone. */
+  --radius: var(--radius-md);
+  --page-gutter: var(--space-4);
+  --shadow: var(--shadow-sm);
 }
 
 * { box-sizing: border-box; }
@@ -68,25 +60,28 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: var(--lh-normal);
 }
+h1, h2, h3, h4 { font-family: var(--heading-font); color: var(--heading); }
 
 a { color: var(--berry-blue); text-underline-offset: 2px; }
 a:focus-visible, button:focus-visible, summary:focus-visible, main:focus-visible, h2:focus-visible {
-  outline: 3px solid var(--berry-blue); outline-offset: 2px;
+  outline: 3px solid var(--focus); outline-offset: 2px;
 }
-code { font-family: ui-monospace, Consolas, monospace; font-size: 0.88em; overflow-wrap: anywhere; }
+code { font-family: var(--font-mono); font-size: 0.88em; overflow-wrap: anywhere; }
 
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip-link { position: absolute; left: -999px; }
-.skip-link:focus { left: var(--gutter); top: 8px; background: var(--surface); color: var(--berry-blue); padding: 8px; z-index: 10; }
+.skip-link:focus { left: var(--page-gutter); top: 8px; background: var(--surface); color: var(--berry-blue); padding: 8px; z-index: 10; }
 
 /* ---- Header ---- */
 .brand-stripe {
   height: 4px;
-  background: linear-gradient(90deg, var(--cherry) 0 33.3%, var(--berry-blue) 33.3% 66.6%, var(--berry-green) 66.6% 100%);
+  background: linear-gradient(90deg, var(--brand-primary) 0 33.3%, var(--brand-tertiary) 33.3% 66.6%, var(--brand-secondary) 66.6% 100%);
 }
-.site-header, main { max-width: 1440px; margin: 0 auto; padding: 0 var(--gutter); }
+.site-header, main { max-width: 1440px; margin: 0 auto; padding: 0 var(--page-gutter); }
 .site-header { padding-top: 18px; }
 .header-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start; }
 .eyebrow { margin: 0; color: var(--berry-blue); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; overflow-wrap: anywhere; }
@@ -102,10 +97,6 @@ h2 { font-size: 1.3rem; margin: 22px 0 8px; }
   padding: 6px 10px; border-radius: 6px; font-weight: 600;
 }
 
-.mode-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; background: var(--surface); }
-.mode-btn { border: 0; background: transparent; color: var(--text); padding: 6px 14px; font: inherit; font-size: 0.9rem; cursor: pointer; min-height: 40px; min-width: 44px; }
-.mode-btn[aria-pressed="true"] { background: var(--pressed); color: var(--on-accent); }
-
 main { padding-bottom: 56px; }
 main:focus { outline: none; }
 
@@ -116,10 +107,13 @@ main:focus { outline: none; }
 .console { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; align-items: start; }
 @media (min-width: 760px) { .console { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1200px) { .console { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-/* An opened disclosure needs room for its tables: the panel takes the full row. */
-.console .panel:has(.disclosure[open]) { grid-column: 1 / -1; }
-/* The ladder carries the ten rungs: give it two columns of room on wide screens. */
-@media (min-width: 1200px) { .console .panel[data-panel="ladder"] { grid-column: span 2; } }
+/* Every panel keeps its own grid cell, open or closed (Aleem's review of PR #1, required change 3):
+   opening a disclosure never changes a panel's column or width, so nothing the operator did not
+   touch moves sideways. Opened content stays inside its panel; a wide table scrolls within its own
+   frame (.table-wrap), and the full-width view of a capability or rung is its detail page.
+   tests/design-system.test.mjs fails if a rule places a panel by whether a disclosure is open. */
+.console > .panel { grid-column: auto; }
+.disclosure-body { min-width: 0; }
 .console-footer { margin-top: 24px; }
 
 .panel {
@@ -178,9 +172,9 @@ main:focus { outline: none; }
 
 .btn-primary {
   display: inline-flex; align-items: center; min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650;
-  color: var(--on-accent); background: var(--cherry); border: 0; border-radius: 8px; cursor: pointer; text-decoration: none;
+  color: var(--on-accent); background: var(--action-fill); border: 0; border-radius: 8px; cursor: pointer; text-decoration: none;
 }
-.btn-primary:hover { background: var(--cherry-hover); }
+.btn-primary:hover { background: var(--action-fill-hover); }
 .btn-primary:focus-visible { outline-offset: 3px; }
 
 /* ---- Detail pages and text blocks ---- */
@@ -189,19 +183,25 @@ main:focus { outline: none; }
 .muted { color: var(--muted); font-size: 0.9rem; }
 .empty { padding: 12px 14px; background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
 .error { color: var(--danger); background: var(--danger-soft); padding: 10px 12px; border-radius: 6px; font-weight: 600; }
-.guide-steps li { margin: 6px 0; }
+/* A guide step may name a long file path with no break point; it wraps rather than pushing the page
+   sideways at 320 px (WCAG 1.4.10). tests/evidence/check-review-corrections.mjs checks every page. */
+.guide-steps li { margin: 6px 0; overflow-wrap: anywhere; }
 .hypothetical { border: 1px dashed var(--grey); border-radius: 8px; padding: 10px 12px; margin: 14px 0; background: var(--surface-alt); }
 .hypothetical p { margin: 4px 0; }
 .console-footer code, .panel code { overflow-wrap: anywhere; }
 
 /* ---- Tables ---- */
-.table-wrap:focus-visible { outline: 3px solid var(--berry-blue); outline-offset: 2px; }
+.table-wrap:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th { background: var(--berry-blue-soft); color: var(--berry-blue); font-weight: 650; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover td { background: var(--surface-alt); }
+/* Inside a table frame, words break only between words: a narrow panel scrolls its table sideways
+   within .table-wrap rather than squeezing each header to one letter per line. Placed after the
+   .panel code rule above so it wins for code inside tables too. */
+.table-wrap th, .table-wrap td, .table-wrap th *, .table-wrap td * { overflow-wrap: normal; }
 .nowrap { white-space: nowrap; }
 .story-link { font-weight: 600; }
 .story-id { color: var(--muted); font-size: 0.78rem; }

@@ -1,49 +1,66 @@
-# Accessibility pass: axe and a keyboard walkthrough
+# Accessibility pass: axe, a keyboard walkthrough and reflow
 
-**Captured:** 7:38 PM CST on 2026-11-03 (re-run after the agent-link correction and the record-ID redaction), by `tests/evidence/capture-evidence.mjs`.
+**Captured:** 7:27 PM CST on 2026-11-09, from the working tree of `story-000-command-center-revision`
+after `main` was merged in (local merge commit `5a0376f`, platform sync of 2026-11-04), with Aleem's
+three required changes of 2026-11-08 applied (design-system tokens, the brief's panel order,
+disclosures that open in place) and the 320 px reflow fix, by `tests/evidence/capture-evidence.mjs`. The 2026-11-03
+results this replaces showed the earlier palette, order and dark theme.
 **Tools:** axe-core 4.10.2 and playwright-core 1.48.2, driving the installed Chrome. Neither is a
 repository dependency.
 **Raw results:** [axe-results.json](axe-results.json) and [keyboard-walkthrough.json](keyboard-walkthrough.json).
 
-## axe
+**What this is not.** These are automated checks plus one scripted keyboard pass, in one browser.
+They find many failures but cannot show that the page conforms to WCAG 2.2 AA, so no conformance is
+claimed here. See "What this pass does not cover" below.
 
-**Rule sets:** WCAG 2.0, 2.1 and 2.2 at levels A and AA, plus axe best practice. Colour contrast is
-one of the checked rules, in both themes.
+## axe: every rule axe ships
 
-| Run | Violations | Rules passed |
-|---|---|---|
-| Console, phone, light, disclosures closed | 0 | 41 |
-| Console, phone, light, every disclosure open | 0 | 50 |
-| Console, desktop, light, closed / open | 0 / 0 | 41 / 49 |
-| Console, phone, dark, closed / open | 0 / 0 | 41 / 50 |
-| Console, desktop, dark, closed / open | 0 / 0 | 41 / 49 |
-| Capability detail page, desktop, light | 0 | 45 |
-| Rung detail page (`autonomy:R1`), desktop, light | 0 | 39 |
-| Capture guide, desktop, light | 0 | 36 |
-| Story page (`STORY-000`), desktop, light | 0 | 38 |
-| State matrix page (fixtures), desktop, light | 0 | 41 |
+**Rules run:** all of axe's rules (105 to 107 per page; 29 to 58 of them find something to check and pass), not a tag subset. That includes the
+AAA and experimental rules, so each finding is labelled with what it is:
 
-The first run found four problems, each fixed and re-run:
+| Label | Meaning |
+|---|---|
+| WCAG A/AA | A failure of a WCAG 2.0, 2.1 or 2.2 success criterion at level A or AA |
+| AAA | A level AAA criterion. Not required for AA; reported because it was checked |
+| Best practice | axe's own advice, not a WCAG criterion |
+| Experimental | A rule axe marks as experimental, with known false positives |
 
-| Problem | Rule | Fix |
-|---|---|---|
-| Scrolling tables could not be reached by keyboard | `scrollable-region-focusable` | Table wrappers take focus and show the focus ring |
-| The "Why this ceiling" toggle in the ladder grid was under 24 px tall | `target-size`, WCAG 2.2 | Given a 24 px minimum height |
-| The state-matrix page repeated panel ids across scenarios | `landmark-unique` | Ids now carry a scenario suffix |
-| A badge forced 14 px of sideways scrolling at 820 px wide | Not an axe rule; found by the width check | The badge now wraps |
+**Widths:** narrow 320 px, phone 390, tablet 820, desktop 1440. The console was checked with every
+disclosure closed and with every disclosure open. The four detail pages were checked at 320 and 1440.
 
-## Keyboard walkthrough (desktop, light, scripted)
+| Run | WCAG A/AA | AAA | Best practice | Experimental | Needs review |
+|---|---|---|---|---|---|
+| Console, 320 / 390 / 820 / 1440, disclosures closed | 0 | 1 rule | 0 | 0 | 1 rule (AAA) |
+| Console, 320 / 390 / 820 / 1440, every disclosure open | 0 | 1 rule | 0 | 1 rule | 2 rules (AAA) |
+| Capability detail page, 320 and 1440 | 0 | 1 rule | 0 | 1 rule | 0 |
+| Rung detail page (`autonomy:R1`), 320 and 1440 | 0 | 1 rule | 0 | 1 rule | 0 |
+| Capture guide, 320 and 1440 | 0 | 1 rule | 0 | 0 | 0 |
+| Story page (`STORY-000`), 320 and 1440 | 0 | 1 rule | 0 | 0 | 0 |
+| State matrix page (fixtures), 1440 | 0 | 1 rule | 0 | 0 | 1 rule (AAA) |
 
-**Tab order.** From the top of the page, Tab visits 38 stops, in this order:
+**WCAG A/AA violations: 0 in all 17 runs.**
+
+### Every finding, and what it means
+
+| Finding | Kind | Where | What it is |
+|---|---|---|---|
+| `color-contrast-enhanced` (7:1) | AAA, serious | Every page | AAA asks for 7:1 for body text. The design-system colours used for text meet AA (4.5:1) but not 7:1: muted text 5.33:1, links 5.96:1, the filled button 4.73:1. Up to 896 elements per run. Meeting AAA would mean darker text colours than the design system defines; not attempted |
+| `focus-order-semantics` | Experimental, minor | Console with disclosures open (12 elements); capability and rung pages (1 or 2) | The scrolling table frames take keyboard focus (`tabindex="0"`, added so a keyboard user can scroll them; axe's `scrollable-region-focusable`) but have no role, so a screen reader announces only "group" or nothing. Not a WCAG failure; worth a `role="region"` and a label in a later revision |
+| `color-contrast-enhanced`, needs review | AAA | Console (6 elements), state matrix (48) | Elements axe could not measure for 7:1; AAA, not pursued |
+| `identical-links-same-purpose`, needs review | AAA | Console with disclosures open (25 links) | Links with the same name leading to different pages; AAA, not pursued |
+
+## Keyboard walkthrough (desktop 1440 px, light, scripted)
+
+**Tab order.** From the top of the page, Tab visits 38 stops; the 39th Tab leaves the page and the
+order repeats:
 1. the skip link;
 2. the console title;
-3. the three theme buttons;
-4. then each panel in turn: its primary action, then its disclosures. Panel 4's ten rung links come
-   before its action.
+3. then each panel in the brief's order (Employee, Inventory, Ladder, Behaviour, Governance, Gaps):
+   its primary action, then its disclosures. Panel 3's ten rung links come before its action.
 
-The 39th Tab leaves the page, and the order then repeats. All 38 stops had a visible 3 px focus outline.
-
-**Checks:**
+The walkthrough recorded 70 Tabs: one full pass, the moment focus leaves the page (Tab 39), and most
+of a second pass. All 69 stops on page elements had a visible 3 px focus outline. The theme buttons are gone; the panels carry three more
+disclosures than on 2026-11-03, so the total is again 38.
 
 | Check | Result |
 |---|---|
@@ -53,13 +70,41 @@ The 39th Tab leaves the page, and the order then repeats. All 38 stops had a vis
 | Space on the same summary closes it | Pass |
 | Enter on the ladder panel's action opens a capability detail page | Pass |
 | Enter on "Back to the console" returns to the ladder panel and focuses its heading | Pass |
-| Enter on the "Dark" theme button switches the theme and marks it pressed | Pass |
+| No theme switch is offered and no theme is set: the page is light only | Pass |
 
-**A fault the walkthrough found:** at first, the skip link changed the page address to `#main`. That
-re-drew the console and lost focus. It now moves focus directly, without changing the address.
+## Reflow at 320 px (WCAG 1.4.10)
+
+Measured separately on every reachable page: does the page scroll sideways at 320 CSS px?
+
+| Page | Sideways scroll |
+|---|---|
+| Console | 0 px |
+| Capability detail, rung detail (`R1`, `R8`), story page | 0 px |
+| Guides: requests, refresh | 0 px |
+| Guide: capture | 0 px. Fixed on 2026-11-09; it was 76 px (see below) |
+
+Opening any disclosure on the console, at 320, 390, 820 and 1440 px, keeps every panel in place and
+every word whole: [review-corrections-check.json](../review-corrections-check.json), 80 openings, 0
+failures. A wide table in a narrow panel scrolls sideways inside its own frame; that is allowed by
+1.4.10 for data tables, but it is more scrolling than a full-width view.
+
+This is now measured on every page at 320 px by `tests/evidence/check-review-corrections.mjs`
+(`reflow_320` in [review-corrections-check.json](../review-corrections-check.json)): 8 pages, 0 px each.
+
+## Found and fixed during this pass
+
+| Problem | How it was found | Fix |
+|---|---|---|
+| The capture guide scrolled 76 px sideways at 320 px (WCAG 1.4.10): the plain-text path `command-center/snapshots/product_experience.endpoint-snapshots.json` in its fifth step has no break point. It arrived with this PR (`0d0cc6a`) and is not on `main` | A text-overflow probe on every page at 320 px; axe's AA contrast rule also could not read that item's background | `.guide-steps li { overflow-wrap: anywhere; }`. Regression tests: `tests/reflow.test.mjs` (fails without the rule) and the 320 px reflow check on all 8 pages (reported 76 px before the fix, 0 after). axe's "needs review" item on that page is gone |
+| With a disclosure opened in place, the inventory table squeezed to fit its panel and broke its headers one letter per line, at every width | Looking at the one-disclosure screenshot; the layout check passed because nothing moved | `overflow-wrap: anywhere` removed from the disclosure body, and table cells now break only between words, so the table scrolls in its frame. The layout check now also fails any opening where a table word is split across lines; with the faulty rule put back it reports 40 failures, with the fix 0 |
+| The state matrix's "Today" row still showed Panels 1 and 5 as "Not available", which the real console no longer does since the platform sync | Comparing the matrix with the console | "Today" now renders exactly what the console loads; the old view is kept as its own row, "Real sources, nothing captured or synced". `tests/state-matrix.test.mjs` fails if they drift apart |
 
 ## What this pass does not cover
 
 - **No session with a person using a screen reader**, and no manual zoom test at 200% or 400%.
-- **The pages were checked in Chrome only.**
+- **Chrome only**, on Windows. No Firefox, Safari or mobile browser.
+- **The keyboard pass is scripted at desktop width only.**
+- **The font.** Roboto is not loaded (it would come from the Google Fonts CDN, an external dependency
+  pending a decision from Aleem or Ali), so every measurement used the system font that the design
+  system's `--font-body` falls back to. Text widths, and so wrapping, will differ if Roboto is added.
 - **axe cannot judge whether the wording is clear.** That is part of Aleem's review.

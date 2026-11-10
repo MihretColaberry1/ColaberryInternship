@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-04T01:38:51.376Z",
+  "captured_at": "2026-11-10T01:27:02.375Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -7,6 +7,15 @@
   },
   "chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
   "shots": [
+    {
+      "file": "screenshots/console-narrow-light.png",
+      "width": 320,
+      "theme": "light",
+      "horizontal_overflow_px": 0,
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
+      ]
+    },
     {
       "file": "screenshots/console-phone-light.png",
       "width": 390,
@@ -26,6 +35,12 @@
       ]
     },
     {
+      "file": "screenshots/console-tablet-light-one-open.png",
+      "width": 820,
+      "theme": "light",
+      "note": "one Panel 2 disclosure opened in place"
+    },
+    {
       "file": "screenshots/console-desktop-light.png",
       "width": 1440,
       "theme": "light",
@@ -33,6 +48,12 @@
       "console_errors": [
         "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
       ]
+    },
+    {
+      "file": "screenshots/console-desktop-light-one-open.png",
+      "width": 1440,
+      "theme": "light",
+      "note": "one Panel 2 disclosure opened in place"
     },
     {
       "file": "screenshots/console-desktop-light-expanded.png",
@@ -50,51 +71,6 @@
       "file": "screenshots/capability-detail-desktop-light.png",
       "width": 1440,
       "theme": "light",
-      "horizontal_overflow_px": 0
-    },
-    {
-      "file": "screenshots/console-phone-dark.png",
-      "width": 390,
-      "theme": "dark",
-      "horizontal_overflow_px": 0,
-      "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
-      ]
-    },
-    {
-      "file": "screenshots/console-tablet-dark.png",
-      "width": 820,
-      "theme": "dark",
-      "horizontal_overflow_px": 0,
-      "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
-      ]
-    },
-    {
-      "file": "screenshots/console-desktop-dark.png",
-      "width": 1440,
-      "theme": "dark",
-      "horizontal_overflow_px": 0,
-      "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
-      ]
-    },
-    {
-      "file": "screenshots/console-desktop-dark-expanded.png",
-      "width": 1440,
-      "theme": "dark",
-      "note": "every disclosure opened"
-    },
-    {
-      "file": "screenshots/capability-detail-phone-dark.png",
-      "width": 390,
-      "theme": "dark",
-      "horizontal_overflow_px": 0
-    },
-    {
-      "file": "screenshots/capability-detail-desktop-dark.png",
-      "width": 1440,
-      "theme": "dark",
       "horizontal_overflow_px": 0
     }
   ]

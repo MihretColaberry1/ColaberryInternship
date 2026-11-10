@@ -10,11 +10,16 @@ const entry = (key, status, body) => ({ endpoint: ENDPOINTS[key], method: 'GET',
 const snap = (entries) => ({ status: 'captured', ...readSnapshot({ schema: SNAPSHOT_SCHEMA, captured_at: at, snapshots: entries }) });
 const notCaptured = () => ({ status: 'not_captured', endpoints: Object.fromEntries(Object.keys(ENDPOINTS).map((k) => [k, { state: 'not_captured' }])) });
 
-/** Each scenario is { id, title, what, domain(source) } where source is the real loaded source file. */
+/**
+ * Each scenario is { id, title, what, domain(source, real) }: `source` is the real loaded source file,
+ * `real` is everything the console itself loads (source file, snapshot if any, and the platform sync).
+ */
 export const SCENARIOS = [
   { id: 'loading', title: 'Loading', what: 'The sources have not answered yet.',
     domain: () => ({ status: 'loading' }) },
-  { id: 'today', title: 'Today (real sources, no snapshot)', what: 'The real pinned source file and project plan; no endpoint snapshot captured. This is what the published console shows.',
+  { id: 'today', title: 'Today (real sources)', what: 'Exactly what the console loads on this branch: the pinned source file, the project plan and the platform\'s synced copy of its endpoints (.colaberry/agent-domain.json); no endpoint snapshot is captured. This is what the published console shows.',
+    domain: (source, real) => ({ status: 'loaded', ...real }) },
+  { id: 'nothing-captured', title: 'Real sources, nothing captured or synced', what: 'The real pinned source file and project plan, with neither an endpoint snapshot nor the platform sync. No fixture data; the endpoint answers are simply absent.',
     domain: (source) => ({ status: 'loaded', source, snapshot: notCaptured() }) },
   { id: 'captured-empty', title: 'Captured: no agent, nothing filed', what: 'FIXTURE: both endpoints answered 200; the domain has no agent and no requests.',
     domain: (source) => ({ status: 'loaded', source, snapshot: snap([

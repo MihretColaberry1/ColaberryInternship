@@ -13,6 +13,24 @@
       "note": "The capability research file the platform's agent-domain routes read. Every capability in it is requirement_validation_state draft: nobody has agreed it."
     }
   ],
+  "design_system": {
+    "_what_this_is": "The Colaberry design-system token files the Command Center's stylesheet is built on, copied byte for byte into command-center/vendor/colaberry-ds/ and pinned to one upstream commit (Aleem's review of PR #1, 2026-11-08, required change 1). tests/design-system.test.mjs recomputes each git blob hash.",
+    "repo": "https://github.com/aleemcolaberry/Colaberry-DS-School-Final",
+    "commit": "9b8a6ec64740f8010b4fcaf4fc75b69f62a27529",
+    "commit_date": "2026-07-16",
+    "license": "MIT (Copyright (c) 2026 Colaberry, Inc.), copied as command-center/vendor/colaberry-ds/LICENSE",
+    "copied_on": "2026-11-09",
+    "files": [
+      { "file": "command-center/vendor/colaberry-ds/tokens/colors.css", "upstream_path": "tokens/colors.css", "git_blob": "cca255a35e6669839d46ef12200f24f8236c3c68" },
+      { "file": "command-center/vendor/colaberry-ds/tokens/typography.css", "upstream_path": "tokens/typography.css", "git_blob": "3bc7418e70dfaa3362933346d96d72a199613707" },
+      { "file": "command-center/vendor/colaberry-ds/tokens/spacing.css", "upstream_path": "tokens/spacing.css", "git_blob": "8be0b330338be6ad5f63e6c0aaf61508760f5a59" },
+      { "file": "command-center/vendor/colaberry-ds/LICENSE", "upstream_path": "LICENSE", "git_blob": "8e18d11dba2a79a88d697fe1bc5c3a2b261296df" }
+    ],
+    "not_vendored": [
+      { "upstream_path": "tokens/fonts.css", "why": "It loads Roboto from the Google Fonts CDN and an icon font from jsDelivr. The repository ships no font files to self-host (assets/fonts/ holds only LICENSES.md), so adopting it adds an external dependency. Not added: pending a decision from Aleem or Ali (Mihret, 2026-11-09). The page uses the --font-body token, which names Roboto first and falls back to the system font." },
+      { "upstream_path": "tokens/base.css", "why": "An optional element layer (body 18px, h1 48px, link and focus defaults). Adopting it is a type-scale change, which the review lists separately as item 7 for the next revision." }
+    ]
+  },
   "platform_code": [
     {
       "used_in": "command-center/authority.js",

@@ -52,12 +52,15 @@ const endpointsNamed = (p) => new Set(findAll(findAll(p, hasClass('panel-reads')
 // Display id to the brief's panel number (docs/stories/STORY-000.md).
 const BRIEF = { employee: 1, inventory: 2, ladder: 3, behaviour: 4, governance: 5, gaps: 6 };
 
-test('six panels render in the operator order, numbered 1 to 6', async () => {
+test('six panels render in the brief order, each numbered with its brief panel number', async () => {
   const { domain, project } = await realInputs();
   const panels = renderPanels(domain, project);
   assert.deepEqual(panels.map((p) => p.getAttribute('data-panel')), PANEL_ORDER);
-  assert.deepEqual(PANEL_ORDER, ['employee', 'governance', 'inventory', 'ladder', 'behaviour', 'gaps']);
+  // Aleem's review of PR #1 (2026-11-08), required change 2: the brief's order, the same for every domain.
+  assert.deepEqual(PANEL_ORDER, ['employee', 'inventory', 'ladder', 'behaviour', 'governance', 'gaps']);
   panels.forEach((p, i) => assert.equal(findAll(p, hasClass('panel-order'))[0].textContent, String(i + 1)));
+  // The number on screen is the brief's number for that panel, so a reviewer moving between domains reads the same thing.
+  panels.forEach((p) => assert.equal(findAll(p, hasClass('panel-order'))[0].textContent, String(BRIEF[p.getAttribute('data-panel')])));
 });
 
 test('criterion 1: each panel names, as whole tags, every endpoint the brief assigns it', async () => {
@@ -70,7 +73,7 @@ test('criterion 1: each panel names, as whole tags, every endpoint the brief ass
   for (const k of Object.keys(ENDPOINTS)) assert.ok(endpointsNamed(panels.gaps).has(GET(k)), `gaps does not name ${GET(k)}`);
 });
 
-test('today, from the platform sync: Panel 1 is ready, Panel 2 is empty (no requests), the other four are ready', async () => {
+test('today, from the platform sync: Panel 1 is ready, Panel 5 is empty (no requests), the other four are ready', async () => {
   const { domain, project } = await realInputs();
   const panels = byId(renderPanels(domain, project));
   const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
@@ -78,7 +81,7 @@ test('today, from the platform sync: Panel 1 is ready, Panel 2 is empty (no requ
   for (const id of ['employee', 'governance']) assert.equal(findAll(panels[id], hasClass('not-available')).length, 0, id);
 });
 
-test('with neither a snapshot nor the platform sync: Panels 1 and 2 are "Not available", the other four are ready', async () => {
+test('with neither a snapshot nor the platform sync: Panels 1 and 5 are "Not available", the other four are ready', async () => {
   const { domain, project } = await realInputs({ sync: false });
   const panels = byId(renderPanels(domain, project));
   const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));

@@ -18,10 +18,22 @@ import { employeeView, requestGroups, toolRuleStatus } from '../command-center/a
 import { NOT_AN_APPROVAL, renderEmployeePanel } from '../command-center/panel-employee.js';
 import { renderGovernancePanel } from '../command-center/panel-governance.js';
 import { consoleInputs, renderPanels } from '../command-center/console.js';
+import { formatCentral } from '../command-center/model.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = async (p) => JSON.parse(await readFile(path.join(ROOT, p), 'utf8'));
-const LAST_CHANGED_CENTRAL = '3 November 2026, 8:26 PM CST'; // manifest generated_at 2026-11-04T02:26:48.364Z
+// "Last changed" is the manifest's generated_at in Central time. Read from the manifest, not typed in:
+// a hard-coded time broke on the next platform sync (main 4ca7ada, 2026-11-04, merged 2026-11-09).
+const LAST_CHANGED_CENTRAL = formatCentral(new Date((await read('.colaberry/manifest.json')).generated_at));
+test('the expected "last changed" text is a Central-time date, as the page writes it', () => {
+  assert.match(LAST_CHANGED_CENTRAL, /^\d{1,2} [A-Z][a-z]+ \d{4}, \d{1,2}:\d{2} [AP]M C[SD]T$/);
+});
+// Independent of the manifest: fixed inputs and typed-in answers, so a formatter that drifted would fail
+// here even though the page and LAST_CHANGED_CENTRAL above would still agree with each other.
+test('formatCentral pins standard time (CST) to fixed inputs', () => {
+  assert.equal(formatCentral(new Date('2026-11-04T02:26:48.364Z')), '3 November 2026, 8:26 PM CST');
+  assert.equal(formatCentral(new Date('2026-11-04T21:14:40.376Z')), '4 November 2026, 3:14 PM CST');
+});
 
 // Repo files from disk; the local snapshot always answers 404. `override` replaces one file's answer.
 function diskFetch(override = {}) {
@@ -119,7 +131,7 @@ test('no synced file is "not synced"; an unreadable one is reported, not hidden'
   assert.match(broken.snapshot.sync.error, /not valid JSON/);
 });
 
-test('a broken synced file makes Panels 1 and 2 an error, never "Not available" and never loading', async () => {
+test('a broken synced file makes Panels 1 and 5 an error, never "Not available" and never loading', async () => {
   const domain = await realDomain({ [PLATFORM_SYNC_FILE]: answer({ schema: 'wrong' }) });
   const panels = rendered(() => renderPanels(consoleInputs(domain), null));
   for (const id of ['employee', 'governance']) {
@@ -188,7 +200,7 @@ test('the synced agent state changes no capability authority: still R0 for all, 
   assert.equal(toolRuleStatus(inputs.rows).held, 0);
 });
 
-test('Panel 2 on real data: empty, said in words, read from the synced copy, and a request is never a grant', async () => {
+test('Panel 5 on real data: empty, said in words, read from the synced copy, and a request is never a grant', async () => {
   const domain = await realDomain();
   const p = rendered(() => renderPanels(consoleInputs(domain), null).governance);
   assert.equal(p.getAttribute('data-state'), 'empty');

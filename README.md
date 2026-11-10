@@ -24,8 +24,12 @@ python -m http.server 8000
 ```
 
 - No sign-in is needed to view it, and it never calls the platform.
-- **Theme:** the System / Light / Dark switch is in the top right. The choice is remembered in this
-  browser only.
+- **Theme:** light only, built on the Colaberry design-system tokens (pinned in
+  `command-center/sources/SOURCES.json`). The design system's dark set is partial, so no dark theme is
+  offered until one can be built from its own values.
+- **Font:** the design system's `--font-body` names Roboto first, but Roboto is not loaded. It would
+  come from the Google Fonts CDN, an external dependency pending a decision from Aleem or Ali, so the
+  page shows the system font the token falls back to.
 - **Widths:** to review at phone, tablet and desktop widths, use the browser's device toolbar
   (390, 820 and 1440 px are the widths in the evidence).
 - **Detail pages:**
@@ -39,16 +43,20 @@ python -m http.server 8000
 **Published link:** not published yet. GitHub Pages is not enabled on this repository, and
 publishing waits for Mihret's approval and a choice of branch (see "Publishing" below).
 
-## The six panels, in the order the operator needs them
+## The six panels, in the brief's order
 
-| # | Panel | Question | Brief panel | One primary action |
-|---|---|---|---|---|
-| 1 | Your employee | Does it exist, and what is it allowed to do? | 1 | Capture this panel with your own sign-in (today) |
-| 2 | Your governance queue | What am I waiting on a human for? | 5 | Capture this panel with your own sign-in (today) |
-| 3 | Your capability inventory | What am I actually building? | 2 | Review a draft capability |
-| 4 | The autonomy ladder | Where is this going? | 3 | See how the R2 cap would apply |
-| 5 | Per-rung behaviour | What does the next rung require of me? | 4 | Read what autonomy:R1 requires |
-| 6 | What is not available | What would I be lying about? | 6 | Refresh the data from the portal |
+The order and the numbers are the STORY-000 brief's, the same in every domain (Aleem's review of
+PR #1, 2026-11-08). A case for showing the governance queue second is written up as a
+[proposal for the brief's owner](docs/evidence/panel-order-proposal.md); it is not applied here.
+
+| # | Panel | Question | One primary action |
+|---|---|---|---|
+| 1 | Your employee | Does it exist, and what is it allowed to do? | Capture this panel with your own sign-in (today) |
+| 2 | Your capability inventory | What am I actually building? | Review a draft capability |
+| 3 | The autonomy ladder | Where is this going? | See how the R2 cap would apply |
+| 4 | Per-rung behaviour | What does the next rung require of me? | Read what autonomy:R1 requires |
+| 5 | Your governance queue | What am I waiting on a human for? | Capture this panel with your own sign-in (today) |
+| 6 | What is not available | What would I be lying about? | Refresh the data from the portal |
 
 Each panel shows:
 - a state chip: Loading, Ready, Empty, Not available or Error;
@@ -57,7 +65,7 @@ Each panel shows:
 - its long content in collapsed disclosures.
 
 The primary action changes with the state. For example, once a snapshot exists, Panel 1's action
-becomes "See what is blocking an agent". Why this order, and every other choice, is in the
+becomes "See what is blocking an agent". Every design choice is in the
 [design rationale](docs/evidence/design-rationale.md).
 
 ## Content inventory: the nine tabs, mapped to six panels
@@ -145,15 +153,15 @@ question 8 in [the plan](docs/stories/STORY-000-agent-domain-plan.md#5-questions
 | What | Waiting for | Panel shows now |
 |---|---|---|
 | `GET /api/admin/agent-domains-mine` | A capture with the reviewed v4 snippet, under Mihret's own sign-in (Ali Muwwakkil approved the method on 2026-11-02, with two conditions) | 1: "Not available" |
-| `GET /api/admin/agent-domain-change-requests-mine` | The same capture | 2: "Not available" |
-| `GET /api/admin/agent-domains/product_experience/coverage` | Not in Ali's approval. The v4 capture does not read it | 3: "/coverage check: Not captured yet" |
+| `GET /api/admin/agent-domain-change-requests-mine` | The same capture | 5: "Not available" |
+| `GET /api/admin/agent-domains/product_experience/coverage` | Not in Ali's approval. The v4 capture does not read it | 2: "/coverage check: Not captured yet" |
 | `GET /api/admin/agent-domains/product_experience` | Not in Ali's approval. Its response does not carry the capability records anyway | Values come from the pinned source file, and each panel says so |
-| The agent's seven fields (enabled, autonomy level, tools granted, when set, how set) | The v4 capture keeps only whether an agent is linked. Adding them (a v5 capture) needs Ali's approval | 1: "Not captured: not in the captured response" once captured; "Tools granted: Not captured" on Panels 1 and 2 |
-| Request titles and dates | Same: v4 keeps only kind and status | 2: "not captured" in those columns |
-| Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 2: "withheld: identifies a person" |
+| The agent's seven fields (enabled, autonomy level, tools granted, when set, how set) | The v4 capture keeps only whether an agent is linked. Adding them (a v5 capture) needs Ali's approval | 1: "Not captured: not in the captured response" once captured; "Tools granted: Not captured" on Panels 1 and 5 |
+| Request titles and dates | Same: v4 keeps only kind and status | 5: "not captured" in those columns |
+| Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 5: "withheld: identifies a person" |
 | `autonomy_level_set_by` | The platform has no column for it | 1: "Not recorded by the platform" |
-| An approved autonomy level for any capability | A named human approving one | 4: `autonomy:R0`, "Starting rung — no human approval yet" |
-| The employee's current rung | A verified source that records an agent's rung on this ladder. None exists: the agent's `autonomy_level` is a different scale | 4: "Unknown: no source records an agent's rung on this ladder" |
+| An approved autonomy level for any capability | A named human approving one | 3: `autonomy:R0`, "Starting rung — no human approval yet" |
+| The employee's current rung | A verified source that records an agent's rung on this ladder. None exists: the agent's `autonomy_level` is a different scale | 3: "Unknown: no source records an agent's rung on this ladder" |
 
 ## Tests
 

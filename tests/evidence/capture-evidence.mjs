@@ -1,5 +1,5 @@
 // Captures the STORY-000 evidence from the running console: screenshots at phone, tablet and desktop
-// widths in light and dark themes, the state matrix, axe results and a scripted keyboard walkthrough.
+// widths in the light theme (the only theme since 2026-11-09), the state matrix, axe results and a scripted keyboard walkthrough.
 // Writes only under docs/evidence/. Never contacts the platform: it reads this repository through a
 // local static server.
 //
@@ -24,8 +24,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT = path.join(ROOT, 'docs/evidence');
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8765/';
 const CHROME = process.env.CHROME ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const WIDTHS = [['phone', 390, 844], ['tablet', 820, 1180], ['desktop', 1440, 900]];
-const THEMES = ['light', 'dark'];
+const WIDTHS = [['narrow', 320, 800], ['phone', 390, 844], ['tablet', 820, 1180], ['desktop', 1440, 900]];
+const W = Object.fromEntries(WIDTHS.map((w) => [w[0], w]));
+// Light only: the dark theme was removed because the design system's dark set is partial (Aleem's
+// review of PR #1, 2026-11-08; Mihret's decision of 2026-11-09).
+const THEMES = ['light'];
 const CAPABILITY = 'product_experience.design_token_drift_audit';
 
 const settled = (page) => page.waitForFunction(() => document.querySelectorAll('.panel').length === 6
@@ -41,11 +44,27 @@ async function open(browser, { width, height, theme }, route = '') {
   return { context, page, errors };
 }
 
+/**
+ * What kind of rule a finding comes from. Only "wcag_a_aa" findings are WCAG 2.x A/AA failures;
+ * best practice, AAA and experimental rules are reported separately and are not conformance claims.
+ */
+function ruleLevel(tags) {
+  if (tags.includes('experimental')) return 'experimental';
+  if (tags.some((t) => /^wcag2\d?a{1,2}$/.test(t))) return 'wcag_a_aa';
+  if (tags.some((t) => /^wcag2\d?aaa$/.test(t))) return 'wcag_aaa';
+  if (tags.includes('best-practice')) return 'best_practice';
+  return 'other';
+}
+
+/** Runs EVERY rule axe ships (including AAA and experimental), not a tag subset. */
 async function axe(page, label) {
-  await page.addScriptTag({ path: AXE_PATH });
-  const r = await page.evaluate(() => window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } }));
-  return { label, url: page.url(), violations: r.violations.map((v) => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length,
-    targets: v.nodes.slice(0, 5).map((n) => n.target.join(' ')) })), passes: r.passes.length, incomplete: r.incomplete.map((v) => ({ id: v.id, nodes: v.nodes.length })) };
+  if (!(await page.evaluate(() => Boolean(window.axe)))) await page.addScriptTag({ path: AXE_PATH });
+  const r = await page.evaluate(() => window.axe.run(document, { runOnly: { type: 'rule', values: window.axe.getRules().map((x) => x.ruleId) } }));
+  const summarise = (list) => list.map((v) => ({ id: v.id, level: ruleLevel(v.tags), impact: v.impact, help: v.help, nodes: v.nodes.length,
+    targets: v.nodes.slice(0, 5).map((n) => n.target.join(' ')) }));
+  return { label, url: page.url(), rules_run: r.passes.length + r.violations.length + r.incomplete.length + r.inapplicable.length,
+    violations: summarise(r.violations), passes: r.passes.length, inapplicable: r.inapplicable.length,
+    incomplete: summarise(r.incomplete).map(({ id, level, nodes, help }) => ({ id, level, nodes, help })) };
 }
 
 async function screenshots(browser, log) {
@@ -58,6 +77,15 @@ async function screenshots(browser, log) {
       const file = `screenshots/console-${name}-${theme}.png`;
       await page.screenshot({ path: path.join(OUT, file), fullPage: true });
       shots.push({ file, width, theme, horizontal_overflow_px: overflow, console_errors: errors });
+      if (name === 'tablet' || name === 'desktop') {
+        // One disclosure opened in place: the other panels keep their columns (Aleem, 2026-11-08, change 3).
+        const summary = page.locator('.panel[data-panel="inventory"] > .panel-details > details.disclosure > summary').first();
+        await summary.click();
+        const one = `screenshots/console-${name}-${theme}-one-open.png`;
+        await page.screenshot({ path: path.join(OUT, one), fullPage: true });
+        shots.push({ file: one, width, theme, note: 'one Panel 2 disclosure opened in place' });
+        await summary.click();
+      }
       if (name === 'desktop') {
         await page.$$eval('details.disclosure', (ds) => ds.forEach((d) => { d.open = true; }));
         const expanded = `screenshots/console-desktop-${theme}-expanded.png`;
@@ -67,7 +95,7 @@ async function screenshots(browser, log) {
       await context.close();
       log(`${file} overflow=${overflow}`);
     }
-    for (const [name, width, height] of [WIDTHS[0], WIDTHS[2]]) {
+    for (const [name, width, height] of [W.phone, W.desktop]) {
       const { context, page } = await open(browser, { width, height, theme }, `#/capability/${CAPABILITY}`);
       await page.waitForSelector('.hypothetical');
       const file = `screenshots/capability-detail-${name}-${theme}.png`;
@@ -95,7 +123,7 @@ async function stateMatrix(browser) {
 async function accessibility(browser) {
   const runs = [];
   for (const theme of THEMES) {
-    for (const [name, width, height] of [WIDTHS[0], WIDTHS[2]]) {
+    for (const [name, width, height] of WIDTHS) {
       const { context, page } = await open(browser, { width, height, theme });
       await settled(page);
       runs.push(await axe(page, `console, ${name}, ${theme}, disclosures closed`));
@@ -105,10 +133,12 @@ async function accessibility(browser) {
     }
   }
   for (const route of [`#/capability/${CAPABILITY}`, '#/rung/autonomy:R1', '#/guide/capture', '#/story/STORY-000']) {
-    const { context, page } = await open(browser, { width: 1440, height: 900, theme: 'light' }, route);
-    await page.waitForSelector('.back');
-    runs.push(await axe(page, `detail ${route}, desktop light`));
-    await context.close();
+    for (const [name, width, height] of [W.narrow, W.desktop]) {
+      const { context, page } = await open(browser, { width, height, theme: 'light' }, route);
+      await page.waitForSelector('.back');
+      runs.push(await axe(page, `detail ${route}, ${name}, light`));
+      await context.close();
+    }
   }
   return runs;
 }
@@ -151,12 +181,8 @@ async function keyboard(browser) {
   await settled(page);
   checks.push({ step: 'Enter on "Back to the console" returns to the ladder panel and focuses its heading',
     pass: await page.evaluate(() => document.activeElement.id === 'panel-ladder-title') });
-  const themeButton = page.getByRole('button', { name: 'Dark' });
-  await themeButton.focus();
-  await page.keyboard.press('Enter');
-  checks.push({ step: 'Enter on the "Dark" theme button switches the theme and marks it pressed',
-    pass: await page.evaluate(() => document.documentElement.dataset.theme === 'dark'
-      && document.querySelector('.mode-btn[aria-pressed="true"]').textContent === 'Dark') });
+  checks.push({ step: 'No theme switch is offered and no theme is set: the page is light only',
+    pass: await page.evaluate(() => !document.querySelector('.mode-btn') && !document.documentElement.dataset.theme) });
   await context.close();
   return { stops, checks, invisible_focus: stops.filter((s) => s.tag !== 'body' && (s.outline_px < 2 || s.outline_style === 'none')) };
 }
@@ -176,7 +202,7 @@ try {
   await writeFile(path.join(OUT, 'state-matrix.json'), `${JSON.stringify({ ...meta, matrix }, null, 2)}\n`);
   await writeFile(path.join(OUT, 'a11y/axe-results.json'), `${JSON.stringify({ ...meta, runs: axeRuns }, null, 2)}\n`);
   await writeFile(path.join(OUT, 'a11y/keyboard-walkthrough.json'), `${JSON.stringify({ ...meta, ...kb }, null, 2)}\n`);
-  log(`axe: ${axeRuns.map((r) => `${r.label}: ${r.violations.length} violations`).join(' | ')}`);
+  log(`axe: ${axeRuns.map((r) => `${r.label}: ${r.violations.length} violations (${r.violations.filter((v) => v.level === 'wcag_a_aa').length} WCAG A/AA), ${r.incomplete.length} needs review`).join(' | ')}`);
   log(`keyboard: ${kb.checks.filter((c) => c.pass).length} of ${kb.checks.length} checks pass; ${kb.invisible_focus.length} stops without a visible outline`);
 } finally {
   await browser.close();

@@ -84,7 +84,7 @@ export function rungDetail(g) {
 const GUIDES = {
   capture: {
     panel: 'employee',
-    title: 'Capture Panels 1 and 2 (Your employee and Your governance queue) with your own sign-in',
+    title: 'Capture Panels 1 and 5 (Your employee and Your governance queue) with your own sign-in',
     steps: [
       'Sign in to the portal yourself, in your own browser. Never use anyone else\'s login.',
       `Run the reviewed capture snippet (v4) in that tab's console. It only reads GET ${ENDPOINTS.mine} and GET ${ENDPOINTS.requests}, and downloads one file.`,
@@ -92,7 +92,7 @@ const GUIDES = {
       'The redaction and privacy check are done for you, outside this repository, and the report is shown to you. If redaction would empty a panel, the process stops and Ali Muwwakkil is asked.',
       `Only the redacted file, after you have reviewed it, is placed at ${SNAPSHOT_FILE}. Nothing that identifies another person is committed.`,
     ],
-    why: 'This page is public. Panels 1 and 2 (Your employee and Your governance queue) read admin endpoints that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (Ali Muwwakkil, 2026-11-02).',
+    why: 'This page is public. Panels 1 and 5 (Your employee and Your governance queue) read admin endpoints that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (Ali Muwwakkil, 2026-11-02).',
   },
   requests: {
     panel: 'governance',

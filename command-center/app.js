@@ -1,4 +1,4 @@
-// App shell for the six-panel console: header, "Data as of" stamp, theme switch and hash routing.
+// App shell for the six-panel console: header, "Data as of" stamp and hash routing.
 // The nine tabs and the Sample/Real switch were removed on 2026-11-03 (README, "Content inventory").
 import { h } from './dom.js';
 import { loadProjectData } from './data.js';
@@ -6,39 +6,10 @@ import { buildOverviewModel } from './model.js';
 import { loadAgentDomainData } from './agent-domain-data.js';
 import { PANEL_ORDER, renderRoute } from './console.js';
 
-const THEME_KEY = 'command-center-theme';
-const THEMES = [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']];
-const state = { theme: 'system', domain: { status: 'loading' }, project: { status: 'loading' } };
-
-// Per-viewer convenience only: the page works the same when storage is blocked.
-function readTheme() {
-  try {
-    const t = localStorage.getItem(THEME_KEY);
-    return THEMES.some(([k]) => k === t) ? t : 'system';
-  } catch (err) {
-    console.warn('Command Center: could not read the saved theme; using the system setting.', err);
-    return 'system';
-  }
-}
-
-function applyTheme(theme) {
-  state.theme = theme;
-  if (theme === 'system') delete document.documentElement.dataset.theme;
-  else document.documentElement.dataset.theme = theme;
-  try {
-    localStorage.setItem(THEME_KEY, theme);
-  } catch (err) {
-    console.warn('Command Center: could not save the theme; it will reset on reload.', err);
-  }
-}
-
-function themeSwitch() {
-  return h('div', { class: 'mode-switch', role: 'group', 'aria-label': 'Colour theme' },
-    THEMES.map(([key, label]) => h('button', {
-      type: 'button', class: 'mode-btn', 'aria-pressed': state.theme === key ? 'true' : 'false',
-      onclick: () => { applyTheme(key); render(); },
-    }, label)));
-}
+// Light theme only (Aleem's review of PR #1, 2026-11-08, and Mihret's decision of 2026-11-09): the
+// design system's dark set is partial, so a dark theme would need values the system does not define.
+// No theme switch is offered and data-theme is never set, so the system's [data-theme="dark"] block never applies.
+const state = { domain: { status: 'loading' }, project: { status: 'loading' } };
 
 // Old tab links (#/overview, #/agent-domain/capability/x, #/project-management/story/x) still land
 // somewhere sensible: the matching detail page, or the console.
@@ -71,8 +42,7 @@ export function render() {
     h('header', { class: 'site-header' },
       h('div', { class: 'header-row' },
         h('div', {}, h('p', { class: 'eyebrow' }, 'Colaberry · Command Center · product_experience'),
-          h('h1', {}, h('a', { href: '#/', class: 'home-link' }, 'Product Experience & UI/UX agent domain'))),
-        themeSwitch()),
+          h('h1', {}, h('a', { href: '#/', class: 'home-link' }, 'Product Experience & UI/UX agent domain')))),
       stamp()),
     h('main', { id: 'main', tabindex: '-1', class: onConsole ? 'main-console' : 'main-detail' }, renderRoute(parts, state.domain, project))));
   if (parts[0] === 'panel' && PANEL_ORDER.includes(parts[1])) {
@@ -84,7 +54,6 @@ export function render() {
 }
 
 async function start() {
-  applyTheme(readTheme());
   // The skip link moves focus itself: following "#main" would change the route and re-render.
   document.querySelector('.skip-link')?.addEventListener('click', (event) => {
     event.preventDefault();

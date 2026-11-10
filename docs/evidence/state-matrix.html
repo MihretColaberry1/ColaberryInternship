@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light">
   <title>State matrix · Command Center evidence</title>
+  <link rel="stylesheet" href="../../command-center/vendor/colaberry-ds/tokens/colors.css">
+  <link rel="stylesheet" href="../../command-center/vendor/colaberry-ds/tokens/typography.css">
+  <link rel="stylesheet" href="../../command-center/vendor/colaberry-ds/tokens/spacing.css">
   <link rel="stylesheet" href="../../command-center/styles.css">
   <style>
     .fixture-banner { border: 2px solid var(--warn-accent); background: var(--warn-soft); color: var(--warn-text); padding: 8px 12px; border-radius: 8px; font-weight: 650; }
@@ -16,7 +19,7 @@
 <body>
   <main id="main">
     <h1>State matrix: every panel in every state</h1>
-    <p class="fixture-banner" role="note">Review page. Except the "Today" row, every scenario uses FIXTURE endpoint responses written to put a panel into a state. None of it is this domain's data, and the console never loads this page.</p>
+    <p class="fixture-banner" role="note">Review page. Except the "Today" and "nothing captured or synced" rows, every scenario uses FIXTURE endpoint responses written to put a panel into a state. None of it is this domain's data, and the console never loads this page.</p>
     <p>Each cell is read from the rendered panel's <code>data-state</code>, not typed by hand. A dash means the panel cannot reach that state from that scenario; the reasons are in <code>docs/evidence/state-matrix.md</code>.</p>
     <div id="matrix" aria-live="polite"><p>Rendering…</p></div>
     <div id="scenarios"></div>
@@ -36,7 +39,7 @@
     const project = { status: 'loaded', data, model: buildOverviewModel(data, new Date()), error: null };
     const results = {};
     const sections = SCENARIOS.map((s) => {
-      const panels = renderPanels(consoleInputs(s.domain(real.source)), s.id === 'loading' ? null : project);
+      const panels = renderPanels(consoleInputs(s.domain(real.source, real)), s.id === 'loading' ? null : project);
       results[s.id] = Object.fromEntries(PANEL_ORDER.map((id) => [id, panels[id].dataset.state]));
       // The same panels appear once per scenario: suffix their ids so ids and landmark names stay unique.
       for (const id of PANEL_ORDER) {
@@ -46,7 +49,7 @@
         p.querySelector('h2').append(` (${s.title})`);
       }
       return h('section', { class: 'scenario', id: `scenario-${s.id}`, 'aria-labelledby': `t-${s.id}` },
-        h('h2', { id: `t-${s.id}` }, s.title), h('p', { class: s.id === 'today' ? 'muted' : 'fixture-banner' }, s.what),
+        h('h2', { id: `t-${s.id}` }, s.title), h('p', { class: ['today', 'nothing-captured'].includes(s.id) ? 'muted' : 'fixture-banner' }, s.what),
         h('div', { class: 'console' }, PANEL_ORDER.map((id) => panels[id])));
     });
     document.getElementById('scenarios').replaceChildren(...sections);

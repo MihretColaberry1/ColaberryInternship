@@ -1,7 +1,7 @@
 // The six-panel console (STORY-000, current brief of 2026-11-03), and the detail pages below it.
-// Panels are ordered by what the governing human needs first (docs/evidence/design-rationale.md):
-// does my employee exist, what is waiting on me, what am I building, how far may it go, what does
-// the next rung require, and what can this page not tell me.
+// Panels follow the STORY-000 brief's order and numbering, the same for every domain (Aleem's review of
+// PR #1, 2026-11-08, required change 2). A different order, governance second, is written up as a
+// proposal for the brief's owner in docs/evidence/panel-order-proposal.md; it is not applied here.
 import { h } from './dom.js';
 import { ENDPOINTS } from './agent-domain-facts.js';
 import { CAPABILITY_FILE, PLATFORM_SYNC_FILE } from './agent-domain-data.js';
@@ -19,8 +19,8 @@ import { renderGapsPanel } from './panel-gaps.js';
 import { capabilityDetail, guidePage, rungDetail } from './details.js';
 import { storyDetail } from './project-sections.js';
 
-/** Display order. Each id maps to one brief panel (docs/evidence/traceability.md). */
-export const PANEL_ORDER = Object.freeze(['employee', 'governance', 'inventory', 'ladder', 'behaviour', 'gaps']);
+/** Display order = the brief's panel numbers 1 to 6 (docs/evidence/traceability.md). */
+export const PANEL_ORDER = Object.freeze(['employee', 'inventory', 'ladder', 'behaviour', 'governance', 'gaps']);
 
 const loadingEndpoints = () => Object.fromEntries(Object.keys(ENDPOINTS).map((k) => [k, { state: 'loading' }]));
 
@@ -39,7 +39,7 @@ export function consoleInputs(domain) {
 function syncText(sync) {
   if (!sync || sync.status === 'not_synced') return '';
   if (sync.status === 'invalid') return ` The platform-synced file ${PLATFORM_SYNC_FILE} could not be used: ${sync.error}`;
-  return ` Panels 1 and 2 read ${PLATFORM_SYNC_FILE}, the platform's synced copy of its endpoints, ${lastChangedWords(sync.last_changed)}.`;
+  return ` Panels 1 and 5 read ${PLATFORM_SYNC_FILE}, the platform's synced copy of its endpoints, ${lastChangedWords(sync.last_changed)}.`;
 }
 
 function intro(inputs) {
@@ -48,7 +48,7 @@ function intro(inputs) {
     : (snap.status === 'captured' ? `Endpoint snapshot captured ${snap.captured_at ?? '(time not recorded)'}.`
       : snap.status === 'invalid' ? `Endpoint snapshot could not be used: ${snap.error}`
         : snap.sync?.status === 'synced' ? 'Endpoint snapshot: not captured.'
-          : 'Endpoint snapshot: not captured yet, so Panels 1 and 2 say "Not available".') + syncText(snap.sync);
+          : 'Endpoint snapshot: not captured yet, so Panels 1 and 5 say "Not available".') + syncText(snap.sync);
   return h('section', { class: 'console-intro', 'aria-label': 'About this console' },
     h('p', { class: 'job' }, 'A human governs agents. This console shows what you govern, what is waiting on you, and what it cannot show yet.'),
     h('p', { class: 'muted' }, 'Every value is tagged: ', sourceTag('endpoint'), ' a response you captured with your own sign-in; ',
