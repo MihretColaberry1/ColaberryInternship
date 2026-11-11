@@ -1,10 +1,12 @@
 # Accessibility pass: axe, a keyboard walkthrough and reflow
 
-**Captured:** 7:27 PM CST on 2026-11-09, from the working tree of `story-000-command-center-revision`
-after `main` was merged in (local merge commit `5a0376f`, platform sync of 2026-11-04), with Aleem's
-three required changes of 2026-11-08 applied (design-system tokens, the brief's panel order,
-disclosures that open in place) and the 320 px reflow fix, by `tests/evidence/capture-evidence.mjs`. The 2026-11-03
-results this replaces showed the earlier palette, order and dark theme.
+**Captured:** 9:46 PM CST on 2026-11-10, from the working tree of `story-000-command-center-revision`
+(platform sync of 2026-11-04), with Aleem's three required changes of 2026-11-08 applied (design-system
+tokens, the brief's panel order, disclosures that open in place), the 320 px reflow fix, the
+2026-11-10 changes to Panels 1, 2 and 6 (employee fields at a glance; your ticks and the platform
+verifier kept apart; neutral manager-access wording) and the privacy wording corrections (no personal
+names on any page; shorter Panel 6 label), by `tests/evidence/capture-evidence.mjs`. It replaces the
+captures of 7:27 PM CST on 2026-11-09 and 9:13 PM CST on 2026-11-10.
 **Tools:** axe-core 4.10.2 and playwright-core 1.48.2, driving the installed Chrome. Neither is a
 repository dependency.
 **Raw results:** [axe-results.json](axe-results.json) and [keyboard-walkthrough.json](keyboard-walkthrough.json).
@@ -44,7 +46,7 @@ disclosure closed and with every disclosure open. The four detail pages were che
 
 | Finding | Kind | Where | What it is |
 |---|---|---|---|
-| `color-contrast-enhanced` (7:1) | AAA, serious | Every page | AAA asks for 7:1 for body text. The design-system colours used for text meet AA (4.5:1) but not 7:1: muted text 5.33:1, links 5.96:1, the filled button 4.73:1. Up to 896 elements per run. Meeting AAA would mean darker text colours than the design system defines; not attempted |
+| `color-contrast-enhanced` (7:1) | AAA, serious | Every page | AAA asks for 7:1 for body text. The design-system colours used for text meet AA (4.5:1) but not 7:1: muted text 5.33:1, links 5.96:1, the filled button 4.73:1. Up to 983 elements per run (the state matrix page). Meeting AAA would mean darker text colours than the design system defines; not attempted |
 | `focus-order-semantics` | Experimental, minor | Console with disclosures open (12 elements); capability and rung pages (1 or 2) | The scrolling table frames take keyboard focus (`tabindex="0"`, added so a keyboard user can scroll them; axe's `scrollable-region-focusable`) but have no role, so a screen reader announces only "group" or nothing. Not a WCAG failure; worth a `role="region"` and a label in a later revision |
 | `color-contrast-enhanced`, needs review | AAA | Console (6 elements), state matrix (48) | Elements axe could not measure for 7:1; AAA, not pursued |
 | `identical-links-same-purpose`, needs review | AAA | Console with disclosures open (25 links) | Links with the same name leading to different pages; AAA, not pursued |
@@ -90,6 +92,11 @@ failures. A wide table in a narrow panel scrolls sideways inside its own frame; 
 
 This is now measured on every page at 320 px by `tests/evidence/check-review-corrections.mjs`
 (`reflow_320` in [review-corrections-check.json](../review-corrections-check.json)): 8 pages, 0 px each.
+The same script measures every at-a-glance value at all four widths (`glance_values_squeezed`): none
+is squeezed on 2026-11-10. At 820 px Panel 6's values were 88 px wide, set by its longest label
+("Endpoints read from the platform sync"); that glance label is now "Endpoints from the sync" (the details
+section keeps the full title), and the values are 112 px wide, set by the next-longest label, "Endpoints
+with no usable response". Measured: 254 px at 320, 324 at 390, 112 at 820, 185 at 1440.
 
 ## Found and fixed during this pass
 
@@ -98,6 +105,7 @@ This is now measured on every page at 320 px by `tests/evidence/check-review-cor
 | The capture guide scrolled 76 px sideways at 320 px (WCAG 1.4.10): the plain-text path `command-center/snapshots/product_experience.endpoint-snapshots.json` in its fifth step has no break point. It arrived with this PR (`0d0cc6a`) and is not on `main` | A text-overflow probe on every page at 320 px; axe's AA contrast rule also could not read that item's background | `.guide-steps li { overflow-wrap: anywhere; }`. Regression tests: `tests/reflow.test.mjs` (fails without the rule) and the 320 px reflow check on all 8 pages (reported 76 px before the fix, 0 after). axe's "needs review" item on that page is gone |
 | With a disclosure opened in place, the inventory table squeezed to fit its panel and broke its headers one letter per line, at every width | Looking at the one-disclosure screenshot; the layout check passed because nothing moved | `overflow-wrap: anywhere` removed from the disclosure body, and table cells now break only between words, so the table scrolls in its frame. The layout check now also fails any opening where a table word is split across lines; with the faulty rule put back it reports 40 failures, with the fix 0 |
 | The state matrix's "Today" row still showed Panels 1 and 5 as "Not available", which the real console no longer does since the platform sync | Comparing the matrix with the console | "Today" now renders exactly what the console loads; the old view is kept as its own row, "Real sources, nothing captured or synced". `tests/state-matrix.test.mjs` fails if they drift apart |
+| 2026-11-10: a new 60-character glance label on Panel 6 ("Stories where your ticks are ahead of the platform verifier") took the glance grid's full label width and squeezed every Panel 6 value to 0 px at 820 px, wrapping them one character per line | axe's AA contrast rule reported 4 "needs review" items at 820 px that it could not measure (the elements had no width); measured in the browser | Shorter labels ("Ticks ahead of verifier", "Verified by the platform"). `check-review-corrections.mjs` now also fails if any glance value is narrower than 20% of its list or 60 px: with the long label put back it reports 4 values at 0 px (820 px) and 4 at 39 px (1440 px); with the fix, none. axe's contrast "needs review" items at 820 px are back to 0 |
 
 ## What this pass does not cover
 

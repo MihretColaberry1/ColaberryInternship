@@ -78,25 +78,25 @@ where it went. **Dropped** items are gone from the page; the reason is given.
 | Header | "Data as of" stamp and the over-a-week warning | Header, unchanged | Every panel's age depends on it |
 | Header | Sample / Real switch | **Dropped** | Aleem: do not invent values. Sample data looked like data. Every placeholder is now labelled where it appears |
 | Header | Tab bar | **Dropped** | Aleem: panels at a glance, not hidden behind tabs, and not kept side by side |
-| Overview | Stories verified, criteria passed, points awarded | 3 Inventory: glance line, and "Stories, criteria and points" | What is being built |
+| Overview | Stories verified, criteria passed, points awarded | 2 Inventory: glance lines "Verified by the platform" and "Ticks ahead of verifier", and "Stories: your ticks and the platform verifier" | What is being built |
 | Overview | Project plan (name, repository, plan version and hash) | Header title; plan version **dropped** | The console is about one domain; the plan hash adds nothing an operator acts on |
-| Overview | Schedule and milestones | 3 Inventory: "Schedule and milestones" | |
-| Overview | Release cards and progress bars | 3 Inventory: "Release timeline" | One timeline replaces three cards |
-| Overview | "What is live: agents and systems" | 1 Employee ("Runs: none recorded") and 6 Not available (systems) | |
+| Overview | Schedule and milestones | 2 Inventory: "Schedule and milestones" | |
+| Overview | Release cards and progress bars | 2 Inventory: "Release timeline" | One timeline replaces three cards |
+| Overview | "What is live: agents and systems" | 1 Employee details ("Registry entry, manager access and runs") and 6 Not available (systems) | |
 | Overview | Story, criteria and points detail pages | Merged into one stories table; the story page stays at `#/story/<id>` | Three tables of the same rows became one |
 | Outcomes | Measures (none in the plan) | 6 Not available: "Not in the project plan yet" | An empty tab is a named gap |
 | Users and use case | Roles (none in the plan) | 6 Not available | Same |
-| Guardrails | SAFE requirements (none in the plan) | 2 Governance: "Guardrails waiting on a human" | A guardrail is a human decision |
-| Guardrails | Draft REQ-001 and its five-step status | 2 Governance: same disclosure, and the glance line "Sign-off waiting" | It waits on Aleem's R0 sign-off |
+| Guardrails | SAFE requirements (none in the plan) | 5 Governance: "Guardrails waiting on a human" | A guardrail is a human decision |
+| Guardrails | Draft REQ-001 and its five-step status | 5 Governance: same disclosure, and the glance line "Sign-off waiting" | It waits on the accountable manager's R0 sign-off |
 | Systems | Systems named in the plan (none) | 6 Not available | |
-| Project management | Release Gantt | 3 Inventory: "Release timeline" | |
-| Project management | Every-task table (due, first given, change, past due) | 3 Inventory: "Stories, criteria and points" | |
+| Project management | Release Gantt | 2 Inventory: "Release timeline" | |
+| Project management | Every-task table (due, first given, change, past due) | 2 Inventory: "Stories: your ticks and the platform verifier" | |
 | AI agents | Story-owner roster ("owners, not agents") | **Dropped** | Beside "Your employee" it read as a second agent list. The real agent is Panel 1 |
-| AI agents | "No runs recorded" | 1 Employee: glance line | |
+| AI agents | "No runs recorded" | 1 Employee details: "Registry entry, manager access and runs" (moved from the glance on 2026-11-10) | |
 | Knowledge base | "Ask about this project" (keyword questions) | **Dropped** | It answered by naming tabs that no longer exist. Everything it answered is now visible at a glance |
-| Knowledge base | Requirements and traceability | 3 Inventory: "Requirements and which stories cover them" | |
+| Knowledge base | Requirements and traceability | 2 Inventory: "Requirements and which stories cover them" | |
 | Knowledge base | Stories table | Merged into the stories table | Duplicate |
-| Knowledge base | Decisions and notes (`notes.json`) | 2 Governance: "Decisions recorded in this repo" | |
+| Knowledge base | Decisions and notes (`notes.json`) | 5 Governance: "Decisions recorded in this repo" | |
 | Data model | Domain tables (none derived) | 6 Not available | |
 | Data model | "The data behind this Command Center" cards | **Dropped** from the page; documented under "Data dependencies" below | Contract documentation, not something an operator governs |
 | Agent domain | Panels 1 to 6, the capability, rung and source-tag pages | The console itself | |
@@ -108,6 +108,8 @@ where it went. **Dropped** items are gone from the page; the reason is given.
 | `.colaberry/plan.json`, `progress.json`, `manifest.json` (written by the platform on "Sync from GitHub") | Header stamp; Inventory stories, releases, requirements, schedule; Governance guardrails; Not available plan gaps | Committed. Data as of 30 October 2026 (see the header). `progress.json` still holds the earlier five STORY-000 criteria: a sync should bring the six |
 | `command-center/sources/product_experience.capabilities.json`, pinned at platform `9d9aa3c3` and checked against its git blob by a test | Inventory, Ladder, Behaviour, the capability and rung pages | Committed |
 | `command-center/notes.json`, `command-center/draft-guardrails.json` | Governance | Committed |
+| `.colaberry/agent-domain.json`, the platform's committed snapshot of its endpoints (written by the platform's sync; dated by `manifest.json`) | Panel 1 (the agent fields), Panel 5 (`governance.requests`), Panel 6 (the verifier's reasons for plan stories, and which `authority` sections are present) | Committed. `authority[]` and `authority_rule` are present but **not displayed**, pending the platform's extended capability projection |
+| The `verification` block the platform writes into each story in `progress.json` | Panel 2 ("Platform verifier" column and glance) and Panel 6 (ticks ahead of the verifier) | Committed. Kept separate from your own ticks (`criteria[].passed`) everywhere |
 | `command-center/snapshots/product_experience.endpoint-snapshots.json`: a redacted capture, git-ignored until reviewed | Panels 1 and 5, and the `/coverage` check | **Not captured** |
 
 ### Whether an agent is linked: the live endpoint, not the registry
@@ -139,7 +141,8 @@ This repository never edits the registry and never writes an agent id into it.
 ### Record IDs are withheld on the page
 
 The pinned research file's `manager_has_no_admin_login` blocker includes a staff member's internal
-`org_members` record ID. The page shows it as "[record ID withheld]". Only the display changes: the
+`org_members` record ID. The page first showed it as "[record ID withheld]"; since 2026-11-10 the whole
+blocker is shown only as a neutral sentence (next section). Only the display changes: the
 research file is kept exactly as the platform wrote it, because a test checks it against the
 platform's copy. `tests/record-id-exposure.test.mjs` renders every page a visitor can reach and fails
 if any UUID-shaped value appears.
@@ -148,7 +151,45 @@ The same ID is also in files the platform's sync writes (`.colaberry/plan.json` 
 story files), and those are already on `main`. Removing it there is the platform's decision: see
 question 8 in [the plan](docs/stories/STORY-000-agent-domain-plan.md#5-questions-still-open).
 
+### No manager name or account-access records on Panels 1, 2 and 6 (2026-11-10)
+
+Mihret's decision D4: this public page does not name the accountable manager or describe anyone's
+admin-portal account records.
+- A blocker that describes account records (for example `manager_has_no_admin_login`) is shown as
+  **"Accountable manager access: Not configured in the admin portal."** on Panel 1, Panel 6 and every
+  capability page's "Blocked by" list. Two such blockers on one capability are shown once.
+- The manager's name is read from the pinned file's `accountable_human`, not written into the code, and
+  replaced with "the accountable manager" in Panel 2's story titles and on every story page. With no name
+  list loaded, Panel 2 shows story ids instead of titles, and a story page waits.
+- Display only: the pinned research file and the platform-written plan are unchanged.
+- `tests/panels-1-2-6.test.mjs` fails if Panels 1, 2 or 6, a story page, or a capability page's "Blocked by"
+  list shows the name, account records, an email address or a record id.
+- **Panels 3 to 5, wording only (Mihret's correction, later on 2026-11-10):** the governance panel's sign-off
+  line reads "Accountable manager's R0 sign-off", and the behaviour criteria in `release_behaviour[]` (Panel 4,
+  the rung pages and each capability page's behaviour table) say "the accountable manager". Their logic, data
+  sources and platform integration are unchanged.
+- **The capture guide** refers to "the platform owner" instead of a staff name; its instructions are unchanged.
+- `tests/public-privacy.test.mjs` renders all 6 panels and all 70 detail and guide pages and fails on a
+  personal name, an email address, a record id or a person's account-state records.
+
+### Your ticks and the platform verifier (2026-11-10)
+
+Two records about the same story, never merged (Mihret's decision D2):
+- **Your ticks:** the `passed` flags you set in `progress.json`.
+- **Platform verifier:** the `verification` block the platform writes into the same file.
+
+Panel 2 shows them in separate columns and glance lines ("Verified by the platform: 6 of 32 plan stories";
+"Ticks ahead of verifier: STORY-000: 5 of 6 ticked locally; platform verifier 0 of 6"). Panel 6 lists each
+story whose ticks are ahead, with the verifier's own reason from the platform snapshot. The verifier's
+per-rung records are left for the per-rung behaviour panel.
+
 ### Missing endpoints and fields
+
+This table describes the separate capture route (a redacted snapshot under your own sign-in). Since the
+platform's sync of 2026-11-04, Panels 1 and 5 read `.colaberry/agent-domain.json` instead, so on today's
+page Panel 1 shows the agent's recorded fields and Panel 5 reads the synced request list. The capability
+projection for Panels 3, 4 and 5 is being extended by the platform; until its structure is confirmed those
+panels are unchanged.
 
 | What | Waiting for | Panel shows now |
 |---|---|---|

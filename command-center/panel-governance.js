@@ -93,7 +93,7 @@ export function renderGovernancePanel(groups, rows, { order, snapshot, project, 
       ['Tool requests', count(groups, 'tool')],
       ['Tools the capabilities will need', `${tools.length} listed`],
       ['Tools granted to the agent', toolGrantWords(link)],
-      ['Sign-off waiting in this repo', signoffs.length ? signoffs.map((d) => `${d.id}: Aleem's R0 sign-off`).join('; ') : 'None'],
+      ['Sign-off waiting in this repo', signoffs.length ? signoffs.map((d) => `${d.id}: Accountable manager's R0 sign-off`).join('; ') : 'None'],
     ],
     reads: [endpointTags(5), platformTag(REQUEST_RULE.source.path), ' ', sourceFileTag()],
     details: [

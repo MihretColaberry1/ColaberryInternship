@@ -55,9 +55,9 @@ export const REGISTRY_ENTRY = Object.freeze({
     + 'and deliberately does not write the other domains\' agent ids back, because they differ per environment. '
     + 'It is not evidence either way; whether an agent is linked comes from the live endpoint.',
   can_reach_surface: false,
-  blocker: 'manager_has_no_admin_login: Mohammed Abdul Aleem has an org_members row but no admin_users row, '
-    + "so they cannot open their employee's Agent Detail or Talk surface. Needs an admin_users row with a "
-    + 'scoped mgmt_role, or an alternative surface.',
+  // The registry records a manager-access blocker for this domain. Mihret's decision D4 (2026-11-10):
+  // this public page states it in neutral words, with no name and no account records.
+  blocker: 'Accountable manager access: Not configured in the admin portal.',
 });
 
 /**

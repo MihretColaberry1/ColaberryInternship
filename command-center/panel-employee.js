@@ -46,12 +46,47 @@ function fieldTable(v) {
     ], v.fields)];
 }
 
+/**
+ * Decision D1 (2026-11-10): the registry seed value and "Runs" sit here, in the details, not at a glance.
+ * Decision D4: manager access is stated in neutral words (REGISTRY_ENTRY.blocker), with no name or account records.
+ */
 function registryDetail() {
   return [h('p', {}, platformTag(REGISTRY_ENTRY.source.path), ' The registry entry for product_experience has ',
     h('code', {}, 'agent_id: null'), ' and ', h('code', {}, 'can_reach_surface: false'), '.'),
   h('p', {}, badge('warn', 'Stale seed value'), ' ', h('strong', {}, `${REGISTRY_ENTRY.agent_id_label}.`), ' ', REGISTRY_ENTRY.stale_note),
   h('p', {}, platformTag(AGENT_LINK_SOURCE.source.path, AGENT_LINK_SOURCE.source.commit), ' ', AGENT_LINK_SOURCE.statement),
-  h('p', {}, REGISTRY_ENTRY.blocker)];
+  h('p', {}, REGISTRY_ENTRY.blocker),
+  h('p', {}, h('strong', {}, 'Runs: '), 'None recorded; not checked from here. No source this page reads records an agent run.')];
+}
+
+const SOURCE_WORDS = { auto: 'by default (auto)', manual: 'by a person (manual)' };
+
+/**
+ * One glance value for an agent field: the recorded value in plain words, or the same "not captured",
+ * "no agent yet" or "not in your list" wording the details table uses. Never a guessed value.
+ */
+function glanceValue(v, key) {
+  const f = v.fields.find((x) => x.key === key);
+  if (!f) return badge('neutral', 'Not read');
+  if (f.state !== 'recorded') return fieldValue(f);
+  const value = f.value;
+  if (value === null || value === undefined) return h('code', {}, 'null');
+  switch (key) {
+    case 'agent_enabled': return value === false ? 'No (disabled)' : value === true ? 'Yes (enabled)' : h('code', {}, String(value));
+    case 'agent_autonomy_level': return [h('code', {}, String(value)), h('div', { class: 'muted' }, 'Per-agent scale; not a rung on the R0 to R9 ladder')];
+    case 'agent_autonomy_level_set_at': {
+      const how = v.fields.find((x) => x.key === 'agent_autonomy_level_source');
+      const source = how?.state === 'recorded' ? (SOURCE_WORDS[how.value] ?? `source: ${how.value}`) : null;
+      return [centralTime(value), source ? `, ${source}` : ''];
+    }
+    default: return String(value);
+  }
+}
+
+/** "Set by", which the platform does not store: said in words, never a name. */
+function setByValue(v) {
+  const f = v.fields.find((x) => x.key === 'autonomy_level_set_by');
+  return f ? badge('neutral', 'Not recorded by the platform') : badge('neutral', 'Not read');
 }
 
 /** "Agent linked" in words, from the live endpoint (or the platform's synced copy of it) only. */
@@ -119,8 +154,6 @@ export function renderEmployeePanel(v, { order, snapshot } = {}) {
   const state = employeeState(v, snapshot);
   // The live endpoint decides. The registry's agent_id is a stale seed value and never counts.
   const agentLinked = v.link.state === 'linked';
-  const registryLine = [h('code', {}, 'agent_id: null'), ' ', badge('warn', 'Stale seed value'),
-    h('div', { class: 'muted' }, REGISTRY_ENTRY.agent_id_label), platformTag(REGISTRY_ENTRY.source.path)];
 
   let headline = null;
   let body = null;
@@ -156,16 +189,20 @@ export function renderEmployeePanel(v, { order, snapshot } = {}) {
     id: 'employee', order, state, headline, body, action,
     title: 'Your employee',
     question: 'Does it exist, and what is it allowed to do?',
+    // Decision D1: the brief's employee fields at a glance, each exactly as the snapshot records it.
     glance: [
       [v.link.origin === 'platform_sync' ? 'Agent linked (platform sync)' : 'Agent linked (live endpoint)', linkWords(v.link)],
+      ['Agent name', glanceValue(v, 'agent_display_name')],
+      ['Enabled', glanceValue(v, 'agent_enabled')],
+      ['Autonomy level', glanceValue(v, 'agent_autonomy_level')],
       ['Tools granted', toolGrantWords(v.link)],
-      ['Agent in the platform registry', registryLine],
-      ['Runs', 'None recorded; not checked from here'],
+      ['Autonomy last set', glanceValue(v, 'agent_autonomy_level_set_at')],
+      ['Autonomy set by', setByValue(v)],
     ],
     reads: [endpointTags(1), platformTag(REGISTRY_ENTRY.source.path)],
     details: [
       { title: 'The agent, as the endpoint records it', count: v.fields.length, body: fieldTable(v) },
-      { title: 'Registry entry and manager access', body: registryDetail() },
+      { title: 'Registry entry, manager access and runs', body: registryDetail() },
     ],
   });
 }

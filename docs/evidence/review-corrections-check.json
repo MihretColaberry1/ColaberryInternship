@@ -13,6 +13,7 @@
       "grid_columns": 1,
       "disclosures_checked": 20,
       "failed": 0,
+      "glance_values_squeezed": [],
       "checks": [
         {
           "panel": "employee",
@@ -29,7 +30,7 @@
         },
         {
           "panel": "employee",
-          "disclosure": "Registry entry and manager access",
+          "disclosure": "Registry entry, manager access and runs",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -54,7 +55,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories, criteria and points (32)",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -223,6 +224,7 @@
       "grid_columns": 1,
       "disclosures_checked": 20,
       "failed": 0,
+      "glance_values_squeezed": [],
       "checks": [
         {
           "panel": "employee",
@@ -239,7 +241,7 @@
         },
         {
           "panel": "employee",
-          "disclosure": "Registry entry and manager access",
+          "disclosure": "Registry entry, manager access and runs",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -264,7 +266,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories, criteria and points (32)",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -433,6 +435,7 @@
       "grid_columns": 2,
       "disclosures_checked": 20,
       "failed": 0,
+      "glance_values_squeezed": [],
       "checks": [
         {
           "panel": "employee",
@@ -448,7 +451,7 @@
         },
         {
           "panel": "employee",
-          "disclosure": "Registry entry and manager access",
+          "disclosure": "Registry entry, manager access and runs",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -472,7 +475,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories, criteria and points (32)",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -626,6 +629,7 @@
       "grid_columns": 3,
       "disclosures_checked": 20,
       "failed": 0,
+      "glance_values_squeezed": [],
       "checks": [
         {
           "panel": "employee",
@@ -640,7 +644,7 @@
         },
         {
           "panel": "employee",
-          "disclosure": "Registry entry and manager access",
+          "disclosure": "Registry entry, manager access and runs",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -658,7 +662,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories, criteria and points (32)",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -844,22 +848,22 @@
     {
       "run": "console, phone, disclosures closed",
       "violations": [],
-      "nodes_passed": 268
+      "nodes_passed": 283
     },
     {
       "run": "console, phone, disclosures open",
       "violations": [],
-      "nodes_passed": 1560
+      "nodes_passed": 1613
     },
     {
       "run": "console, desktop, disclosures closed",
       "violations": [],
-      "nodes_passed": 268
+      "nodes_passed": 283
     },
     {
       "run": "console, desktop, disclosures open",
       "violations": [],
-      "nodes_passed": 1560
+      "nodes_passed": 1613
     }
   ],
   "button": {
@@ -881,6 +885,7 @@
   "summary": {
     "disclosures_checked": 80,
     "layout_failures": 0,
+    "glance_values_squeezed": [],
     "reflow_pages_checked": 8,
     "reflow_failures": [],
     "contrast_violations": 0,

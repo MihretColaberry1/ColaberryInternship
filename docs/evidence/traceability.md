@@ -8,14 +8,15 @@ session CC-20261102-1whf. Criteria text: [docs/stories/STORY-000.md](../stories/
 - `#/panel/<id>` jumps to one panel.
 - `#/capability/<id>` and `#/rung/<stage>` are the detail pages.
 
-**Every test named below passes.** `node --test tests/*.test.mjs`: 174 of 174 on 2026-11-09, after `main` was merged in (local merge commit `5a0376f`).
+**Every test named below passes.** `node --test tests/*.test.mjs`: 197 of 197 on 2026-11-10, after the
+changes to Panels 1, 2 and 6 and the privacy wording corrections (174 before; 19 new in
+`tests/panels-1-2-6.test.mjs`, 4 new in `tests/public-privacy.test.mjs`).
 
-**Screenshots** are in [screenshots/](screenshots/), captured by `tests/evidence/capture-evidence.mjs`
-at 7:27 PM CST on 2026-11-09, from the working tree after `main` was merged in (platform sync of
-2026-11-04), with Aleem's three required changes applied (design-system colours, the brief's order,
-disclosures in place, light theme only) and the 320 px reflow fix. They replace the
-2026-11-03 captures, and the dark-theme files were removed. Widths: narrow 320 px, phone 390, tablet
-820, desktop 1440.
+**Screenshots** are in [screenshots/](screenshots/), re-captured by `tests/evidence/capture-evidence.mjs`
+at 9:46 PM CST on 2026-11-10, after the privacy wording corrections (platform sync of 2026-11-04), with Aleem's three required changes applied
+(design-system colours, the brief's order, disclosures in place, light theme only), the 320 px reflow fix,
+and the 2026-11-10 changes to Panels 1, 2 and 6. They replace the 2026-11-09 captures, which predate those
+panel changes. Widths: narrow 320 px, phone 390, tablet 820, desktop 1440.
 
 | Capture | Files |
 |---|---|
@@ -64,16 +65,35 @@ walkthrough, a reflow check of every page at 320 px, and the limits of what auto
 | 2. Keep the brief's panel order | Panels numbered 1 to 6 as the brief numbers them | `console.test.mjs`: "six panels render in the brief order, each numbered with its brief panel number". The case for another order: [panel-order-proposal.md](panel-order-proposal.md) |
 | 3. Opening a disclosure must not move the other panels | Any disclosure, any width | [review-corrections-check.json](review-corrections-check.json): 80 disclosure openings at 320, 390, 820 and 1440 px, 0 failures. Each opening is checked for: no other panel changes column or width, panels in earlier rows do not move, the content stays inside its panel, and no table word is split across lines. Before the fix: 40 failures at 820 and 1440 px (panels moved). `console-*-one-open.png` shows it. `design-system.test.mjs`: "no rule changes a panel's grid placement depending on an open disclosure" |
 
+## Mihret's decisions of 2026-11-10: Panels 1, 2 and 6 against the committed snapshot
+
+Platform engineering contact's direction: keep using the committed platform snapshot, add no new route, and continue
+Panels 1, 2 and 6 while the platform extends its capability projection for Panels 3, 4 and 5. Those
+three panels were not changed.
+
+| Decision | Screen | Evidence |
+|---|---|---|
+| D1. Panel 1 shows the brief's employee fields at a glance; the registry seed value and "Runs" move into the details | Panel 1 glance: Agent name, Enabled, Autonomy level (per-agent scale, not a rung), Tools granted, Autonomy last set (Central time, and whether by default or by a person), Autonomy set by ("Not recorded by the platform"). Details: "Registry entry, manager access and runs" | `panels-1-2-6.test.mjs`: "Panel 1 shows the brief's employee fields at a glance…", "…moves the registry seed and runs…", "…with nothing synced or captured shows no agent value…" |
+| D2. Panel 2 keeps your ticks and the platform verifier apart; STORY-000's 5 of 6 (your ticks) and 0 of 6 (verifier) are never merged; the 32 plan stories are counted separately; per-rung verifier records are left out | Panel 2 glance: "Verified by the platform: 6 of 32 plan stories", "Ticks ahead of verifier: STORY-000: 5 of 6 ticked locally; platform verifier 0 of 6". Stories table: separate "Your ticks (progress.json)" and "Platform verifier" columns. Story pages: both counts as separate facts | `panels-1-2-6.test.mjs`: "Panel 2 keeps the 32 plan stories and STORY-000's six criteria apart…", "Panel 2 leaves the verifier's per-rung records out". Model: `verification-model.js` (unit tests in the same file) |
+| D3. Panel 6 names ticks ahead of the verifier, and the snapshot's authority sections as an outstanding data-integration limitation, not an agent failure | Panel 6: 8 items (was 6), with the verifier's own reason quoted; glance "Ticks ahead of verifier: 1 story" | `panels-1-2-6.test.mjs`: "Panel 6 names your ticks ahead of the verifier…", "…names the authority sections as a data-integration limitation… without their values" (it never reads `binds_nothing` or `approved_above_r2`) |
+| D4. No accountable-manager name or account-access records on the public page | "Accountable manager access: Not configured in the admin portal." on Panels 1 and 6 and every capability page's "Blocked by"; "the accountable manager" in Panel 2's story titles and on story pages | `panels-1-2-6.test.mjs`: "Panels 1, 2 and 6 show no manager name, account records, email address or record id", "story pages … withhold the name", "capability pages show the neutral access sentence once…"; `record-id-exposure.test.mjs` (updated). Mutation check: with name withholding disabled, 4 tests fail |
+
+Browser checks after the changes ([review-corrections-check.json](review-corrections-check.json)):
+80 disclosure openings, 0 layout failures; 320 px reflow on 8 pages, 0 px; axe colour contrast 0
+violations; filled button 4.73:1; no glance value squeezed (a new check, added after a long Panel 6
+label collapsed its values to 0 px at 820 px; see [a11y/README.md](a11y/README.md)). Full axe run:
+0 WCAG A/AA violations in 17 runs; keyboard 7 of 7 checks.
+
 ## The six panels
 
 | Panel (brief and display order) | Screen | State today | Evidence |
 |---|---|---|---|
-| 1 Your employee | `#/panel/employee` | Ready (platform sync) | `agent-domain-employee.test.mjs`; `console.test.mjs` "today, from the platform sync" |
-| 2 Your capability inventory | `#/panel/inventory` | Ready (source file and project plan) | `agent-domain.test.mjs`; `command-center-tabs.test.mjs`; `command-center-drafts.test.mjs` |
+| 1 Your employee | `#/panel/employee` | Ready (platform sync) | `agent-domain-employee.test.mjs`; `console.test.mjs` "today, from the platform sync"; `panels-1-2-6.test.mjs` (D1, D4) |
+| 2 Your capability inventory | `#/panel/inventory` | Ready (source file and project plan) | `agent-domain.test.mjs`; `command-center-tabs.test.mjs`; `command-center-drafts.test.mjs`; `panels-1-2-6.test.mjs` (D2, D4) |
 | 3 The autonomy ladder | `#/panel/ladder` | Ready | `agent-domain-tool-rule.test.mjs`; `agent-domain-authority.test.mjs` |
 | 4 Per-rung behaviour | `#/panel/behaviour` | Ready | `agent-domain.test.mjs` (`rungSummary`) |
 | 5 Your governance queue | `#/panel/governance` | Empty (platform sync: no requests) | `console.test.mjs`; `agent-domain-platform-sync.test.mjs`; `agent-domain-redact.test.mjs` |
-| 6 What is not available | `#/panel/gaps` | Ready | `console.test.mjs` ("a missing source file…") |
+| 6 What is not available | `#/panel/gaps` | Ready | `console.test.mjs` ("a missing source file…"); `panels-1-2-6.test.mjs` (D3, D4) |
 
 ## Not yet evidenced
 
@@ -87,12 +107,24 @@ walkthrough, a reflow check of every page at 320 px, and the limits of what auto
   320 px (the capture guide's 76 px overflow was fixed on 2026-11-09: `tests/reflow.test.mjs`), but
   automated checks cannot show conformance. Known open item: focusable table frames have no role (an
   experimental axe rule). Details in [a11y/README.md](a11y/README.md).
-- **Open question, not changed here: what "approved" R0 means.** Since the platform sync of
-  2026-11-04 (merged from `main`), `.colaberry/agent-domain.json` records `approved_autonomy:
-  "autonomy:R0"` with no note for all 25 capabilities. The console says "Starting rung — no human
-  approval yet" (Aleem's wording, 2026-11-03) and computes authority itself; it does not read that
-  field, so nothing on screen changed. Whether the platform's R0 is a recorded human approval or a
-  default is a question for Aleem or Ali.
+- **What "approved" R0 means: answered from platform code, 2026-11-10.** Since the platform sync of
+  2026-11-04, `.colaberry/agent-domain.json` records `approved_autonomy: "autonomy:R0"` for all 25
+  capabilities. The platform's snapshot writer fills that field from each capability's
+  `starting_autonomy` (`agentDomainSnapshot.ts:225` at platform `39453edf`), so it is the starting rung,
+  **not** a recorded human approval. The console says "Starting rung — no human approval yet" (Aleem's
+  wording, 2026-11-03) and does not read that field. It stays undisplayed until the platform's extended
+  projection is confirmed.
+- **Personal names on the page: none, as of 2026-11-10.** After a wording-only correction to Panels 3 to 5
+  (sign-off line "Accountable manager's R0 sign-off"; behaviour criteria say "the accountable manager") and
+  to the capture guide ("the platform owner"), `tests/public-privacy.test.mjs` finds no personal name, email
+  address, record id or account-state record on any of the 6 panels or 70 detail and guide pages. Panels 3 to
+  5's logic and data sources are unchanged. One behaviour criterion still describes the access *mechanism*
+  ("a scoped admin_users row or a specific alternative surface") as a requirement; it names no person and
+  was kept as the criterion's meaning.
+- **Not rendered, but public in the repository:** `command-center/draft-guardrails.json`'s REQ-001 source note
+  now reads "Platform engineering contact" in place of a staff name (Mihret's decision, 2026-11-10). The
+  platform-written `.colaberry/agent-domain.json` still carries staff names and the agent's record id; it is
+  platform-owned and not edited here, and the page withholds those values.
 - **A published link.** GitHub Pages is not enabled. See the README, "Publishing".
 - **The axe and keyboard passes are automated, run in Chrome only.** No screen-reader session with a
   person, no manual 200% or 400% zoom test, and the keyboard pass is scripted at desktop width only.

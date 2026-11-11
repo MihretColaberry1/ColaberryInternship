@@ -149,7 +149,7 @@ test('content from the old tabs is carried into the panels, and the tabs themsel
     const out = renderConsole(domain, project);
     const panels = byId(findAll(out, hasClass('panel')));
     const summaries = (id) => findAll(panels[id], (el) => el.tagName === 'SUMMARY').map((s) => s.textContent);
-    assert.ok(summaries('inventory').some((t) => t.startsWith('Stories, criteria and points')));
+    assert.ok(summaries('inventory').some((t) => t.startsWith('Stories: your ticks and the platform verifier')));
     assert.ok(summaries('inventory').some((t) => t.startsWith('Release timeline')));
     assert.ok(summaries('governance').some((t) => t.startsWith('Guardrails waiting on a human')));
     assert.ok(summaries('gaps').some((t) => t.startsWith('Not in the project plan yet')));

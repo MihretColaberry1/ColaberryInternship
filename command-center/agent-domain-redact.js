@@ -27,6 +27,67 @@ export function withholdRecordIds(text) {
   return String(text).replace(new RegExp(`\\b${RECORD_ID_PATTERN}\\b`, 'g'), RECORD_ID_WITHHELD);
 }
 
+/**
+ * Mihret's decision D4 (2026-11-10): this public page shows no personal account-access information
+ * and does not name the accountable manager. Display-only, like the record-id rule above: the pinned
+ * research file and the platform-written plan are never edited.
+ */
+export const MANAGER_ACCESS_TEXT = 'Accountable manager access: Not configured in the admin portal.';
+const MANAGER_ACCESS_PATTERN = /admin_users|org_members|mgmt_role|admin login/i;
+
+/** True for text that describes a person's admin-portal account records or how they would log in. */
+export function isManagerAccessText(text) {
+  return MANAGER_ACCESS_PATTERN.test(String(text ?? ''));
+}
+
+export const MANAGER_WORDS = 'the accountable manager';
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * The accountable manager's name, as the pinned research file records it (`accountable_human`).
+ * Read from data rather than written into this code. Empty when the file is not loaded.
+ */
+export function accountableNames(matrix) {
+  const name = typeof matrix?.accountable_human === 'string' ? matrix.accountable_human.trim() : '';
+  return name ? [name] : [];
+}
+
+/**
+ * Replaces each recorded name, and its surname on its own, with "the accountable manager"
+ * ("The accountable manager" where a sentence starts). With no names known it returns null, so a
+ * caller can fall back to something that cannot carry a name (a story id) instead of guessing.
+ */
+export function withholdNames(text, names) {
+  if (text == null) return text;
+  if (!Array.isArray(names) || names.length === 0) return null;
+  const tokens = new Set();
+  for (const n of names) {
+    tokens.add(n);
+    const parts = n.split(/\s+/);
+    if (parts.length > 1) tokens.add(parts[parts.length - 1]);
+  }
+  // Longest first, so the full name is replaced before its surname is.
+  const alternation = [...tokens].sort((a, b) => b.length - a.length).map(escapeRegExp).join('|');
+  const re = new RegExp(`\\b(?:${alternation})\\b`, 'g');
+  return String(text).replace(re, (_m, offset, whole) => {
+    const before = whole.slice(0, offset);
+    const startsSentence = before.trim() === '' || /[.!?:]\s*$/.test(before);
+    return startsSentence ? 'The accountable manager' : MANAGER_WORDS;
+  });
+}
+
+/**
+ * A blocker line as this public page shows it, for capability and story pages alike:
+ *   - text describing a person's admin-portal account records becomes MANAGER_ACCESS_TEXT (D4);
+ *   - a staff member's internal record id is withheld;
+ *   - the accountable manager's name is withheld (when the name list is known).
+ */
+export function publicBlockerText(raw, names) {
+  if (isManagerAccessText(raw)) return MANAGER_ACCESS_TEXT;
+  const b = withholdRecordIds(raw);
+  return withholdNames(b, names) ?? b;
+}
+
 const IDENTITY_KEYS = new Set(['requested_by_identity', 'approved_by_identity']);
 // Panel 1 only needs to know whether an agent exists, not which database row it is. The id is a
 // key into an internal record, so it is reduced to PRESENT or null.

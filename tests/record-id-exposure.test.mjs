@@ -13,7 +13,7 @@ import { installFakeDom } from './fake-dom.mjs';
 import { CAPABILITY_FILE, SNAPSHOT_FILE, SNAPSHOT_SCHEMA, loadAgentDomainData, readSnapshot } from '../command-center/agent-domain-data.js';
 import { AUTONOMY_STAGES } from '../command-center/authority.js';
 import { ENDPOINTS } from '../command-center/agent-domain-facts.js';
-import { PRESENT, RECORD_ID_PATTERN, RECORD_ID_WITHHELD, withholdRecordIds } from '../command-center/agent-domain-redact.js';
+import { MANAGER_ACCESS_TEXT, PRESENT, RECORD_ID_PATTERN, RECORD_ID_WITHHELD, withholdRecordIds } from '../command-center/agent-domain-redact.js';
 import { loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
 import { renderRoute } from '../command-center/console.js';
@@ -93,12 +93,21 @@ test('no page a visitor can reach shows a UUID-shaped record id', async () => {
   }
 });
 
-test('capability pages say the id is withheld, and keep the rest of the blocker', async () => {
+// Decision D4 (2026-11-10): the blocker that carries the record id also describes a person's admin-portal
+// account records, so the page now states it only in neutral words. The id stays withheld either way.
+test('capability pages state manager access in neutral words, with no record id, account records or name', async () => {
   const { domain, project } = await inputs();
   const matrix = JSON.parse(await readFile(path.join(ROOT, CAPABILITY_FILE), 'utf8'));
-  for (const c of matrix.capabilities.filter((x) => x.blocked_by?.some((b) => ANY_ID().test(b)))) {
+  const withId = matrix.capabilities.filter((x) => x.blocked_by?.some((b) => ANY_ID().test(b)));
+  assert.ok(withId.length > 0, 'the pinned file still carries the blocker this test is about');
+  for (const c of withId) {
     const text = pageText(['capability', c.capability_id], domain, project);
-    assert.ok(text.includes(`org_members row (${RECORD_ID_WITHHELD})`), c.capability_id);
-    assert.match(text, /manager_has_no_admin_login/, c.capability_id);
+    // The "Blocked by" section only: the per-rung behaviour section is Panel 4's data, not changed here.
+    const start = text.indexOf('Blocked by');
+    const blocked = text.slice(start, text.indexOf('Tools it will need', start));
+    assert.ok(start >= 0 && blocked.includes(MANAGER_ACCESS_TEXT), c.capability_id);
+    assert.doesNotMatch(blocked, /manager_has_no_admin_login|org_members|admin_users/, c.capability_id);
+    assert.equal(blocked.includes(RECORD_ID_WITHHELD), false, `${c.capability_id}: nothing left to withhold`);
+    assert.equal((text.match(ANY_ID()) ?? []).length, 0, c.capability_id);
   }
 });

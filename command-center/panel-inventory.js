@@ -8,6 +8,7 @@ import { ENDPOINTS } from './agent-domain-facts.js';
 import { capabilitySourceNote, draftBadge, endpointNotice, endpointRead, endpointTags, sourceFileTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock } from './console-ui.js';
 import { projectTotals, requirementsSection, scheduleSection, storiesSection, timelineSection } from './project-sections.js';
+import { ticksAheadOfVerifier } from './verification-model.js';
 
 export const capabilityHref = (id) => `#/capability/${encodeURIComponent(id)}`;
 const th = (label, source) => [label, h('span', { class: 'th-src' }, source)];
@@ -37,7 +38,7 @@ function capabilityTable(rows, checks) {
   ], rows, 'The source file holds no capabilities.');
 }
 
-function projectDetails(project) {
+function projectDetails(project, names) {
   if (!project) return [];
   if (project.error) {
     return [{ title: 'Stories and releases from the project plan', body: errorBlock({ what: 'The project plan could not be read.',
@@ -45,14 +46,24 @@ function projectDetails(project) {
   }
   const { data, model } = project;
   return [
-    { title: 'Stories, criteria and points', count: model.rows.length, body: storiesSection(model) },
+    { title: 'Stories: your ticks and the platform verifier', count: model.rows.length, body: [storiesSection(model, { names }),
+      h('p', { class: 'muted' }, 'The platform verifier also keeps a record for each capability rung. Those per-rung records belong to the per-rung behaviour panel and are not counted here.')] },
     { title: 'Release timeline', count: model.releases.length, body: timelineSection(data, model) },
     { title: 'Requirements and which stories cover them', count: (data.plan.requirements ?? []).length, body: requirementsSection(data, model) },
     { title: 'Schedule and milestones', body: scheduleSection(model) },
   ];
 }
 
-export function renderInventoryPanel(rows, checks, coverage, { order, sourceState = 'ready', sourceError, project } = {}) {
+/** STORY-000 and the like, in words: your ticks and the verifier's count side by side, never merged. */
+function aheadWords(project) {
+  if (!project?.model) return 'project plan not loaded';
+  const ahead = ticksAheadOfVerifier(project.model.rows);
+  if (ahead.length === 0) return 'None: no story has more ticks than the platform verifier records';
+  return ahead.map((a) => `${a.id.replace(/^product_experience\./, '')}: ${a.ticked} of ${a.tickedTotal} ticked locally; `
+    + (a.confirmedTotal == null ? 'no platform verifier record yet' : `platform verifier ${a.confirmed} of ${a.confirmedTotal}`)).join('. ');
+}
+
+export function renderInventoryPanel(rows, checks, coverage, { order, sourceState = 'ready', sourceError, project, names = [] } = {}) {
   const state = sourceState !== 'ready' ? sourceState : rows.length === 0 ? 'empty' : 'ready';
   const drafts = rows.filter((r) => r.validation === 'draft').length;
   const humans = rows.filter((r) => r.human_decision).length;
@@ -71,7 +82,9 @@ export function renderInventoryPanel(rows, checks, coverage, { order, sourceStat
       ['Validation', `${drafts} of ${rows.length} draft`],
       ['A human decides, always', `${humans} of ${rows.length}`],
       ['Implementation', countBy(rows, 'implementation_state')],
-      ['Stories verified (project plan)', totals ? totals.stories : 'project plan not loaded'],
+      // Short labels: the glance grid gives a long label its full width and squeezes the value (820 px check).
+      ['Verified by the platform', totals ? `${totals.stories} plan stories` : 'project plan not loaded'],
+      ['Ticks ahead of verifier', aheadWords(project)],
     ] : null,
     body: state === 'error'
       ? errorBlock({ what: 'The capability source file could not be read.', why: sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } })
@@ -82,7 +95,8 @@ export function renderInventoryPanel(rows, checks, coverage, { order, sourceStat
       state === 'ready' ? { title: 'All capabilities, in the order research recorded them', count: rows.length, body: [
         endpointNotice(ENDPOINTS.coverage, coverage) ?? endpointRead(ENDPOINTS.coverage, coverage),
         capabilityTable(rows, checks)] } : null,
-      ...projectDetails(project),
+      // Decision D4: titles pass through withholdNames; with no name list loaded they show as story ids.
+      ...projectDetails(project, names),
     ],
   });
 }

@@ -99,6 +99,24 @@ async function checkDisclosure(page, panelId, index) {
   return { panel: panelId, disclosure: title, pass: problems.length === 0, problems, moved_down_only: shifted };
 }
 
+/**
+ * Every at-a-glance value must have room to be read. The glance grid gives a label its full width, so a
+ * long label can squeeze its value to 0 px and wrap it one letter per line: found on 2026-11-10 at 820 px,
+ * when axe could only report the squeezed values as "contrast: needs review".
+ */
+// 0.2: catches a collapsed value (0 px on 2026-11-10) while passing the existing third-width panels at
+// 820 px, where the longest unchanged label leaves an 88 px value column (about 24% of the list).
+export const GLANCE_MIN_SHARE = 0.2;
+export const GLANCE_MIN_PX = 60;
+
+const glanceSqueezed = (page) => page.evaluate(({ share, px }) => [...document.querySelectorAll('.glance')].flatMap((dl) => {
+  const total = dl.getBoundingClientRect().width;
+  return [...dl.querySelectorAll(':scope > dd')].map((dd) => ({ dd, w: dd.getBoundingClientRect().width }))
+    .filter(({ w }) => w < Math.min(px, total) || w < total * share)
+    .map(({ dd, w }) => ({ panel: dl.closest('.panel')?.dataset.panel ?? null, label: dd.previousElementSibling?.textContent.trim() ?? '',
+      value_width_px: Math.round(w), list_width_px: Math.round(total) }));
+}), { share: GLANCE_MIN_SHARE, px: GLANCE_MIN_PX });
+
 async function layout(browser) {
   const results = [];
   for (const [name, width, height] of WIDTHS) {
@@ -106,13 +124,14 @@ async function layout(browser) {
     const page = await context.newPage();
     await page.goto(BASE, { waitUntil: 'networkidle' });
     await settled(page);
+    const squeezed = await glanceSqueezed(page);
     const counts = await page.evaluate(() => [...document.querySelectorAll('.panel')]
       .map((p) => [p.dataset.panel, p.querySelectorAll(':scope > .panel-details > details.disclosure').length]));
     const checks = [];
     for (const [panelId, n] of counts) for (let i = 0; i < n; i += 1) checks.push(await checkDisclosure(page, panelId, i));
     const columns = await page.evaluate(() => getComputedStyle(document.querySelector('.console')).gridTemplateColumns.split(' ').length);
     results.push({ width_name: name, width, grid_columns: columns, disclosures_checked: checks.length,
-      failed: checks.filter((c) => !c.pass).length, checks });
+      failed: checks.filter((c) => !c.pass).length, glance_values_squeezed: squeezed, checks });
     await context.close();
   }
   return results;
@@ -199,6 +218,7 @@ try {
   result.summary = {
     disclosures_checked: result.layout.reduce((n, l) => n + l.disclosures_checked, 0),
     layout_failures: result.layout.reduce((n, l) => n + l.failed, 0),
+    glance_values_squeezed: result.layout.flatMap((l) => l.glance_values_squeezed.map((g) => `${l.width}px ${g.panel}: ${g.label} (${g.value_width_px}px)`)),
     reflow_pages_checked: result.reflow_320.length,
     reflow_failures: result.reflow_320.filter((r) => !r.pass).map((r) => `${r.route}: ${r.sideways_px}px`),
     contrast_violations: result.axe_color_contrast.reduce((n, r) => n + r.violations.length, 0),

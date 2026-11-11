@@ -161,7 +161,8 @@ test('your own capture wins wherever it answered; the sync fills only what it di
   assert.equal(out.endpoints.mine, captured);
   assert.equal(out.endpoints.requests.origin, 'platform_sync');
   assert.equal(out.endpoints.domain.state, 'not_captured');
-  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null });
+  // verdict_reasons and not_shown (decisions D2, D3) default to empty when the sync carries none.
+  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, not_shown: [] });
 });
 
 // ---- Labels on the real page ----
@@ -216,7 +217,7 @@ test('Panel 6 on real data: 2 of 4 endpoints have no usable response, 2 of 4 rea
   const domain = await realDomain();
   const p = rendered(() => renderPanels(consoleInputs(domain), null).gaps);
   assert.match(p.textContent, /Endpoints with no usable response\s*2 of 4/);
-  assert.match(p.textContent, new RegExp(`Endpoints read from the platform sync\\s*2 of 4, last changed ${LAST_CHANGED_CENTRAL}`));
+  assert.match(p.textContent, new RegExp(`Endpoints from the sync\\s*2 of 4, last changed ${LAST_CHANGED_CENTRAL}`));
   assert.match(p.textContent, /An agent is linked to this domain\./);
 });
 

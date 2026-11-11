@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-10T01:27:02.375Z",
+  "captured_at": "2026-11-11T03:46:22.810Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -42,7 +42,7 @@
     {
       "n": 5,
       "tag": "summary",
-      "text": "Registry entry and manager access",
+      "text": "Registry entry, manager access and runs",
       "panel": "employee",
       "outline_px": 3,
       "outline_style": "solid"
@@ -66,7 +66,7 @@
     {
       "n": 8,
       "tag": "summary",
-      "text": "Stories, criteria and points (32)",
+      "text": "Stories: your ticks and the platform verifier (32)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
@@ -354,7 +354,7 @@
     {
       "n": 44,
       "tag": "summary",
-      "text": "Registry entry and manager access",
+      "text": "Registry entry, manager access and runs",
       "panel": "employee",
       "outline_px": 3,
       "outline_style": "solid"
@@ -378,7 +378,7 @@
     {
       "n": 47,
       "tag": "summary",
-      "text": "Stories, criteria and points (32)",
+      "text": "Stories: your ticks and the platform verifier (32)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"

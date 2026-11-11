@@ -7,6 +7,7 @@
 import { DATA_FILES, DataLoadError, loadJson } from './data.js';
 import { DOMAIN_KEY, ENDPOINTS } from './agent-domain-facts.js';
 import { redactSnapshot } from './agent-domain-redact.js';
+import { isPerRungRecord } from './verification-model.js';
 
 export const CAPABILITY_FILE = 'command-center/sources/product_experience.capabilities.json';
 export const SOURCES_FILE = 'command-center/sources/SOURCES.json';
@@ -109,7 +110,34 @@ export function readPlatformSync(json, lastChanged) {
     const key = Object.keys(ENDPOINTS).find((k) => ENDPOINTS[k] === s.endpoint);
     endpoints[key] = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null, body: s.body };
   }
-  return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints };
+  return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints,
+    verdict_reasons: verdictReasons(json.verification), not_shown: sectionsNotShown(json) };
+}
+
+/**
+ * The platform verifier's own reasons, by plan story id (Panel 6 quotes them beside a disagreement).
+ * Only `story_id` and `reasons` are kept: no titles, no criteria text, no commit data. The verifier's
+ * per-rung records are left out; they belong to Panel 4 and its updated projection.
+ */
+export function verdictReasons(verification) {
+  const out = {};
+  for (const s of Array.isArray(verification?.stories) ? verification.stories : []) {
+    if (typeof s?.story_id !== 'string' || isPerRungRecord(s.story_id)) continue;
+    out[s.story_id] = Array.isArray(s.reasons) ? s.reasons.filter((x) => typeof x === 'string') : [];
+  }
+  return out;
+}
+
+/**
+ * Sections the snapshot carries that this console deliberately does not display yet, because the
+ * platform's capability projection for Panels 3, 4 and 5 is being extended (the platform engineering
+ * contact's direction, 2026-11-10). Only their presence and size are read, never their values.
+ */
+export function sectionsNotShown(json) {
+  const out = [];
+  if (Array.isArray(json?.authority)) out.push({ section: 'authority[]', size: json.authority.length });
+  if (json?.authority_rule && typeof json.authority_rule === 'object') out.push({ section: 'authority_rule', size: null });
+  return out;
 }
 
 async function loadPlatformSync(options) {
@@ -135,7 +163,8 @@ export function combineEndpoints(snapshot, sync) {
   for (const [key, e] of Object.entries(sync?.endpoints ?? {})) {
     if (out[key]?.state !== 'ok') out[key] = e;
   }
-  return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null } };
+  return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null,
+    verdict_reasons: sync?.verdict_reasons ?? {}, not_shown: sync?.not_shown ?? [] } };
 }
 
 export async function loadAgentDomainData(options = {}) {

@@ -2,9 +2,9 @@
 
 **Source:** [state-matrix.html](state-matrix.html) renders the real panel code against eight
 scenarios ([state-fixtures.js](state-fixtures.js)). The table below was read from each rendered
-panel's `data-state` ([state-matrix.json](state-matrix.json), captured 7:27 PM CST on 2026-11-09
-from the working tree after `main` was merged in, with Aleem's three required changes applied), not
-typed by hand. The platform-synced files are those of 2026-11-04 (3:14 PM CST). Columns follow
+panel's `data-state` ([state-matrix.json](state-matrix.json), re-captured 9:46 PM CST on 2026-11-10
+after the changes to Panels 1, 2 and 6 and the privacy wording corrections, with Aleem's three required changes applied; every state is the
+same as in the 2026-11-09 capture), not typed by hand. The platform-synced files are those of 2026-11-04 (3:14 PM CST). Columns follow
 the brief's panel order.
 
 **Real data versus fixtures:**

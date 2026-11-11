@@ -27,7 +27,7 @@
       { "file": "command-center/vendor/colaberry-ds/LICENSE", "upstream_path": "LICENSE", "git_blob": "8e18d11dba2a79a88d697fe1bc5c3a2b261296df" }
     ],
     "not_vendored": [
-      { "upstream_path": "tokens/fonts.css", "why": "It loads Roboto from the Google Fonts CDN and an icon font from jsDelivr. The repository ships no font files to self-host (assets/fonts/ holds only LICENSES.md), so adopting it adds an external dependency. Not added: pending a decision from Aleem or Ali (Mihret, 2026-11-09). The page uses the --font-body token, which names Roboto first and falls back to the system font." },
+      { "upstream_path": "tokens/fonts.css", "why": "It loads Roboto from the Google Fonts CDN and an icon font from jsDelivr. The repository ships no font files to self-host (assets/fonts/ holds only LICENSES.md), so adopting it adds an external dependency. Not added: pending platform design-system decision (Mihret, 2026-11-09). The page uses the --font-body token, which names Roboto first and falls back to the system font." },
       { "upstream_path": "tokens/base.css", "why": "An optional element layer (body 18px, h1 48px, link and focus defaults). Adopting it is a type-scale change, which the review lists separately as item 7 for the next revision." }
     ]
   },

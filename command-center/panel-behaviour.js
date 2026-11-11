@@ -7,12 +7,20 @@ import { autonomyIndex, AUTONOMY_STAGES } from './authority.js';
 import { capabilitySourceNote, endpointTags, sourceFileTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock } from './console-ui.js';
 import { rungHref } from './panel-ladder.js';
+import { withholdNames } from './agent-domain-redact.js';
 
-export function behaviourTable(items, withCapability) {
+/**
+ * Wording only (Mihret's privacy correction, 2026-11-10): the accountable manager's name in a behaviour
+ * or its criteria reads "the accountable manager" on this public page. The pinned file is unchanged, and
+ * which behaviours are shown, and from where, is unchanged. With no name list the text is shown as it is;
+ * that happens only when the source file is not loaded, and then there are no rows to show.
+ */
+export function behaviourTable(items, withCapability, { names = [] } = {}) {
+  const say = (text) => withholdNames(text, names) ?? text;
   return table([
     withCapability ? { label: 'Capability', cell: (b) => b.capability_name } : { label: 'Rung', cell: (b) => h('code', {}, b.autonomy) },
-    { label: 'Behaviour at this rung', cell: (b) => b.behaviour },
-    { label: 'Its acceptance criteria', cell: (b) => b.acceptance_criteria },
+    { label: 'Behaviour at this rung', cell: (b) => say(b.behaviour) },
+    { label: 'Its acceptance criteria', cell: (b) => say(b.acceptance_criteria) },
     { label: 'State', cell: () => badge('warn', 'Draft · not evidenced') },
   ], items, 'No behaviour is written for this rung.');
 }
@@ -23,7 +31,7 @@ export function nextRung(rows) {
   return Number.isFinite(lowest) ? AUTONOMY_STAGES[Math.min(lowest + 1, AUTONOMY_STAGES.length - 1)] : null;
 }
 
-export function renderBehaviourPanel(rows, rungs, { order, sourceState = 'ready', sourceError } = {}) {
+export function renderBehaviourPanel(rows, rungs, { order, sourceState = 'ready', sourceError, names = [] } = {}) {
   const total = rungs.reduce((n, g) => n + g.behaviours.length, 0);
   const state = sourceState !== 'ready' ? sourceState : total === 0 ? 'empty' : 'ready';
   const next = nextRung(rows);
@@ -52,7 +60,7 @@ export function renderBehaviourPanel(rows, rungs, { order, sourceState = 'ready'
         { label: 'Note', cell: (g) => (g.unreachable_by_fact ? 'Unreachable by fact: no agent handoff exists'
           : (g.behaviours.length ? 'Open the rung to read them' : 'None written for this rung')) },
       ], rungs) },
-      nextGroup ? { title: `What ${next} requires, capability by capability`, count: nextGroup.behaviours.length, body: behaviourTable(nextGroup.behaviours, true) } : null,
+      nextGroup ? { title: `What ${next} requires, capability by capability`, count: nextGroup.behaviours.length, body: behaviourTable(nextGroup.behaviours, true, { names }) } : null,
     ] : [],
   });
 }

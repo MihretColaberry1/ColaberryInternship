@@ -6,7 +6,7 @@ import { badge, facts } from './ui.js';
 import { REASON_TEXT, autonomyIndex } from './authority.js';
 import { AUTHORITY_WORDS, ENDPOINTS, REGISTRY_ENTRY } from './agent-domain-facts.js';
 import { SNAPSHOT_FILE } from './agent-domain-data.js';
-import { withholdRecordIds } from './agent-domain-redact.js';
+import { publicBlockerText } from './agent-domain-redact.js';
 import { authorityView } from './agent-domain-model.js';
 import { draftBadge, platformTag, sourceFileTag } from './agent-domain-ui.js';
 import { backToConsole } from './console-ui.js';
@@ -20,12 +20,15 @@ import { behaviourTable } from './panel-behaviour.js';
  * itself is never edited (a test checks it against the platform's git blob).
  */
 export const STALE_AGENT_BLOCKER = 'no_ai_employee_provisioned';
-function blockerItem(raw) {
-  // Display-only: a staff member's internal record id in the blocker text is withheld.
-  const b = withholdRecordIds(raw);
-  if (!b.startsWith(STALE_AGENT_BLOCKER)) return h('li', {}, b);
-  return h('li', {}, b, h('div', { class: 'muted' }, badge('warn', 'May be out of date'), ' ', REGISTRY_ENTRY.stale_note));
+
+// Display-only (the pinned file is unchanged): see publicBlockerText in agent-domain-redact.js.
+function blockerItem(text) {
+  if (!text.startsWith(STALE_AGENT_BLOCKER)) return h('li', {}, text);
+  return h('li', {}, text, h('div', { class: 'muted' }, badge('warn', 'May be out of date'), ' ', REGISTRY_ENTRY.stale_note));
 }
+
+/** Each blocker once: two access blockers that both become the neutral sentence are shown once. */
+const blockerTexts = (blockedBy, names) => [...new Set(blockedBy.map((b) => publicBlockerText(b, names)))];
 
 const reasonList = (reasons) => (reasons.length
   ? h('ul', {}, reasons.map((x) => h('li', {}, h('code', {}, x), ` ${REASON_TEXT[x] ?? ''}`))) : 'None returned.');
@@ -44,7 +47,7 @@ export function hypotheticalText(r) {
   return `If a human approved this capability up to its ${r.ceiling} ceiling, effectiveAuthority() would return ${r.hypothetical.effective_autonomy}.`;
 }
 
-export function capabilityDetail(r, check) {
+export function capabilityDetail(r, check, { names = [] } = {}) {
   const a = authorityView(r);
   return [backToConsole('ladder'), h('h2', {}, r.name, ' ', draftBadge(r.validation)), h('p', {}, sourceFileTag(), ' ', h('code', {}, r.id)),
     facts([
@@ -52,7 +55,7 @@ export function capabilityDetail(r, check) {
       ['Starting rung', r.starting], ['Ceiling (proposed)', r.ceiling],
       ['Why this ceiling', r.ceiling_reason ?? 'No reason recorded.'],
       ['Human decision', r.human_decision ? '★ Yes: a human makes this decision at every level, forever.' : 'No'],
-      ['Blocked by', r.blocked_by.length ? h('ul', {}, r.blocked_by.map(blockerItem)) : 'Nothing recorded'],
+      ['Blocked by', r.blocked_by.length ? h('ul', {}, blockerTexts(r.blocked_by, names).map(blockerItem)) : 'Nothing recorded'],
       [r.granted_tools === null ? 'Tools it will need (grants not captured)' : 'Tools it will need', r.required_tools.length ? r.required_tools.map((t) => h('code', {}, `${t} `)) : 'None listed'],
     ]),
     h('h3', {}, 'Authority ', platformTag('autonomyLadder.ts')),
@@ -70,13 +73,13 @@ export function capabilityDetail(r, check) {
       h('p', {}, hypotheticalText(r)),
       h('p', { class: 'muted' }, `Today: ${AUTHORITY_WORDS.cap_idle}. No human has approved this capability above its starting rung.`)),
     h('h3', {}, 'Ladder'), ladderGrid([r]),
-    h('h3', {}, 'Behaviour per rung ', sourceFileTag()), behaviourTable(r.behaviours, false)];
+    h('h3', {}, 'Behaviour per rung ', sourceFileTag()), behaviourTable(r.behaviours, false, { names })];
 }
 
-export function rungDetail(g) {
+export function rungDetail(g, { names = [] } = {}) {
   return [backToConsole('behaviour'), h('h2', {}, g.stage), h('p', {}, platformTag('autonomyLadder.ts'), ' ', g.meaning),
     g.unreachable_by_fact ? h('p', { class: 'error' }, 'Unreachable by fact: coordinated handoff between agents does not exist in the platform today.') : null,
-    h('h3', {}, 'Behaviours written for this rung ', sourceFileTag()), behaviourTable(g.behaviours, true)];
+    h('h3', {}, 'Behaviours written for this rung ', sourceFileTag()), behaviourTable(g.behaviours, true, { names })];
 }
 
 // ---- Operator guides: where each primary action leads ----
@@ -89,10 +92,10 @@ const GUIDES = {
       'Sign in to the portal yourself, in your own browser. Never use anyone else\'s login.',
       `Run the reviewed capture snippet (v4) in that tab's console. It only reads GET ${ENDPOINTS.mine} and GET ${ENDPOINTS.requests}, and downloads one file.`,
       'Save the downloaded file outside this repository, and send its location to the person preparing the snapshot. You do not run any redaction command yourself.',
-      'The redaction and privacy check are done for you, outside this repository, and the report is shown to you. If redaction would empty a panel, the process stops and Ali Muwwakkil is asked.',
+      'The redaction and privacy check are done for you, outside this repository, and the report is shown to you. If redaction would empty a panel, the process stops and the platform owner is asked.',
       `Only the redacted file, after you have reviewed it, is placed at ${SNAPSHOT_FILE}. Nothing that identifies another person is committed.`,
     ],
-    why: 'This page is public. Panels 1 and 5 (Your employee and Your governance queue) read admin endpoints that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (Ali Muwwakkil, 2026-11-02).',
+    why: 'This page is public. Panels 1 and 5 (Your employee and Your governance queue) read admin endpoints that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (the platform owner\'s direction, 2026-11-02).',
   },
   requests: {
     panel: 'governance',

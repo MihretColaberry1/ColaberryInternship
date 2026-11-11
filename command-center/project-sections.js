@@ -6,6 +6,8 @@ import { NOT_CHECKED, badge, columns, date, facts, sectionTitle, stateBadge, tab
 import { draftGuardrailStatus, guardrailStatus, rolesWithStories, taskList, timeline, traceability } from './model-tabs.js';
 import { DRAFTS_FILE, NOTES_FILE } from './data.js';
 import { backToConsole } from './console-ui.js';
+import { publicBlockerText, withholdNames } from './agent-domain-redact.js';
+import { ticksAheadOfVerifier, verifierWords, yourTickWords } from './verification-model.js';
 
 const plainText = (text) => (text ?? '').replace(/\*\*|`|#{1,6}\s/g, '');
 const planTag = () => h('span', { class: 'src src-plan' }, 'Project plan', h('span', { class: 'src-detail' }, ' · .colaberry/'));
@@ -27,12 +29,29 @@ export function projectTotals(model) {
 
 // ---- Stories, criteria and points (Overview, Project management, Knowledge base) ----
 
-export function storiesSection(model) {
+/**
+ * A story title as this public page shows it: the accountable manager's name withheld (decision D4).
+ * With no name list loaded, the title is dropped so the id is shown instead of a title that might name someone.
+ */
+const safeTitle = (title, names) => (title == null ? title : withholdNames(title, names));
+
+/**
+ * Two different records, kept in separate columns and never added together (decision D2):
+ *   - "Your ticks": the `passed` flags you set in progress.json, which are your claim;
+ *   - "Platform verifier": the `verification` block the platform writes into the same file
+ *     (docs/DATA_CONTRACT.md), which is what it confirmed from a pushed commit.
+ */
+export function storiesSection(model, { names = [] } = {}) {
   const today = model.schedule?.today ?? '';
-  const tasks = taskList(model.rows, today);
+  const tasks = taskList(model.rows, today).map((r) => ({ ...r, title: safeTitle(r.title, names) }));
   const t = projectTotals(model);
-  return [h('p', {}, planTag(), ` Stories verified: ${t.stories}. Criteria passed: ${t.criteria}. Points awarded: ${t.points}. `,
+  const ahead = ticksAheadOfVerifier(model.rows);
+  return [h('p', {}, planTag(), ` Plan stories verified by the platform: ${t.stories}. Criteria the platform confirms: ${t.criteria}. Points awarded: ${t.points}. `,
     'Due dates are shown exactly as plan.json records them; past dates are not corrected or hidden.'),
+  // A short badge: badges do not wrap, so the explanation is ordinary text that reflows at 320 px.
+  ahead.length ? h('p', {}, badge('warn', 'Not equivalent'), ' Your ticks are ahead of the platform verifier for ',
+    ahead.map((a) => `${a.id.replace(/^product_experience\./, '')}: ${yourTickWords(a)}; ${verifierWords(a)}.`).join(' '),
+    ' These are two different records. See "What is not available".') : null,
   table([
     columns.story,
     { label: 'Release', cell: (r) => r.release ?? '—' },
@@ -40,10 +59,12 @@ export function storiesSection(model) {
     { label: 'Due', cell: (r) => date(r.dueOn) },
     { label: 'First given', cell: (r) => date(r.dueBaselineOn) },
     { label: 'Change', cell: (r) => shiftText(r.shiftDays) },
-    { label: 'Criteria (platform · your ticks)', cell: (r) => `${r.confirmedTotal == null ? NOT_CHECKED : `${r.confirmedPassed} of ${r.confirmedTotal}`} · ${r.tickedPassed} of ${r.tickedTotal}` },
+    { label: 'Your ticks (progress.json)', cell: (r) => `${r.tickedPassed} of ${r.tickedTotal}` },
+    { label: 'Platform verifier', cell: (r) => (r.confirmedTotal == null ? NOT_CHECKED : `${r.confirmedPassed} of ${r.confirmedTotal}`) },
     { label: 'Status', cell: (r) => (r.pastDue ? badge('warn', 'Past due, not verified') : r.state === 'verified' ? badge('ok', '✓ Done') : '') },
   ], tasks, 'plan.json and progress.json hold no stories.'),
-  h('p', { class: 'muted' }, 'A tick is your claim in progress.json; "platform" is what the platform confirmed from a pushed commit.')];
+  h('p', { class: 'muted' }, 'Your ticks are your claim in progress.json. The platform verifier is what the platform confirmed from a pushed commit, '
+    + 'and writes into the same file. A story counts as verified only on the platform verifier\'s record.')];
 }
 
 export function timelineSection(data, model) {
@@ -90,7 +111,7 @@ export function scheduleSection(model) {
 // ---- Guardrails and notes (Guardrails, Knowledge base) ----
 
 const DRAFT_STEPS = [['documented', 'Draft documented'], ['registered', 'Registered in platform plan'],
-  ['signoff', "Aleem's R0 sign-off"], ['enforcement', 'Enforcement implemented'], ['verification', 'Verification completed']];
+  ['signoff', "Accountable manager's R0 sign-off"], ['enforcement', 'Enforcement implemented'], ['verification', 'Verification completed']];
 const STEP_BADGES = { done: ['ok', '✓ Done'], pending: ['neutral', 'Pending'], conflict: ['error', 'Conflicts with plan.json'] };
 
 /** Guardrails waiting on a human: the platform's SAFE requirements and this repo's drafts. */
@@ -145,21 +166,29 @@ export function planGaps(data) {
 
 // ---- Story detail page (Project management) ----
 
-export function storyDetail(model, id) {
+/**
+ * One story. `names` is the accountable-manager name list (decision D4): every line of text from the
+ * plan passes through withholdNames. The console only renders this page once that list is known.
+ */
+export function storyDetail(model, id, { names = [] } = {}) {
   const tasks = taskList(model.rows, model.schedule?.today ?? '');
   const r = tasks.find((t) => t.id === id);
   if (!r) return [backToConsole('inventory'), h('h2', {}, 'Story not found'), h('p', {}, `No story "${id}" in plan.json or progress.json.`)];
+  const safe = (text) => (text == null ? text : (withholdNames(text, names) ?? ''));
   const ticked = new Map(r.criteria.map((c) => [c.text, c.passed === true]));
   const criteriaText = r.acceptance.length ? r.acceptance : r.criteria.map((c) => c.text);
-  return [backToConsole('inventory'), h('h2', {}, r.title ?? r.id), h('p', {}, planTag(), ' ', h('code', {}, r.id)),
-    facts([['State', stateBadge(r.state)], ['Release', r.release ?? (r.inPlan ? '—' : 'not in plan.json')],
+  return [backToConsole('inventory'), h('h2', {}, safe(r.title) || r.id), h('p', {}, planTag(), ' ', h('code', {}, r.id)),
+    facts([['State (platform verifier)', stateBadge(r.state)],
+      ['Your ticks (progress.json)', `${r.tickedPassed} of ${r.tickedTotal}`],
+      ['Platform verifier', r.confirmedTotal == null ? NOT_CHECKED : `${r.confirmedPassed} of ${r.confirmedTotal}`],
+      ['Release', r.release ?? (r.inPlan ? '—' : 'not in plan.json')],
       ['Due', r.dueOn ?? 'no due date in plan'], ['First given', r.dueBaselineOn ?? '—'], ['Change', shiftText(r.shiftDays)],
       ['Verified commit', r.commitUrl ? h('a', { href: r.commitUrl }, 'open on GitHub') : '—']]),
-    r.narrative ? [sectionTitle('What it asks for'), h('p', {}, plainText(r.narrative))] : null,
+    r.narrative ? [sectionTitle('What it asks for'), h('p', {}, safe(plainText(r.narrative)))] : null,
     sectionTitle('Acceptance criteria'),
     criteriaText.length === 0 ? h('p', { class: 'empty' }, 'No criteria recorded.')
-      : h('ul', { class: 'criteria' }, criteriaText.map((text) => h('li', {}, ticked.get(text) ? badge('ok', '✓ ticked') : badge('neutral', 'not ticked'), ' ', text))),
-    h('p', { class: 'muted' }, 'A tick is your claim in progress.json. The state above is what the platform confirmed.'),
-    r.failurePaths.length ? [sectionTitle('Failure paths'), h('ul', {}, r.failurePaths.map((f) => h('li', {}, f)))] : null,
-    r.blockedBy.length ? [sectionTitle('Blocked by'), h('ul', {}, r.blockedBy.map((b) => h('li', {}, b)))] : null];
+      : h('ul', { class: 'criteria' }, criteriaText.map((text) => h('li', {}, ticked.get(text) ? badge('ok', '✓ ticked') : badge('neutral', 'not ticked'), ' ', safe(text)))),
+    h('p', { class: 'muted' }, 'A tick is your claim in progress.json. The state above is what the platform verifier confirmed; the two are not equivalent.'),
+    r.failurePaths.length ? [sectionTitle('Failure paths'), h('ul', {}, r.failurePaths.map((f) => h('li', {}, safe(f))))] : null,
+    r.blockedBy.length ? [sectionTitle('Blocked by'), h('ul', {}, [...new Set(r.blockedBy.map((b) => publicBlockerText(b, names)))].map((b) => h('li', {}, b)))] : null];
 }
