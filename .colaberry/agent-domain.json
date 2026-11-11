@@ -341,7 +341,7 @@
       {
         "story_id": "product_experience.CAP.brand_design_system_sync_review",
         "title": "Review the vendored design-system drift pull request",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -394,7 +394,7 @@
       {
         "story_id": "product_experience.CAP.bundle_and_render_performance_review",
         "title": "Bundle size and render performance review",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -447,7 +447,7 @@
       {
         "story_id": "product_experience.CAP.color_contrast_regression_check",
         "title": "Rendered colour-contrast regression check",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -500,7 +500,7 @@
       {
         "story_id": "product_experience.CAP.component_duplication_detection",
         "title": "Component duplication and divergence detection",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -553,7 +553,7 @@
       {
         "story_id": "product_experience.CAP.dataviz_quality_audit",
         "title": "Data-visualisation quality audit on product surfaces",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -594,7 +594,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit",
         "title": "Design-token drift audit across every styled surface",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -658,7 +658,7 @@
       {
         "story_id": "product_experience.CAP.empty_error_loading_state_inventory",
         "title": "Empty, error and loading state inventory",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -834,7 +834,7 @@
       {
         "story_id": "product_experience.CAP.manager_design_review_queue",
         "title": "Manager-reachable design review and decision queue",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -916,7 +916,7 @@
       {
         "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit",
         "title": "Cross-brand consistency audit across the platform and the three public apps",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -957,7 +957,7 @@
       {
         "story_id": "product_experience.CAP.page_health_smoke_sweep",
         "title": "Page-health smoke sweep on direct load and client-side navigation",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1022,7 +1022,7 @@
       {
         "story_id": "product_experience.CAP.plain_language_interface_copy_audit",
         "title": "Plain-language audit of interface copy",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1063,7 +1063,7 @@
       {
         "story_id": "product_experience.CAP.public_copy_claims_compliance_audit",
         "title": "Public copy and claims compliance audit",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1181,7 +1181,7 @@
       {
         "story_id": "product_experience.CAP.route_surface_inventory",
         "title": "Route and surface inventory with review-coverage map",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1234,7 +1234,7 @@
       {
         "story_id": "product_experience.CAP.screenshot_visual_review_packet",
         "title": "Assemble the screenshot-based design review packet",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1369,7 +1369,7 @@
       {
         "story_id": "product_experience.CAP.unrouted_page_detection",
         "title": "Unrouted and orphaned page detection",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1422,7 +1422,7 @@
       {
         "story_id": "product_experience.CAP.ux_quality_exception_register",
         "title": "UX quality standard and exception register",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1463,7 +1463,7 @@
       {
         "story_id": "product_experience.CAP.visual_change_approval_gate",
         "title": "Visual and brand change approval gate",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1504,7 +1504,7 @@
       {
         "story_id": "product_experience.CAP.wcag_aa_accessibility_audit",
         "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1641,7 +1641,7 @@
       {
         "story_id": "product_experience.STORY-000",
         "title": "STORY-000 · Build your Command Center",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
