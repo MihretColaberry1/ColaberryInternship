@@ -1,5 +1,7 @@
 # product_experience.CAP.manager_design_review_queue — Manager-reachable design review and decision queue
 
+**CANDIDATE -- not started, not assigned.** This is one line on this domain's list of everything its agent could eventually do. It becomes real work only when the builder picks it and their manager agrees, at which point it opens as four stories. Until then it is deliberately inert, and the honest status of it is "not started" rather than "behind".
+
 The accountable manager can see what his AI employee found, decide on it, and have that decision recorded, which is the precondition for every other capability in this domain mattering.
 
 **Built today:** absent. **Requirement validated:** draft -- Mohammed Abdul Aleem must confirm scope, exceptions and success measures; he has no admin login today
@@ -12,7 +14,7 @@ The accountable manager can see what his AI employee found, decide on it, and ha
 
 Full build prompt is attached to this story.
 
-**Release:** r2 · r2 (weeks 0–0)
+**Release:** autonomy:R0 · Legacy migration plan (weeks 0–0)
 **Owner:** 
 **Blocked by:** nothing — you can start this now
 

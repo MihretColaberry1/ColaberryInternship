@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "project": "product_experience",
+  "project": "Product Experience & UI/UX",
   "totals": {
-    "stories_total": 32,
+    "stories_total": 36,
     "stories_verified": 6,
     "stories_submitted": 0,
-    "stories_in_progress": 19,
-    "stories_not_started": 7,
+    "stories_in_progress": 26,
+    "stories_not_started": 4,
     "criteria_total": 49,
     "criteria_passed": 18,
     "points_awarded": 150
@@ -14,7 +14,7 @@
   "stories": [
     {
       "id": "product_experience.CAP.brand_design_system_sync_review",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -42,7 +42,7 @@
     },
     {
       "id": "product_experience.CAP.bundle_and_render_performance_review",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -70,7 +70,7 @@
     },
     {
       "id": "product_experience.CAP.color_contrast_regression_check",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -98,7 +98,7 @@
     },
     {
       "id": "product_experience.CAP.component_duplication_detection",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -126,7 +126,7 @@
     },
     {
       "id": "product_experience.CAP.dataviz_quality_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -154,7 +154,7 @@
     },
     {
       "id": "product_experience.CAP.design_token_drift_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -183,8 +183,136 @@
       }
     },
     {
+      "id": "product_experience.CAP.design_token_drift_audit.L1-BY-HAND",
+      "release": "autonomy:R0",
+      "acceptance_total": 2,
+      "criteria": [
+        {
+          "text": "The capability was performed end to end by hand, producing its real outcome on real inputs.",
+          "passed": false
+        },
+        {
+          "text": "A run log exists recording the date, the elapsed time, each step actually performed, every judgment call made, and at least one way the recorded workflow differed from what the work was really like.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 0,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": []
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP",
+      "release": "autonomy:R0",
+      "acceptance_total": 2,
+      "criteria": [
+        {
+          "text": "The same outcome was produced a second time using only the product, with no agent, no script and no direct database edit -- or the exact step that made this impossible is written down as a named gap.",
+          "passed": false
+        },
+        {
+          "text": "The app route was compared against the step 1 run log, and every difference between them is recorded.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 0,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": []
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "A change request for a tool exists against this domain, filed by the builder, naming the tool, its scope, what it must never touch, and who approves a run.",
+          "passed": false
+        },
+        {
+          "text": "The request cites the step 1 run log and the step 2 result as its evidence.",
+          "passed": false
+        },
+        {
+          "text": "A named human other than the builder has recorded a decision on it. A decline counts; an undecided request does not.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 0,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": []
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet.",
+          "passed": false
+        },
+        {
+          "text": "The agent produced the same outcome as the step 1 run log, on the same inputs, including the exceptions recorded there.",
+          "passed": false
+        },
+        {
+          "text": "Every run in the evidence window was approved by a named human before it took effect, and the record shows who.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 0,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": []
+      }
+    },
+    {
       "id": "product_experience.CAP.empty_error_loading_state_inventory",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -211,8 +339,8 @@
       }
     },
     {
-      "id": "product_experience.CAP.evidence_labeling_and_sample_data_aud",
-      "release": "r2",
+      "id": "product_experience.CAP.evidence_labeling_and_sample_data_audit",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -224,11 +352,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved definition covering public and admin surfaces separately."
+        ]
+      }
     },
     {
-      "id": "product_experience.CAP.image_alt_and_media_accessibility_aud",
-      "release": "r2",
+      "id": "product_experience.CAP.image_alt_and_media_accessibility_audit",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -240,11 +380,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written, manager-approved rule covering decorative images and icon-only controls."
+        ]
+      }
     },
     {
-      "id": "product_experience.CAP.keyboard_and_semantic_interaction_aud",
-      "release": "r2",
+      "id": "product_experience.CAP.keyboard_and_semantic_interaction_audit",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -256,11 +408,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved pattern list, including the backdrop-dismissal exception."
+        ]
+      }
     },
     {
       "id": "product_experience.CAP.manager_design_review_queue",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -287,8 +451,8 @@
       }
     },
     {
-      "id": "product_experience.CAP.motion_and_reduced_motion_compliance_",
-      "release": "r2",
+      "id": "product_experience.CAP.motion_and_reduced_motion_compliance_review",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -300,11 +464,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Written decision on the reset's scope; per-file obligations stated."
+        ]
+      }
     },
     {
       "id": "product_experience.CAP.multi_brand_surface_consistency_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -332,7 +508,7 @@
     },
     {
       "id": "product_experience.CAP.page_health_smoke_sweep",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -360,7 +536,7 @@
     },
     {
       "id": "product_experience.CAP.plain_language_interface_copy_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -388,7 +564,7 @@
     },
     {
       "id": "product_experience.CAP.public_copy_claims_compliance_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -415,8 +591,8 @@
       }
     },
     {
-      "id": "product_experience.CAP.responsive_and_touch_target_regressio",
-      "release": "r2",
+      "id": "product_experience.CAP.responsive_and_touch_target_regression_check",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -428,11 +604,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named."
+        ]
+      }
     },
     {
       "id": "product_experience.CAP.route_surface_inventory",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -460,7 +648,7 @@
     },
     {
       "id": "product_experience.CAP.screenshot_visual_review_packet",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -487,8 +675,8 @@
       }
     },
     {
-      "id": "product_experience.CAP.stylesheet_architecture_consolidation",
-      "release": "r2",
+      "id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -500,11 +688,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written scope naming the stylesheets in play and the no-visual-change constraint."
+        ]
+      }
     },
     {
-      "id": "product_experience.CAP.theme_and_dark_mode_readiness_assessm",
-      "release": "r2",
+      "id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -516,11 +716,23 @@
       "tests_added": [],
       "notes": null,
       "updated_at": null,
-      "verification": null
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 1,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A written assessment scope; no implementation work proposed or begun."
+        ]
+      }
     },
     {
       "id": "product_experience.CAP.unrouted_page_detection",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -548,7 +760,7 @@
     },
     {
       "id": "product_experience.CAP.ux_quality_exception_register",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -576,7 +788,7 @@
     },
     {
       "id": "product_experience.CAP.visual_change_approval_gate",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -604,7 +816,7 @@
     },
     {
       "id": "product_experience.CAP.wcag_aa_accessibility_audit",
-      "release": "r2",
+      "release": "autonomy:R0",
       "acceptance_total": 1,
       "criteria": [
         {
@@ -632,7 +844,7 @@
     },
     {
       "id": "product_experience.LEGACY-MIGRATION-PLAN",
-      "release": "r1",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
@@ -668,7 +880,7 @@
     },
     {
       "id": "product_experience.RESEARCH-1-SYSTEM-CLASSES",
-      "release": "r0",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
@@ -704,7 +916,7 @@
     },
     {
       "id": "product_experience.RESEARCH-2-AGENT-ANATOMY",
-      "release": "r0",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
@@ -740,7 +952,7 @@
     },
     {
       "id": "product_experience.RESEARCH-3-ROLE-AND-DA-TRANSITION",
-      "release": "r0",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
@@ -776,7 +988,7 @@
     },
     {
       "id": "product_experience.RESEARCH-4-MANAGER-INTERVIEW",
-      "release": "r0",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
@@ -812,7 +1024,7 @@
     },
     {
       "id": "product_experience.RESEARCH-5-THREE-PROPOSED-TASKS",
-      "release": "r0",
+      "release": "autonomy:R0",
       "acceptance_total": 3,
       "criteria": [
         {
