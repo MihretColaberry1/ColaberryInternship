@@ -331,7 +331,7 @@
     "known": true,
     "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
     "summary": {
-      "stories": 99,
+      "stories": 36,
       "checked": 32,
       "verified": 6,
       "awaiting_criteria": 26,
@@ -356,42 +356,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R0",
-        "title": "Review the vendored design-system drift pull request · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R2",
-        "title": "Review the vendored design-system drift pull request · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.brand_design_system_sync_review.autonomy:R4",
-        "title": "Review the vendored design-system drift pull request · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.bundle_and_render_performance_review",
         "title": "Bundle size and render performance review",
         "status": "in_progress",
@@ -406,42 +370,6 @@
         "outstanding": [
           "A manager-approved budget exists; until then every measurement is reported as unjudged."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R0",
-        "title": "Bundle size and render performance review · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R1",
-        "title": "Bundle size and render performance review · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.bundle_and_render_performance_review.autonomy:R4",
-        "title": "Bundle size and render performance review · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -462,42 +390,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R0",
-        "title": "Rendered colour-contrast regression check · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R1",
-        "title": "Rendered colour-contrast regression check · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.color_contrast_regression_check.autonomy:R5",
-        "title": "Rendered colour-contrast regression check · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.component_duplication_detection",
         "title": "Component duplication and divergence detection",
         "status": "in_progress",
@@ -512,42 +404,6 @@
         "outstanding": [
           "Manager-approved definition distinguishing legitimate name reuse from real duplication."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R0",
-        "title": "Component duplication and divergence detection · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R1",
-        "title": "Component duplication and divergence detection · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.component_duplication_detection.autonomy:R4",
-        "title": "Component duplication and divergence detection · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -568,30 +424,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.dataviz_quality_audit.autonomy:R0",
-        "title": "Data-visualisation quality audit on product surfaces · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.dataviz_quality_audit.autonomy:R4",
-        "title": "Data-visualisation quality audit on product surfaces · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.design_token_drift_audit",
         "title": "Design-token drift audit across every styled surface",
         "status": "in_progress",
@@ -608,8 +440,8 @@
         "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4"
       },
       {
-        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R0",
-        "title": "Design-token drift audit across every styled surface · R0",
+        "story_id": "product_experience.CAP.design_token_drift_audit.L1-BY-HAND",
+        "title": "Design-token drift audit across every styled surface · 1 · do it by hand",
         "status": "not_started",
         "verification_state": null,
         "verified": false,
@@ -620,8 +452,8 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R1",
-        "title": "Design-token drift audit across every styled surface · R1",
+        "story_id": "product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP",
+        "title": "Design-token drift audit across every styled surface · 2 · do it in the app",
         "status": "not_started",
         "verification_state": null,
         "verified": false,
@@ -632,8 +464,8 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R2",
-        "title": "Design-token drift audit across every styled surface · R2",
+        "story_id": "product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST",
+        "title": "Design-token drift audit across every styled surface · 3 · request the tool",
         "status": "not_started",
         "verification_state": null,
         "verified": false,
@@ -644,8 +476,8 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.design_token_drift_audit.autonomy:R5",
-        "title": "Design-token drift audit across every styled surface · R5",
+        "story_id": "product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED",
+        "title": "Design-token drift audit across every styled surface · 4 · agent does it, watched",
         "status": "not_started",
         "verification_state": null,
         "verified": false,
@@ -673,30 +505,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.empty_error_loading_state_inventory.autonomy:R0",
-        "title": "Empty, error and loading state inventory · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.empty_error_loading_state_inventory.autonomy:R4",
-        "title": "Empty, error and loading state inventory · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit",
         "title": "Evidence-class and sample-data labelling audit",
         "status": "not_started",
@@ -711,30 +519,6 @@
         "outstanding": [
           "Manager-approved definition covering public and admin surfaces separately."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit.autonomy:R0",
-        "title": "Evidence-class and sample-data labelling audit · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit.autonomy:R4",
-        "title": "Evidence-class and sample-data labelling audit · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -755,30 +539,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit.autonomy:R0",
-        "title": "Image, media and icon alternative-text audit · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit.autonomy:R4",
-        "title": "Image, media and icon alternative-text audit · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit",
         "title": "Keyboard and semantic-interaction audit",
         "status": "not_started",
@@ -793,42 +553,6 @@
         "outstanding": [
           "Manager-approved pattern list, including the backdrop-dismissal exception."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R0",
-        "title": "Keyboard and semantic-interaction audit · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R1",
-        "title": "Keyboard and semantic-interaction audit · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit.autonomy:R5",
-        "title": "Keyboard and semantic-interaction audit · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -849,30 +573,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.manager_design_review_queue.autonomy:R0",
-        "title": "Manager-reachable design review and decision queue · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.manager_design_review_queue.autonomy:R2",
-        "title": "Manager-reachable design review and decision queue · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review",
         "title": "Motion and reduced-motion compliance review",
         "status": "not_started",
@@ -887,30 +587,6 @@
         "outstanding": [
           "Written decision on the reset's scope; per-file obligations stated."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review.autonomy:R0",
-        "title": "Motion and reduced-motion compliance review · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review.autonomy:R4",
-        "title": "Motion and reduced-motion compliance review · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -931,30 +607,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit.autonomy:R0",
-        "title": "Cross-brand consistency audit across the platform and the three public apps · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.multi_brand_surface_consistency_audit.autonomy:R4",
-        "title": "Cross-brand consistency audit across the platform and the three public apps · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.page_health_smoke_sweep",
         "title": "Page-health smoke sweep on direct load and client-side navigation",
         "status": "in_progress",
@@ -969,54 +621,6 @@
         "outstanding": [
           "Manager-approved route list and threshold set, including exemptions for legitimately short pages."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R0",
-        "title": "Page-health smoke sweep on direct load and client-side navigation · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R1",
-        "title": "Page-health smoke sweep on direct load and client-side navigation · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R4",
-        "title": "Page-health smoke sweep on direct load and client-side navigation · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.page_health_smoke_sweep.autonomy:R5",
-        "title": "Page-health smoke sweep on direct load and client-side navigation · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -1037,30 +641,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.plain_language_interface_copy_audit.autonomy:R0",
-        "title": "Plain-language audit of interface copy · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.plain_language_interface_copy_audit.autonomy:R4",
-        "title": "Plain-language audit of interface copy · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.public_copy_claims_compliance_audit",
         "title": "Public copy and claims compliance audit",
         "status": "in_progress",
@@ -1075,54 +655,6 @@
         "outstanding": [
           "Written rule ownership, with legal sign-off recorded for any regulatory rule."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R0",
-        "title": "Public copy and claims compliance audit · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R1",
-        "title": "Public copy and claims compliance audit · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R2",
-        "title": "Public copy and claims compliance audit · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.public_copy_claims_compliance_audit.autonomy:R4",
-        "title": "Public copy and claims compliance audit · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -1143,42 +675,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R0",
-        "title": "Responsive layout and touch-target regression check · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R1",
-        "title": "Responsive layout and touch-target regression check · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check.autonomy:R5",
-        "title": "Responsive layout and touch-target regression check · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.route_surface_inventory",
         "title": "Route and surface inventory with review-coverage map",
         "status": "in_progress",
@@ -1193,42 +689,6 @@
         "outstanding": [
           "Written, manager-approved counting rule; no inventory published under an undefined rule."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R0",
-        "title": "Route and surface inventory with review-coverage map · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R2",
-        "title": "Route and surface inventory with review-coverage map · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.route_surface_inventory.autonomy:R5",
-        "title": "Route and surface inventory with review-coverage map · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -1249,42 +709,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R0",
-        "title": "Assemble the screenshot-based design review packet · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R3",
-        "title": "Assemble the screenshot-based design review packet · R3",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.screenshot_visual_review_packet.autonomy:R4",
-        "title": "Assemble the screenshot-based design review packet · R4",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal",
         "title": "Stylesheet architecture consolidation proposal",
         "status": "not_started",
@@ -1299,30 +723,6 @@
         "outstanding": [
           "A written scope naming the stylesheets in play and the no-visual-change constraint."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal.autonomy:R0",
-        "title": "Stylesheet architecture consolidation proposal · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal.autonomy:R2",
-        "title": "Stylesheet architecture consolidation proposal · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -1343,30 +743,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment.autonomy:R0",
-        "title": "Theme and dark-mode readiness assessment · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment.autonomy:R2",
-        "title": "Theme and dark-mode readiness assessment · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.unrouted_page_detection",
         "title": "Unrouted and orphaned page detection",
         "status": "in_progress",
@@ -1381,42 +757,6 @@
         "outstanding": [
           "Manager-approved definition, and a parked register seeded with at least the SignupV2 case already documented in App.tsx."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R0",
-        "title": "Unrouted and orphaned page detection · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R1",
-        "title": "Unrouted and orphaned page detection · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.unrouted_page_detection.autonomy:R5",
-        "title": "Unrouted and orphaned page detection · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
@@ -1437,30 +777,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.ux_quality_exception_register.autonomy:R0",
-        "title": "UX quality standard and exception register · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.ux_quality_exception_register.autonomy:R2",
-        "title": "UX quality standard and exception register · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.visual_change_approval_gate",
         "title": "Visual and brand change approval gate",
         "status": "in_progress",
@@ -1478,30 +794,6 @@
         "commit_sha": null
       },
       {
-        "story_id": "product_experience.CAP.visual_change_approval_gate.autonomy:R0",
-        "title": "Visual and brand change approval gate · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.visual_change_approval_gate.autonomy:R2",
-        "title": "Visual and brand change approval gate · R2",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
         "story_id": "product_experience.CAP.wcag_aa_accessibility_audit",
         "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals",
         "status": "in_progress",
@@ -1516,54 +808,6 @@
         "outstanding": [
           "A written, manager-approved standard per surface class; no audit has run."
         ],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R0",
-        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R0",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R1",
-        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R1",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R3",
-        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R3",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
-        "commit_sha": null
-      },
-      {
-        "story_id": "product_experience.CAP.wcag_aa_accessibility_audit.autonomy:R5",
-        "title": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals · R5",
-        "status": "not_started",
-        "verification_state": null,
-        "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
         "commit_sha": null
       },
       {
