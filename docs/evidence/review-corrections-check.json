@@ -1,0 +1,894 @@
+{
+  "checked_against": "http://127.0.0.1:8765/",
+  "widths": [
+    "narrow 320px",
+    "phone 390px",
+    "tablet 820px",
+    "desktop 1440px"
+  ],
+  "layout": [
+    {
+      "width_name": "narrow",
+      "width": 320,
+      "grid_columns": 1,
+      "disclosures_checked": 20,
+      "failed": 0,
+      "glance_values_squeezed": [],
+      "checks": [
+        {
+          "panel": "employee",
+          "disclosure": "The agent, as the endpoint records it (8)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "inventory",
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "employee",
+          "disclosure": "Registry entry, manager access and runs",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "inventory",
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "All capabilities, in the order research recorded them (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Release timeline (3)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Requirements and which stories cover them (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Schedule and milestones",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability's authority (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability against the ladder, with its ceiling (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "Behaviours written for each rung (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "What autonomy:R1 requires, capability by capability (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Change requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tool requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tools the capabilities will need (21)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Guardrails waiting on a human",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Decisions recorded in this repo",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints with no usable response (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints read from the platform sync (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Fields left blank because no verified source exists (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Not in the project plan yet",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        }
+      ]
+    },
+    {
+      "width_name": "phone",
+      "width": 390,
+      "grid_columns": 1,
+      "disclosures_checked": 20,
+      "failed": 0,
+      "glance_values_squeezed": [],
+      "checks": [
+        {
+          "panel": "employee",
+          "disclosure": "The agent, as the endpoint records it (8)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "inventory",
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "employee",
+          "disclosure": "Registry entry, manager access and runs",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "inventory",
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "All capabilities, in the order research recorded them (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Release timeline (3)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Requirements and which stories cover them (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Schedule and milestones",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability's authority (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability against the ladder, with its ceiling (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "Behaviours written for each rung (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "What autonomy:R1 requires, capability by capability (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Change requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tool requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tools the capabilities will need (21)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Guardrails waiting on a human",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Decisions recorded in this repo",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "gaps"
+          ]
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints with no usable response (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints read from the platform sync (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Fields left blank because no verified source exists (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Not in the project plan yet",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        }
+      ]
+    },
+    {
+      "width_name": "tablet",
+      "width": 820,
+      "grid_columns": 2,
+      "disclosures_checked": 20,
+      "failed": 0,
+      "glance_values_squeezed": [],
+      "checks": [
+        {
+          "panel": "employee",
+          "disclosure": "The agent, as the endpoint records it (8)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "employee",
+          "disclosure": "Registry entry, manager access and runs",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "All capabilities, in the order research recorded them (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Release timeline (3)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Requirements and which stories cover them (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Schedule and milestones",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability's authority (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability against the ladder, with its ceiling (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "Behaviours written for each rung (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "What autonomy:R1 requires, capability by capability (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Change requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tool requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tools the capabilities will need (21)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Guardrails waiting on a human",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Decisions recorded in this repo",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints with no usable response (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints read from the platform sync (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Fields left blank because no verified source exists (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Not in the project plan yet",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        }
+      ]
+    },
+    {
+      "width_name": "desktop",
+      "width": 1440,
+      "grid_columns": 3,
+      "disclosures_checked": 20,
+      "failed": 0,
+      "glance_values_squeezed": [],
+      "checks": [
+        {
+          "panel": "employee",
+          "disclosure": "The agent, as the endpoint records it (8)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "employee",
+          "disclosure": "Registry entry, manager access and runs",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "All capabilities, in the order research recorded them (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Stories: your ticks and the platform verifier (32)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Release timeline (3)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Requirements and which stories cover them (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "inventory",
+          "disclosure": "Schedule and milestones",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability's authority (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "Each capability against the ladder, with its ceiling (25)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "Behaviours written for each rung (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "behaviour",
+          "disclosure": "What autonomy:R1 requires, capability by capability (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Change requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tool requests (0)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Tools the capabilities will need (21)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Guardrails waiting on a human",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "governance",
+          "disclosure": "Decisions recorded in this repo",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints with no usable response (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Endpoints read from the platform sync (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Fields left blank because no verified source exists (2)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        },
+        {
+          "panel": "gaps",
+          "disclosure": "Not in the project plan yet",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": []
+        }
+      ]
+    }
+  ],
+  "reflow_320": [
+    {
+      "route": "/",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/capability/product_experience.design_token_drift_audit",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/rung/autonomy:R1",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/rung/autonomy:R8",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/story/STORY-000",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/guide/capture",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/guide/requests",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    },
+    {
+      "route": "#/guide/refresh",
+      "sideways_px": 0,
+      "text_past_edge": [],
+      "pass": true
+    }
+  ],
+  "axe_color_contrast": [
+    {
+      "run": "console, phone, disclosures closed",
+      "violations": [],
+      "nodes_passed": 283
+    },
+    {
+      "run": "console, phone, disclosures open",
+      "violations": [],
+      "nodes_passed": 1613
+    },
+    {
+      "run": "console, desktop, disclosures closed",
+      "violations": [],
+      "nodes_passed": 283
+    },
+    {
+      "run": "console, desktop, disclosures open",
+      "violations": [],
+      "nodes_passed": 1613
+    }
+  ],
+  "button": {
+    "text": "See what it is allowed to do",
+    "color": "rgb(255, 255, 255)",
+    "background": "rgb(229, 18, 29)",
+    "font_size": "16px",
+    "font_weight": "650",
+    "contrast_ratio": 4.73
+  },
+  "order": [
+    "1 employee",
+    "2 inventory",
+    "3 ladder",
+    "4 behaviour",
+    "5 governance",
+    "6 gaps"
+  ],
+  "summary": {
+    "disclosures_checked": 80,
+    "layout_failures": 0,
+    "glance_values_squeezed": [],
+    "reflow_pages_checked": 8,
+    "reflow_failures": [],
+    "contrast_violations": 0,
+    "button_contrast": 4.73
+  }
+}

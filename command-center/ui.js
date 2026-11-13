@@ -1,4 +1,4 @@
-// Shared building blocks so all nine tabs look and behave the same.
+// Shared building blocks so every panel and detail page looks and behaves the same.
 // Every status carries a text label; colour is never the only signal.
 import { h } from './dom.js';
 
@@ -54,7 +54,7 @@ export function sectionTitle(text) {
 
 export function table(columns, rows, emptyText = 'Nothing here yet.') {
   if (rows.length === 0) return h('p', { class: 'empty' }, emptyText);
-  return h('div', { class: 'table-wrap' }, h('table', {},
+  return h('div', { class: 'table-wrap', tabindex: '0' }, h('table', {},
     h('thead', {}, h('tr', {}, columns.map((c) => h('th', { scope: 'col' }, c.label)))),
     h('tbody', {}, rows.map((r) => h('tr', {}, columns.map((c) => h('td', {}, c.cell(r))))))));
 }
@@ -64,7 +64,7 @@ export function facts(pairs) {
 }
 
 export function storyLink(id) {
-  return `#/project-management/story/${encodeURIComponent(id)}`;
+  return `#/story/${encodeURIComponent(id)}`;
 }
 
 // Dates stay on one line so "2026-09-20" never breaks in a narrow column.

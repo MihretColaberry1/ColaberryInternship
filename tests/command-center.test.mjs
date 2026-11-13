@@ -8,7 +8,6 @@ import path from 'node:path';
 
 import { loadJson, loadProjectData, checkShapes, DataLoadError } from '../command-center/data.js';
 import { buildOverviewModel, describeFreshness, joinStories, summarizeSchedule } from '../command-center/model.js';
-import { makeSampleData } from '../command-center/sample.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const HOUR = 60 * 60 * 1000;
@@ -81,7 +80,8 @@ test('a request that never answers times out, retries once, then fails', async (
 });
 
 test('a file missing a required field is rejected before anything renders', () => {
-  const good = makeSampleData(new Date());
+  const good = { plan: { stories: [], releases: [] }, progress: { stories: [] }, manifest: { generated_at: '2026-11-03T12:00:00Z' } };
+  assert.doesNotThrow(() => checkShapes(good));
   assert.throws(() => checkShapes({ ...good, plan: { releases: [] } }), /"stories" to be a list/);
   assert.throws(() => checkShapes({ ...good, manifest: {} }), /"generated_at" to be a timestamp/);
 });
@@ -143,12 +143,4 @@ test('schedule dates before today are marked as past', () => {
   assert.deepEqual(s.milestones.map((m) => m.isPast), [true, false, false]);
 });
 
-// ---- Sample mode ----
 
-test('sample data is flagged as sample and has the same shape as real data', () => {
-  const sample = makeSampleData(new Date());
-  assert.doesNotThrow(() => checkShapes(sample));
-  const model = buildOverviewModel(sample, new Date());
-  assert.equal(model.isSample, true);
-  assert.match(model.project.name, /Sample/);
-});
