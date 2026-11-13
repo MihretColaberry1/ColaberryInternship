@@ -1,0 +1,53 @@
+# Publishes the Command Center demo to GitHub Pages from the command-center-pages branch only.
+# The build uploads exactly the 37 allow-listed files (scripts/pages-site/allowlist.mjs), with the data
+# files as sanitized public copies, and fails before upload if any test or privacy check fails.
+# No secrets are used. Repository settings needed (not changed by this file): Pages source "GitHub
+# Actions", and the github-pages environment allowing the command-center-pages branch.
+name: Command Center Pages
+
+on:
+  push:
+    branches: [command-center-pages]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: command-center-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/command-center-pages'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Full test suite, including the Pages build checks
+        run: node --test tests/*.test.mjs
+      - name: Build the published folder
+        run: node scripts/build-pages-site.mjs _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/command-center-pages'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
