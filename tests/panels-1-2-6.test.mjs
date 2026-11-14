@@ -182,10 +182,18 @@ test('Panel 1 with nothing synced or captured shows no agent value at a glance, 
 
 // ---- D2: Panel 2 ----
 
-test('Panel 2 keeps the 32 plan stories and STORY-000\'s six criteria apart, and your ticks apart from the verifier', async () => {
+test('Panel 2 keeps the plan\'s stories and STORY-000\'s six criteria apart, and your ticks apart from the verifier', async () => {
   const { domain, project } = await realInputs();
   const { inventory } = render(domain, project);
-  assert.equal(inventory.glance['Verified by the platform'], '6 of 32 plan stories');
+  // Counted from the data files themselves, never written into the test: the board changes on every
+  // platform sync (32 stories on 2026-11-10, 36 on 2026-11-13), and a copied count goes stale with it.
+  const json = async (f) => JSON.parse(await readFile(path.join(ROOT, f), 'utf8'));
+  const plan = await json('.colaberry/plan.json');
+  const progress = await json('.colaberry/progress.json');
+  const verified = progress.stories.filter((s) => s.verification?.state === 'verified').length;
+  assert.equal(progress.totals.stories_total, plan.stories.length, 'the platform totals count the stories the plan holds');
+  assert.equal(progress.totals.stories_verified, verified, 'the platform totals count the stories it verified');
+  assert.equal(inventory.glance['Verified by the platform'], `${verified} of ${plan.stories.length} plan stories`);
   assert.equal(inventory.glance['Ticks ahead of verifier'], 'STORY-000: 5 of 6 ticked locally; platform verifier 0 of 6');
   assert.match(inventory.text, /Your ticks \(progress\.json\)/);
   assert.match(inventory.text, /Platform verifier/);

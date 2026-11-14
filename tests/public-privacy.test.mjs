@@ -59,7 +59,12 @@ const managerTokens = async () => {
 
 test('no reachable page names the accountable manager or other staff', async () => {
   const pages = await everyPage();
-  assert.equal(pages.length, 6 + 25 + 10 + 32 + 3, 'every panel and every detail page is checked');
+  // Expected pages counted from the data files, not copied in: 6 panels, one page per capability, one
+  // per rung, one per story (plan and progress together), 3 guides. The board grows on platform syncs.
+  const json = async (f) => JSON.parse(await readFile(path.join(ROOT, f), 'utf8'));
+  const capabilities = (await json(CAPABILITY_FILE)).capabilities.length;
+  const stories = new Set([...(await json('.colaberry/plan.json')).stories, ...(await json('.colaberry/progress.json')).stories].map((s) => s.id)).size;
+  assert.equal(pages.length, 6 + capabilities + AUTONOMY_STAGES.length + stories + 3, 'every panel and every detail page is checked');
   const tokens = [...(await managerTokens()), ...OTHER_STAFF_SURNAMES];
   for (const [label, t] of pages) {
     assert.ok(t.length > 100, `${label}: rendered something`);
