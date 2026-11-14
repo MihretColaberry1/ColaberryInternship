@@ -332,10 +332,10 @@
     "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
     "summary": {
       "stories": 36,
-      "checked": 32,
+      "checked": 36,
       "verified": 6,
-      "awaiting_criteria": 26,
-      "outstanding_criteria": 31
+      "awaiting_criteria": 30,
+      "outstanding_criteria": 41
     },
     "stories": [
       {
@@ -442,49 +442,75 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L1-BY-HAND",
         "title": "Design-token drift audit across every styled surface · 1 · do it by hand",
-        "status": "not_started",
-        "verification_state": null,
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
+        "criteria_passed": 0,
+        "criteria_total": 2,
+        "reasons": [
+          "None of the 2 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L1-BY-HAND and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L1-BY-HAND` trailer (or product_experience.CAP.design_token_drift_audit.L1-BY-HAND in the subject line) and push."
+        ],
+        "outstanding": [
+          "The capability was performed end to end by hand, producing its real outcome on real inputs.",
+          "A run log exists recording the date, the elapsed time, each step actually performed, every judgment call made, and at least one way the recorded workflow differed from what the work was really like."
+        ],
         "commit_sha": null
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP",
         "title": "Design-token drift audit across every styled surface · 2 · do it in the app",
-        "status": "not_started",
-        "verification_state": null,
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
+        "criteria_passed": 0,
+        "criteria_total": 2,
+        "reasons": [
+          "None of the 2 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP` trailer (or product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP in the subject line) and push."
+        ],
+        "outstanding": [
+          "The same outcome was produced a second time using only the product, with no agent, no script and no direct database edit -- or the exact step that made this impossible is written down as a named gap.",
+          "The app route was compared against the step 1 run log, and every difference between them is recorded."
+        ],
         "commit_sha": null
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST",
         "title": "Design-token drift audit across every styled surface · 3 · request the tool",
-        "status": "not_started",
-        "verification_state": null,
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST` trailer (or product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST in the subject line) and push."
+        ],
+        "outstanding": [
+          "A change request for a tool exists against this domain, filed by the builder, naming the tool, its scope, what it must never touch, and who approves a run.",
+          "The request cites the step 1 run log and the step 2 result as its evidence.",
+          "A named human other than the builder has recorded a decision on it. A decline counts; an undecided request does not."
+        ],
         "commit_sha": null
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED",
         "title": "Design-token drift audit across every styled surface · 4 · agent does it, watched",
-        "status": "not_started",
-        "verification_state": null,
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
-        "criteria_passed": null,
-        "criteria_total": null,
-        "reasons": [],
-        "outstanding": [],
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED` trailer (or product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED in the subject line) and push."
+        ],
+        "outstanding": [
+          "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet.",
+          "The agent produced the same outcome as the step 1 run log, on the same inputs, including the exceptions recorded there.",
+          "Every run in the evidence window was approved by a named human before it took effect, and the record shows who."
+        ],
         "commit_sha": null
       },
       {
@@ -507,14 +533,14 @@
       {
         "story_id": "product_experience.CAP.evidence_labeling_and_sample_data_audit",
         "title": "Evidence-class and sample-data labelling audit",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.evidence_labeling_and_sample_data_aud and changes a file. Commit your work with a `Story: product_experience.CAP.evidence_labeling_and_sample_data_aud` trailer (or product_experience.CAP.evidence_labeling_and_sample_data_aud in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.evidence_labeling_and_sample_data_audit and changes a file. Commit your work with a `Story: product_experience.CAP.evidence_labeling_and_sample_data_audit` trailer (or product_experience.CAP.evidence_labeling_and_sample_data_audit in the subject line) and push."
         ],
         "outstanding": [
           "Manager-approved definition covering public and admin surfaces separately."
@@ -524,14 +550,14 @@
       {
         "story_id": "product_experience.CAP.image_alt_and_media_accessibility_audit",
         "title": "Image, media and icon alternative-text audit",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.image_alt_and_media_accessibility_aud and changes a file. Commit your work with a `Story: product_experience.CAP.image_alt_and_media_accessibility_aud` trailer (or product_experience.CAP.image_alt_and_media_accessibility_aud in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.image_alt_and_media_accessibility_audit and changes a file. Commit your work with a `Story: product_experience.CAP.image_alt_and_media_accessibility_audit` trailer (or product_experience.CAP.image_alt_and_media_accessibility_audit in the subject line) and push."
         ],
         "outstanding": [
           "Written, manager-approved rule covering decorative images and icon-only controls."
@@ -541,14 +567,14 @@
       {
         "story_id": "product_experience.CAP.keyboard_and_semantic_interaction_audit",
         "title": "Keyboard and semantic-interaction audit",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.keyboard_and_semantic_interaction_aud and changes a file. Commit your work with a `Story: product_experience.CAP.keyboard_and_semantic_interaction_aud` trailer (or product_experience.CAP.keyboard_and_semantic_interaction_aud in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.keyboard_and_semantic_interaction_audit and changes a file. Commit your work with a `Story: product_experience.CAP.keyboard_and_semantic_interaction_audit` trailer (or product_experience.CAP.keyboard_and_semantic_interaction_audit in the subject line) and push."
         ],
         "outstanding": [
           "Manager-approved pattern list, including the backdrop-dismissal exception."
@@ -575,14 +601,14 @@
       {
         "story_id": "product_experience.CAP.motion_and_reduced_motion_compliance_review",
         "title": "Motion and reduced-motion compliance review",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.motion_and_reduced_motion_compliance_ and changes a file. Commit your work with a `Story: product_experience.CAP.motion_and_reduced_motion_compliance_` trailer (or product_experience.CAP.motion_and_reduced_motion_compliance_ in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.motion_and_reduced_motion_compliance_review and changes a file. Commit your work with a `Story: product_experience.CAP.motion_and_reduced_motion_compliance_review` trailer (or product_experience.CAP.motion_and_reduced_motion_compliance_review in the subject line) and push."
         ],
         "outstanding": [
           "Written decision on the reset's scope; per-file obligations stated."
@@ -660,14 +686,14 @@
       {
         "story_id": "product_experience.CAP.responsive_and_touch_target_regression_check",
         "title": "Responsive layout and touch-target regression check",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.responsive_and_touch_target_regressio and changes a file. Commit your work with a `Story: product_experience.CAP.responsive_and_touch_target_regressio` trailer (or product_experience.CAP.responsive_and_touch_target_regressio in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.responsive_and_touch_target_regression_check and changes a file. Commit your work with a `Story: product_experience.CAP.responsive_and_touch_target_regression_check` trailer (or product_experience.CAP.responsive_and_touch_target_regression_check in the subject line) and push."
         ],
         "outstanding": [
           "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named."
@@ -711,14 +737,14 @@
       {
         "story_id": "product_experience.CAP.stylesheet_architecture_consolidation_proposal",
         "title": "Stylesheet architecture consolidation proposal",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.stylesheet_architecture_consolidation and changes a file. Commit your work with a `Story: product_experience.CAP.stylesheet_architecture_consolidation` trailer (or product_experience.CAP.stylesheet_architecture_consolidation in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.stylesheet_architecture_consolidation_proposal and changes a file. Commit your work with a `Story: product_experience.CAP.stylesheet_architecture_consolidation_proposal` trailer (or product_experience.CAP.stylesheet_architecture_consolidation_proposal in the subject line) and push."
         ],
         "outstanding": [
           "A written scope naming the stylesheets in play and the no-visual-change constraint."
@@ -728,14 +754,14 @@
       {
         "story_id": "product_experience.CAP.theme_and_dark_mode_readiness_assessment",
         "title": "Theme and dark-mode readiness assessment",
-        "status": "not_started",
+        "status": "in_progress",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
           "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.theme_and_dark_mode_readiness_assessm and changes a file. Commit your work with a `Story: product_experience.CAP.theme_and_dark_mode_readiness_assessm` trailer (or product_experience.CAP.theme_and_dark_mode_readiness_assessm in the subject line) and push."
+          "No commit in the repo names product_experience.CAP.theme_and_dark_mode_readiness_assessment and changes a file. Commit your work with a `Story: product_experience.CAP.theme_and_dark_mode_readiness_assessment` trailer (or product_experience.CAP.theme_and_dark_mode_readiness_assessment in the subject line) and push."
         ],
         "outstanding": [
           "A written assessment scope; no implementation work proposed or begun."
