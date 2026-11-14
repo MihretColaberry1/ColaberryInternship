@@ -1,4 +1,4 @@
-# product_experience — Requirements
+# Product Experience & UI/UX — Requirements
 
 The product experience domain agent.
 
