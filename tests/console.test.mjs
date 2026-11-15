@@ -14,6 +14,7 @@ import { ENDPOINTS, PANEL_ENDPOINTS } from '../command-center/agent-domain-facts
 import { loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
 import { PANEL_ORDER, renderConsole } from '../command-center/console.js';
+import { TEN_RUNGS_TITLE } from '../command-center/panel-ladder.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -158,4 +159,28 @@ test('content from the old tabs is carried into the panels, and the tabs themsel
     assert.equal(findAll(out, hasClass('tabs')).length, 0);
     assert.doesNotMatch(findAll(out, () => true).map((n) => n.textContent).join(''), /SAMPLE DATA|Sample mode/);
   } finally { remove(); }
+});
+
+// Aleem's re-review of PR #1 (2026-11-13): the ten rungs are folded into a closed disclosure, so the
+// ladder panel ends near its row neighbours instead of leaving ~1,400 px of empty page under them.
+test('Panel 3: the ten rungs sit in a closed disclosure titled in the owner\'s words, not in the panel body', async () => {
+  const { domain, project } = await realInputs();
+  const ladder = byId(renderPanels(domain, project)).ladder;
+  const lists = findAll(ladder, hasClass('rung-list'));
+  assert.equal(lists.length, 1, 'one ten-rung list');
+  const disclosures = findAll(ladder, hasClass('disclosure'));
+  const holder = disclosures.find((d) => findAll(d, hasClass('rung-list')).length === 1);
+  assert.ok(holder, 'the ten-rung list is inside a disclosure');
+  assert.equal(holder.getAttribute('open'), null, 'and the disclosure starts closed');
+  const summary = findAll(holder, (el) => el.tagName === 'SUMMARY')[0];
+  assert.equal(summary.textContent, `${TEN_RUNGS_TITLE} (10)`);
+  assert.equal(TEN_RUNGS_TITLE, "The ten rungs, in the owner's words");
+  assert.equal(findAll(lists[0], (el) => el.tagName === 'LI').length, 10, 'all ten rungs are listed');
+  // Nothing outside the disclosures shows the rungs or repeats their heading.
+  const outside = findAll(ladder, hasClass('panel-details'))[0];
+  const rest = ladder.children.filter((c) => c !== outside);
+  for (const c of rest) {
+    assert.equal(findAll(c, hasClass('rung-list')).length, 0, 'no rung list outside the disclosures');
+    assert.doesNotMatch(c.textContent, /The ten rungs, in the owner's words/, 'no heading left in the body');
+  }
 });

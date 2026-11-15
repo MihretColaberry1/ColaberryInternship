@@ -11,7 +11,7 @@
       "width_name": "narrow",
       "width": 320,
       "grid_columns": 1,
-      "disclosures_checked": 21,
+      "disclosures_checked": 22,
       "failed": 0,
       "glance_values_squeezed": [],
       "checks": [
@@ -96,6 +96,17 @@
           "problems": [],
           "moved_down_only": [
             "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "The ten rungs, in the owner's words (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
             "behaviour",
             "governance",
             "gaps"
@@ -231,7 +242,7 @@
       "width_name": "phone",
       "width": 390,
       "grid_columns": 1,
-      "disclosures_checked": 21,
+      "disclosures_checked": 22,
       "failed": 0,
       "glance_values_squeezed": [],
       "checks": [
@@ -316,6 +327,17 @@
           "problems": [],
           "moved_down_only": [
             "ladder",
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "The ten rungs, in the owner's words (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
             "behaviour",
             "governance",
             "gaps"
@@ -451,7 +473,7 @@
       "width_name": "tablet",
       "width": 820,
       "grid_columns": 2,
-      "disclosures_checked": 21,
+      "disclosures_checked": 22,
       "failed": 0,
       "glance_values_squeezed": [],
       "checks": [
@@ -535,6 +557,16 @@
           "moved_down_only": [
             "ladder",
             "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "The ten rungs, in the owner's words (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
             "governance",
             "gaps"
           ]
@@ -652,7 +684,7 @@
       "width_name": "desktop",
       "width": 1440,
       "grid_columns": 3,
-      "disclosures_checked": 21,
+      "disclosures_checked": 22,
       "failed": 0,
       "glance_values_squeezed": [],
       "checks": [
@@ -672,7 +704,11 @@
           "disclosure": "Registry entry, manager access and runs",
           "pass": true,
           "problems": [],
-          "moved_down_only": []
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
         },
         {
           "panel": "inventory",
@@ -715,7 +751,22 @@
           "disclosure": "Schedule and milestones",
           "pass": true,
           "problems": [],
-          "moved_down_only": []
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
+        },
+        {
+          "panel": "ladder",
+          "disclosure": "The ten rungs, in the owner's words (10)",
+          "pass": true,
+          "problems": [],
+          "moved_down_only": [
+            "behaviour",
+            "governance",
+            "gaps"
+          ]
         },
         {
           "panel": "ladder",
@@ -880,22 +931,22 @@
     {
       "run": "console, phone, disclosures closed",
       "violations": [],
-      "nodes_passed": 300
+      "nodes_passed": 271
     },
     {
       "run": "console, phone, disclosures open",
       "violations": [],
-      "nodes_passed": 1763
+      "nodes_passed": 1764
     },
     {
       "run": "console, desktop, disclosures closed",
       "violations": [],
-      "nodes_passed": 300
+      "nodes_passed": 271
     },
     {
       "run": "console, desktop, disclosures open",
       "violations": [],
-      "nodes_passed": 1763
+      "nodes_passed": 1764
     }
   ],
   "button": {
@@ -915,7 +966,7 @@
     "6 gaps"
   ],
   "summary": {
-    "disclosures_checked": 84,
+    "disclosures_checked": 88,
     "layout_failures": 0,
     "glance_values_squeezed": [],
     "reflow_pages_checked": 8,

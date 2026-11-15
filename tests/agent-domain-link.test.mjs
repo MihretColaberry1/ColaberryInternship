@@ -104,7 +104,7 @@ for (const caseKey of Object.keys(CASES)) {
     assert.doesNotMatch(all, UNSUPPORTED);
     assert.equal(inputs.rows.length, 25);
     for (const r of inputs.rows) assert.equal(r.platform.effective_autonomy, 'autonomy:R0', r.id);
-    assert.ok(panels.ladder.includes(`autonomy:R0 for all 25: ${AUTHORITY_WORDS.starting} — ${AUTHORITY_WORDS.confirmation_short}.`));
+    assert.ok(panels.ladder.includes('All 25 at autonomy:R0, the starting rung, set by default. No human has approved a higher level.'));
     assert.ok(panels.ladder.includes(AUTHORITY_WORDS.cap_idle));
     // The employee's rung is unknown in every case: no source records an agent's rung on this ladder.
     assert.match(panels.ladder, /Your employee's rungUnknown: no source records an agent's rung on this ladder/);

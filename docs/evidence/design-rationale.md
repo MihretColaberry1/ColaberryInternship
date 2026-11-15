@@ -72,10 +72,13 @@ one next action. Colour reinforces the word; it never carries the meaning on its
 
 ## 6. Today's state is normal, not an edge case
 
-`autonomy:R0`, the starting rung, is what every operator sees today, and the platform does not yet expose
-its human confirmation records (AgentDomainCapabilityConfirmation). The design treats it as the main case:
-- the ladder headline says it plainly: "autonomy:R0 for all 25: Starting rung — human confirmation not
-  available from the platform yet";
+`autonomy:R0`, the starting rung, is what every operator sees today. The design treats it as the main case:
+- the ladder headline is Aleem's wording from his re-review of 13 November 2026: "All 25 at
+  autonomy:R0, the starting rung, set by default. No human has approved a higher level." His reason:
+  "Default and approval should never read as the same thing.";
+- separately, Panel 3's "Human confirmation" row keeps the platform statement from Ali Muwwakkil's
+  decisions of 14 November 2026: "Not available from the platform yet", because the platform does not
+  expose its human confirmation records (AgentDomainCapabilityConfirmation);
 - the tool-grant cap is named and stated not to bind: "Tool-grant cap in force; constrains nothing
   today", with the count the platform's record gives ("Capabilities it holds at autonomy:R2: 0").
 
@@ -123,5 +126,9 @@ are 3 px. Touch targets are at least 24 px, and buttons are 44 px.
 - **Dropping the keyword Q&A box and Sample mode** removes two features that once satisfied the old
   brief. They were dropped because they added risk (made-up data, answers that pointed at tabs that
   no longer exist), not because they added nothing.
-- **A long Panel 3 (the ladder)** stays visible because criterion 3 asks for all ten rungs. They are shown as a
-  compact list rather than a table so the panel stays readable on a phone.
+- **Panel 3's ten rungs are folded into a closed disclosure.** Aleem's re-review of 13 November 2026 asked:
+  "Fold 'The ten rungs, in the owner's words' into a closed disclosure, as the other panels' long lists
+  already are. Then the three panels in a row end at similar heights." They are now the first of Panel 3's
+  disclosures, "The ten rungs, in the owner's words (10)", closed until the operator opens it. Opened, it
+  still shows all ten rungs in the owner's words with each ceiling mark (criterion 3), as a compact list
+  rather than a table so the panel stays readable on a phone.

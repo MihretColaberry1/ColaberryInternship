@@ -102,6 +102,21 @@ export const AUTHORITY_WORDS = Object.freeze({
 });
 
 /**
+ * Panel 3's headline when every capability is at autonomy:R0 and that is its starting rung, in Mohammed
+ * Abdul Aleem's exact wording from his re-review of PR #1 (2026-11-13): "The platform records R0 for all
+ * 25, set by default, not by a person. Make the headline say exactly that ... Default and approval should
+ * never read as the same thing." It is his statement, shown as he worded it; the page does not read
+ * approved_autonomy to produce it. Ali Muwwakkil's separate platform statement of 2026-11-14 (human
+ * confirmation records are not exposed) stays in Panel 3's "Human confirmation" row.
+ */
+export const R0_DEFAULT_HEADLINE = Object.freeze({
+  rung: 'autonomy:R0',
+  before: (count) => `All ${count} at `,
+  after: ', the starting rung, set by default. No human has approved a higher level.',
+  source: "Mohammed Abdul Aleem, re-review of PR #1, 2026-11-13",
+});
+
+/**
  * Per-rung behaviours: the platform holds all of them in its release ladder and capability records, but
  * no route serves them yet (the platform owner's confirmation). Until one does, the page reads them from
  * the pinned capability file and says so; it never makes a second copy.

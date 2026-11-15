@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-15T06:27:30.621Z",
+  "captured_at": "2026-11-15T21:28:43.833Z",
   "base_url": "http://127.0.0.1:8768/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -17,7 +17,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 172,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -48,7 +48,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 761,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -99,7 +99,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 172,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -130,7 +130,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 761,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -181,7 +181,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 172,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -212,7 +212,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 761,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -263,7 +263,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 172,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -294,7 +294,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 761,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -573,7 +573,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 1133,
+          "nodes": 1069,
           "targets": [
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(1)",
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(2)",

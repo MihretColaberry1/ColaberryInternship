@@ -58,7 +58,11 @@ test('today, on the real file: the platform records autonomy:R0 for all 25, and 
   const ladder = ladderOf(domain);
   const text = ladder.textContent;
   assert.equal(ladder.getAttribute('data-state'), 'ready');
-  assert.ok(text.includes(`autonomy:R0 for all 25: ${AUTHORITY_WORDS.starting} — ${AUTHORITY_WORDS.confirmation_short}.`));
+  // The headline is Aleem's exact wording (re-review of PR #1, 2026-11-13), written out here so any change fails.
+  const headline = findAll(ladder, hasClass('panel-headline'))[0];
+  assert.equal(headline.textContent, 'All 25 at autonomy:R0, the starting rung, set by default. No human has approved a higher level.');
+  assert.equal(findAll(headline, (el) => el.tagName === 'CODE')[0]?.textContent, 'autonomy:R0', 'the rung is still shown as code');
+  assert.doesNotMatch(headline.textContent, /human confirmation not available/, 'Ali\'s platform statement is not merged into the headline');
   assert.ok(text.includes(json.authority_rule.rule), 'the rule in the platform\'s own words');
   assert.ok(text.includes(json.authority_rule.note), 'the platform\'s own note');
   assert.ok(text.includes(`${AUTHORITY_WORDS.cap_idle}: it holds 0 of 25 capabilities.`));
@@ -186,4 +190,21 @@ test('no console module calculates authority: no copy, import or call of effecti
     const code = (await readFile(path.join(dir, f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
     assert.doesNotMatch(code, /effectiveAuthority/, `${f} defines, imports or calls effectiveAuthority`);
   }
+});
+
+// Aleem's headline (2026-11-13) states a fact about today's records, so it appears only while it is true:
+// every capability at autonomy:R0, its starting rung. Any other picture keeps the neutral wording.
+test("Aleem's R0 headline appears only when all capabilities are at autonomy:R0, their starting rung", async () => {
+  const ALEEM = 'No human has approved a higher level.';
+  const headlineOf = async (authority) => findAll(ladderOf(await domainOf(authority)), hasClass('panel-headline'))[0].textContent;
+  assert.ok((await headlineOf(await platform())).endsWith(ALEEM), 'today: shown');
+  // All at R1 (platform-shaped, not today's data): not the starting rung, so the sentence would be untrue.
+  const allR1 = await headlineOf(await platform({ rows: (r) => ({ ...r, effective_autonomy: 'autonomy:R1' }) }));
+  assert.ok(!allR1.includes(ALEEM), allR1);
+  assert.match(allR1, /^autonomy:R1 for all 25: Not the starting rung/);
+  // Rungs that differ: said to differ, no R0 claim.
+  let n = 0;
+  const mixed = await headlineOf(await platform({ rows: (r) => (n++ === 0 ? { ...r, effective_autonomy: 'autonomy:R1' } : r) }));
+  assert.ok(!mixed.includes(ALEEM), mixed);
+  assert.match(mixed, /^Current rungs differ by capability/);
 });

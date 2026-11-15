@@ -7,7 +7,7 @@
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
 import { AUTONOMY_STAGES, autonomyIndex } from './authority.js';
-import { AUTHORITY_WORDS, ENDPOINTS, R8_UNREACHABLE, TOOL_RULE } from './agent-domain-facts.js';
+import { AUTHORITY_WORDS, ENDPOINTS, R0_DEFAULT_HEADLINE, R8_UNREACHABLE, TOOL_RULE } from './agent-domain-facts.js';
 import { authorityView, ladderCell, platformLadderRow, toolRuleStatus } from './agent-domain-model.js';
 import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
 import { PLATFORM_SYNC_FILE } from './agent-domain-data.js';
@@ -91,6 +91,9 @@ export function startingWords(v) {
   return v.isStarting ? AUTHORITY_WORDS.starting : `${AUTHORITY_WORDS.not_starting} (started at ${v.starting})`;
 }
 
+/** The title of the closed disclosure that holds the ten rungs (criterion 3). */
+export const TEN_RUNGS_TITLE = "The ten rungs, in the owner's words";
+
 /** All ten rungs, in the owner's words, with the platform's ceilings that stop at each (criterion 3). */
 function rungList(rows, rungs) {
   const ceilings = rows.map((r) => r.platform?.max_permitted_autonomy ?? null);
@@ -108,11 +111,18 @@ function rungList(rows, rungs) {
   }));
 }
 
-/** The single phrase for the console headline: identical to the per-row and detail-page wording. */
+/**
+ * The console headline. All at autonomy:R0, the starting rung: Aleem's exact sentence (R0_DEFAULT_HEADLINE).
+ * Any other shared rung uses the per-row and detail-page wording; rungs that differ are said to differ.
+ */
 function authorityHeadline(rows) {
   const views = rows.map(authorityView);
   const same = views.every((v) => v.current === views[0].current && v.isStarting === views[0].isStarting);
   if (!same || views[0].current == null) return 'Current rungs differ by capability; open "Each capability\'s authority" for each one.';
+  // Every capability at autonomy:R0, its starting rung: Aleem's exact wording (2026-11-13).
+  if (views[0].current === R0_DEFAULT_HEADLINE.rung && views[0].isStarting === true) {
+    return [R0_DEFAULT_HEADLINE.before(rows.length), h('code', {}, R0_DEFAULT_HEADLINE.rung), R0_DEFAULT_HEADLINE.after];
+  }
   return [h('code', {}, views[0].current), ` for all ${rows.length}: ${startingWords(views[0])} — ${AUTHORITY_WORDS.confirmation_short}.`];
 }
 
@@ -156,11 +166,12 @@ export function renderLadderPanel(rows, rungs, { order, sourceState = 'ready', s
       ['Your employee\'s rung', ['Unknown: no source records an agent\'s rung on this ladder ', unavailableTag()]],
       ['autonomy:R8', 'Unreachable by fact: no agent handoff exists'],
     ] : null,
-    body: ready ? [toolRuleBlock(status), h('h3', { class: 'section-title' }, "The ten rungs, in the owner's words"), rungList(rows, rungs)]
-      : stateBody(state, { sourceError, authority }),
+    body: ready ? [toolRuleBlock(status)] : stateBody(state, { sourceError, authority }),
     action: ready ? { href: capabilityHref(rows[0].id), label: "Open a capability's authority record" } : null,
     reads: [endpointTags(3), authorityTag(), ' ', platformTag('autonomyLadder.ts'), ' ', sourceFileTag(), ' ', platformTag(R8_UNREACHABLE.source.path)],
     details: ready ? [
+      // Folded so the ladder panel ends near its row neighbours (Aleem's re-review of PR #1, 2026-11-13).
+      { title: TEN_RUNGS_TITLE, count: rungs.length, body: [rungList(rows, rungs)] },
       { title: "Each capability's authority", count: rows.length, body: [authorityReadLine(sync),
         h('p', { class: 'muted source-note' }, sourceFileTag(), ' Capability names and starting rungs come from the pinned research file. ',
           sourceTag('unavailable', 'no verified source'), ' Human confirmation is a separate platform record (AgentDomainCapabilityConfirmation) that the platform does not expose yet.'),

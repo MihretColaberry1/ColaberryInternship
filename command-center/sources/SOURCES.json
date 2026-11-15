@@ -27,8 +27,24 @@
       { "file": "command-center/vendor/colaberry-ds/LICENSE", "upstream_path": "LICENSE", "git_blob": "8e18d11dba2a79a88d697fe1bc5c3a2b261296df" }
     ],
     "not_vendored": [
-      { "upstream_path": "tokens/fonts.css", "why": "It loads Roboto from the Google Fonts CDN and an icon font from jsDelivr. The repository ships no font files to self-host (assets/fonts/ holds only LICENSES.md), so adopting it adds an external dependency. Not added: pending platform design-system decision (Mihret, 2026-11-09). The page uses the --font-body token, which names Roboto first and falls back to the system font." },
+      { "upstream_path": "tokens/fonts.css", "why": "It loads Roboto from the Google Fonts CDN and an icon font from jsDelivr. The repository ships no font files to self-host (assets/fonts/ holds only LICENSES.md), so adopting it adds an external dependency. Still not vendored: Aleem's re-review of PR #1 (2026-11-13) decided 'Self-host Roboto (400 and 700, Latin subset, woff2) and Roboto Mono (400) in your vendor folder ... No font CDN', so the page loads its own files instead; see the top-level fonts record and command-center/vendor/fonts/README.md." },
       { "upstream_path": "tokens/base.css", "why": "An optional element layer (body 18px, h1 48px, link and focus defaults). Adopting it is a type-scale change, which the review lists separately as item 7 for the next revision." }
+    ]
+  },
+  "fonts": {
+    "_what_this_is": "Roboto (400, 700) and Roboto Mono (400), Latin subset, woff2, self-hosted in command-center/vendor/fonts/ (Aleem's re-review of PR #1, 2026-11-13). Copied unchanged from the npm packages below; tests/fonts.test.mjs recomputes each SHA-256.",
+    "license": "SIL Open Font License 1.1 (OFL-1.1), checked against github.com/google/fonts ofl/roboto and ofl/robotomono on 2026-11-15",
+    "copied_on": "2026-11-15",
+    "packages": [
+      { "name": "@fontsource/roboto", "version": "5.3.0", "integrity": "sha512-BapRJOWYP+LZ21zp+wBQjfpPYKRoxc4LspJ/RLuI+HSMBD5u/X4O+ESDrSvEqDSy0rAl7GwBJ+09mdc16cVQ1Q==" },
+      { "name": "@fontsource/roboto-mono", "version": "5.3.0", "integrity": "sha512-yhwplHMHW9dCk+1pZuERfcJe+K3rosGVZEoK0XktkxRSqQ9qsipSwwiuW2/8Qmtp9lzu3Ixa/ie4BMH3i8CkZQ==" }
+    ],
+    "files": [
+      { "file": "command-center/vendor/fonts/roboto-latin-400-normal.woff2", "from": "@fontsource/roboto@5.3.0 files/roboto-latin-400-normal.woff2", "sha256": "425c0713a8176f92273d378599c7eac57de7fafabd4bd0ed457b70eb8f80d371" },
+      { "file": "command-center/vendor/fonts/roboto-latin-700-normal.woff2", "from": "@fontsource/roboto@5.3.0 files/roboto-latin-700-normal.woff2", "sha256": "b9d66d1708156f765ada51939bc24ed259dafa69eb631b36e443680fe9e15879" },
+      { "file": "command-center/vendor/fonts/roboto-mono-latin-400-normal.woff2", "from": "@fontsource/roboto-mono@5.3.0 files/roboto-mono-latin-400-normal.woff2", "sha256": "e03013e0baa5690a803c188da2214d920c3245b25ad78421ecc8ae86cd842ae9" },
+      { "file": "command-center/vendor/fonts/LICENSE-Roboto.txt", "from": "@fontsource/roboto@5.3.0 LICENSE", "sha256": "84044c09058803d87a241bd28abb4ce30a433d7db9c27a04da3efad6a0ca539c" },
+      { "file": "command-center/vendor/fonts/LICENSE-RobotoMono.txt", "from": "@fontsource/roboto-mono@5.3.0 LICENSE", "sha256": "b489132782690f2cc1ed23ab56d7057bbb08c42573603e8e704ae2e2ea9c8216" }
     ]
   },
   "platform_code": [
