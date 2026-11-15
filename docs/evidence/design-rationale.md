@@ -72,21 +72,25 @@ one next action. Colour reinforces the word; it never carries the meaning on its
 
 ## 6. Today's state is normal, not an edge case
 
-`autonomy:R0` with no human approval is what every operator sees today. The design treats it as the
-main case:
-- the ladder headline says it plainly: "autonomy:R0 for all 25: Starting rung — no human approval yet";
+`autonomy:R0`, the starting rung, is what every operator sees today, and the platform does not yet expose
+its human confirmation records (AgentDomainCapabilityConfirmation). The design treats it as the main case:
+- the ladder headline says it plainly: "autonomy:R0 for all 25: Starting rung — human confirmation not
+  available from the platform yet";
 - the tool-grant cap is named and stated not to bind: "Tool-grant cap in force; constrains nothing
-  today", with the counted reasons.
+  today", with the count the platform's record gives ("Capabilities it holds at autonomy:R2: 0").
 
 Showing "None" would have read as missing data. Showing R2 would have claimed something the platform
 never computed.
 
-## 7. Hypotheticals only where asked for, and always labelled
+## 7. No hypotheticals: the platform's own rule explanation
 
-The R2-cap explanation appears only on each capability's detail page, in a dashed box marked
-"Hypothetical: not an approval, not data". The console itself never shows a hypothetical, so a glance
-cannot mistake one for the current state. The wording comes from one function, so the console and the
-detail page can never disagree.
+Each capability's detail page explains the R2 tool-grant cap with the platform's own rule text
+(`authority_rule` in `.colaberry/agent-domain.json`, shown by `ruleExplanation()` in `details.js`), under
+its source tag. Nothing on the console or the detail page is computed: until 2026-11-14 the detail page
+carried a labelled "what if" box worked out by this page, and it was removed (approved by Mihret on
+2026-11-14) because the platform never made that calculation. The current authority wording on both
+screens comes from one function, `authorityView()`, so they cannot disagree, and
+`agent-domain-tool-rule.test.mjs` fails if any console module calculates authority.
 
 ## 8. Every value says where it came from
 

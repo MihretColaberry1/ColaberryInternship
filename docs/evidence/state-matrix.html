@@ -14,6 +14,8 @@
     .matrix td, .matrix th { text-align: center; }
     .matrix th[scope="row"] { text-align: left; }
     .scenario { margin-top: 36px; }
+    .fixture-note { border: 2px dashed var(--warn-accent); background: var(--warn-soft); color: var(--warn-text); padding: 6px 10px; border-radius: 6px; font-weight: 650; }
+    .src.fixture-tag { border-color: var(--warn-accent); background: var(--warn-soft); color: var(--warn-text); font-weight: 650; }
   </style>
 </head>
 <body>
@@ -31,7 +33,7 @@
     import { buildOverviewModel } from '../../command-center/model.js';
     import { PANEL_ORDER, consoleInputs, renderPanels } from '../../command-center/console.js';
     import { PANEL_STATES } from '../../command-center/console-ui.js';
-    import { SCENARIOS } from './state-fixtures.js';
+    import { FIXTURE_CAPTURE, SCENARIOS, TEST_DATA_QUEUE, labelFixtureCaptureTime, relabelTestDataQueue } from './state-fixtures.js';
 
     const base = '../../';
     const real = await loadAgentDomainData({ base });
@@ -41,6 +43,10 @@
     const sections = SCENARIOS.map((s) => {
       const panels = renderPanels(consoleInputs(s.domain(real.source, real)), s.id === 'loading' ? null : project);
       results[s.id] = Object.fromEntries(PANEL_ORDER.map((id) => [id, panels[id].dataset.state]));
+      // TEST DATA queue: Panel 5's source wording would call made-up rows the platform's synced snapshot.
+      if (TEST_DATA_QUEUE.includes(s.id)) relabelTestDataQueue(panels.governance);
+      // FIXTURE capture: Panel 1's capture time is the fixture's made-up time; label it as such.
+      if (FIXTURE_CAPTURE.includes(s.id)) labelFixtureCaptureTime(panels.employee);
       // The same panels appear once per scenario: suffix their ids so ids and landmark names stay unique.
       for (const id of PANEL_ORDER) {
         const p = panels[id];

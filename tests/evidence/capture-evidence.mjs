@@ -97,7 +97,7 @@ async function screenshots(browser, log) {
     }
     for (const [name, width, height] of [W.phone, W.desktop]) {
       const { context, page } = await open(browser, { width, height, theme }, `#/capability/${CAPABILITY}`);
-      await page.waitForSelector('.hypothetical');
+      await page.waitForSelector('.tool-rule');
       const file = `screenshots/capability-detail-${name}-${theme}.png`;
       await page.screenshot({ path: path.join(OUT, file), fullPage: true });
       shots.push({ file, width, theme, horizontal_overflow_px: await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth) });
@@ -116,6 +116,13 @@ async function stateMatrix(browser) {
     await (await page.$(`#scenario-${id}`)).screenshot({ path: path.join(OUT, `screenshots/state-${id}.png`) });
   }
   const a11y = await axe(page, 'state matrix page (fixtures), desktop light');
+  // Criterion 5: the test-data requests with Panel 5's disclosures open, so the "Grants: Nothing" column
+  // is visible; the shot keeps the scenario's FIXTURE banner. Taken after axe, which saw them closed.
+  await page.$$eval('#panel-governance--captured-data details.disclosure', (ds) => ds.forEach((d) => { d.open = true; }));
+  await (await page.$('#scenario-captured-data')).screenshot({ path: path.join(OUT, 'screenshots/state-captured-data-requests-open.png') });
+  // The request tables scroll sideways inside the panel; scrolled to their right end, the "Grants" column shows.
+  await page.$$eval('#panel-governance--captured-data .table-wrap', (ws) => ws.forEach((w) => { w.scrollLeft = w.scrollWidth; }));
+  await (await page.$('#scenario-captured-data')).screenshot({ path: path.join(OUT, 'screenshots/state-captured-data-grants-column.png') });
   await context.close();
   return { matrix, a11y };
 }
@@ -174,7 +181,7 @@ async function keyboard(browser) {
   checks.push({ step: 'Space on the same summary closes it', pass: await page.evaluate(() => !document.querySelector('#panel-inventory details').open) });
   await page.locator('#panel-ladder .btn-primary').focus();
   await page.keyboard.press('Enter');
-  await page.waitForSelector('.hypothetical');
+  await page.waitForSelector('.tool-rule');
   checks.push({ step: 'Enter on the ladder panel action opens a capability detail page', pass: page.url().includes('#/capability/') });
   await page.locator('a.back').focus();
   await page.keyboard.press('Enter');

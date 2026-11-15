@@ -201,7 +201,7 @@ panels are unchanged.
 | Request titles and dates | Same: v4 keeps only kind and status | 5: "not captured" in those columns |
 | Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 5: "withheld: identifies a person" |
 | `autonomy_level_set_by` | The platform has no column for it | 1: "Not recorded by the platform" |
-| An approved autonomy level for any capability | A named human approving one | 3: `autonomy:R0`, "Starting rung — no human approval yet" |
+| An approved autonomy level for any capability | A named human approving one | 3: `autonomy:R0`, "Starting rung — human confirmation not available from the platform yet" |
 | The employee's current rung | A verified source that records an agent's rung on this ladder. None exists: the agent's `autonomy_level` is a different scale | 3: "Unknown: no source records an agent's rung on this ladder" |
 
 ## Tests
