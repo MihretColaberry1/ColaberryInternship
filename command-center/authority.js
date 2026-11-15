@@ -1,10 +1,10 @@
-// PLATFORM CODE, ported. The ten autonomy rungs and effectiveAuthority(), copied line for line from
-// backend/src/services/agentDomain/autonomyLadder.ts at platform commit 9d9aa3c3. Only the
-// TypeScript types were removed. tests/agent-domain-authority.test.mjs repeats the platform's own
-// cases, so a drift between this copy and the original shows up as a failing test once re-checked.
+// PLATFORM CODE, ported: the ten autonomy rungs, in the owner's words, and the plain-language text for
+// each reason the platform's effectiveAuthority() can return, from
+// backend/src/services/agentDomain/autonomyLadder.ts at platform commit 9d9aa3c3.
 //
-// Nothing here decides authority for this project. It computes what the platform's rule returns
-// for the inputs the page can verify, and the page renders that rather than what a record asks for.
+// This file deliberately holds no copy of effectiveAuthority(). The page shows the authority the platform
+// itself recorded (`authority[]` in .colaberry/agent-domain.json) and never recalculates it (the platform
+// owner's decision). tests/agent-domain-tool-rule.test.mjs fails if a calculation comes back.
 
 export const PLATFORM_COMMIT = '9d9aa3c3';
 export const LADDER_SOURCE = 'backend/src/services/agentDomain/autonomyLadder.ts';
@@ -34,7 +34,7 @@ export function autonomyIndex(stage) {
   return AUTONOMY_STAGES.indexOf(stage);
 }
 
-/** Plain-language text for each reason effectiveAuthority() can return. */
+/** Plain-language text for each reason the platform's effectiveAuthority() can record. */
 export const REASON_TEXT = Object.freeze({
   no_approved_autonomy: 'No human has approved an autonomy level for this capability, so it has no authority.',
   capped_by_max_permitted: 'Capped at the capability ceiling.',
@@ -43,47 +43,3 @@ export const REASON_TEXT = Object.freeze({
   human_decision_required_at_every_level: 'A human makes this decision at every level.',
   capped_below_automation_because_human_decision: 'Held at autonomy:R5 because the decision stays human.',
 });
-
-/**
- * Effective authority for ONE capability. Never consults any other capability.
- * input: { capability_id, approved_autonomy, max_permitted_autonomy, granted_tools, environment, human_decision }
- */
-export function effectiveAuthority(input) {
-  const reasons = [];
-
-  if (!isAutonomyStage(input.approved_autonomy)) {
-    reasons.push('no_approved_autonomy');
-    return { capability_id: input.capability_id, effective_autonomy: null, reasons };
-  }
-
-  let level = input.approved_autonomy;
-
-  // A ceiling can only ever LOWER the result.
-  if (isAutonomyStage(input.max_permitted_autonomy)
-      && autonomyIndex(input.max_permitted_autonomy) < autonomyIndex(level)) {
-    level = input.max_permitted_autonomy;
-    reasons.push('capped_by_max_permitted');
-  }
-
-  // Production is never reached by approval alone: a pilot (R6) is separately approved.
-  if (input.environment === 'production' && autonomyIndex(level) >= autonomyIndex('autonomy:R6')) {
-    reasons.push('production_requires_separate_pilot_approval');
-  }
-
-  // No tool grants means nothing beyond answering from approved knowledge.
-  if (input.granted_tools.length === 0 && autonomyIndex(level) > autonomyIndex('autonomy:R2')) {
-    level = 'autonomy:R2';
-    reasons.push('no_tool_grants');
-  }
-
-  // A human-required decision stays human-required at EVERY level. It is never automated.
-  if (input.human_decision) {
-    reasons.push('human_decision_required_at_every_level');
-    if (autonomyIndex(level) > autonomyIndex('autonomy:R5')) {
-      level = 'autonomy:R5';
-      reasons.push('capped_below_automation_because_human_decision');
-    }
-  }
-
-  return { capability_id: input.capability_id, effective_autonomy: level, reasons };
-}

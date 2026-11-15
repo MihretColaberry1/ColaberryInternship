@@ -3,7 +3,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
-import { PUBLISHED, SANITIZED, MUST_NOT_PUBLISH } from './allowlist.mjs';
+import { BINARY, PUBLISHED, SANITIZED, MUST_NOT_PUBLISH } from './allowlist.mjs';
 import { PUBLIC_WORDING } from './public-wording.mjs';
 
 const UUID = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i;
@@ -54,6 +54,12 @@ export async function verifySite(site, root, names) {
     if (copy?._public_copy?.derived_from !== f || copy._public_copy.source_sha256 !== sha) {
       problems.push(`${f}: _public_copy does not name this file and the sha256 of its original`);
     }
+  }
+  // Binary files (fonts) are published unchanged: each must be byte for byte its original.
+  const fileSha = async (p) => createHash('sha256').update(await readFile(p)).digest('hex');
+  for (const f of BINARY) {
+    if (!files.includes(f)) continue;
+    if (await fileSha(path.join(site, f)) !== await fileSha(path.join(root, f))) problems.push(`${f}: not byte for byte its original`);
   }
   return problems;
 }

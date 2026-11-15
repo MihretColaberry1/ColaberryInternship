@@ -22,7 +22,9 @@ export const PANEL_ENDPOINTS = Object.freeze({
   2: ['domain', 'coverage'],
   3: ['domain'],
   4: ['domain'],
-  5: ['requests'],
+  // Panel 5 reads no endpoint: it reads the whole-domain queue from the platform's synced snapshot
+  // (GOVERNANCE_SNAPSHOT), never GET .../agent-domain-change-requests-mine, which holds only the caller's own.
+  5: [],
   6: ['mine', 'domain', 'coverage', 'requests'],
 });
 
@@ -72,33 +74,58 @@ export const AGENT_LINK_SOURCE = Object.freeze({
     + 'column. Linking grants nothing: it does not change the agent\'s enabled state, autonomy level or tools.',
 });
 
-/** coverageMatrix.ts rowFor(): effective_authority is null on every row, because nothing is approved. */
-export const NO_APPROVALS_RECORDED = Object.freeze({
-  source: cite('backend/src/services/agentDomain/coverageMatrix.ts'),
-  statement: 'No approved autonomy is recorded for any capability. The platform sets effective_authority to null on every coverage row.',
-});
-
 /**
- * The tool throttle in effectiveAuthority() (autonomyLadder.ts). Criterion 4 as Ali Muwwakkil
- * confirmed it on 2026-11-02: show the rule, and say whether it constrains anything and why.
- * Never fabricate a capability above R2 to make the rule fire.
+ * The tool throttle in the platform's effectiveAuthority() (autonomyLadder.ts). Criterion 4: show the
+ * rule and whether it constrains anything. The rule's wording, its verdict and every capability's
+ * reasons are the platform's own (`authority_rule` and `authority[]` in .colaberry/agent-domain.json);
+ * this page never recalculates them. Only where the rule is defined is cited here.
  */
 export const TOOL_RULE = Object.freeze({
   source: cite('backend/src/services/agentDomain/autonomyLadder.ts'),
-  rule: 'When a capability\'s approved level is above autonomy:R2 and no tools are granted, effectiveAuthority() '
-    + 'holds it at autonomy:R2, with the reason no_tool_grants. It acts on the approved level, not on the '
-    + 'starting rung or the ceiling the research proposes.',
+  reason: 'no_tool_grants',
 });
 
 /**
- * Criterion 4 wording, exactly as Mohammed Abdul Aleem approved it on 2026-11-03 (Option 1). Used
- * verbatim on the console and on every capability detail page.
+ * Criterion 4 wording. "Starting rung" and the two cap phrases are Mohammed Abdul Aleem's (2026-11-03).
+ * Human approval is a separate platform record, AgentDomainCapabilityConfirmation, which the snapshot
+ * does not carry yet (the platform owner's confirmation), so the page says it is not available rather
+ * than inferring it from any other field. Used verbatim on the console and on every capability page.
  */
 export const AUTHORITY_WORDS = Object.freeze({
-  not_approved: 'Starting rung — no human approval yet',
-  approved: 'Approved by a named human at',
+  starting: 'Starting rung',
+  not_starting: 'Not the starting rung',
+  confirmation_unavailable: 'Not available: the platform does not expose human confirmation records (AgentDomainCapabilityConfirmation) yet',
+  confirmation_short: 'human confirmation not available from the platform yet',
   cap_idle: 'Tool-grant cap in force; constrains nothing today',
   cap_holding: 'Tool-grant cap in force; holding this capability at autonomy:R2',
+  not_in_snapshot: 'Not in the platform snapshot',
+});
+
+/**
+ * Panel 3's headline when every capability is at autonomy:R0 and that is its starting rung, in Mohammed
+ * Abdul Aleem's exact wording from his re-review of PR #1 (2026-11-13): "The platform records R0 for all
+ * 25, set by default, not by a person. Make the headline say exactly that ... Default and approval should
+ * never read as the same thing." It is his statement, shown as he worded it; the page does not read
+ * approved_autonomy to produce it. Ali Muwwakkil's separate platform statement of 2026-11-14 (human
+ * confirmation records are not exposed) stays in Panel 3's "Human confirmation" row.
+ */
+export const R0_DEFAULT_HEADLINE = Object.freeze({
+  rung: 'autonomy:R0',
+  before: (count) => `All ${count} at `,
+  after: ', the starting rung, set by default. No human has approved a higher level.',
+  // Attribution as a role, not a name: this value ships in the published code, where only comments may
+  // carry names (they are reworded on publishing). The comment above names Mohammed Abdul Aleem.
+  source: 'Accountable manager, re-review of PR #1, 2026-11-13',
+});
+
+/**
+ * Per-rung behaviours: the platform holds all of them in its release ladder and capability records, but
+ * no route serves them yet (the platform owner's confirmation). Until one does, the page reads them from
+ * the pinned capability file and says so; it never makes a second copy.
+ */
+export const BEHAVIOUR_EXPOSURE = Object.freeze({
+  statement: 'The platform holds these behaviours in its release ladder and capability records, but no route serves them yet, '
+    + 'so they are read from the pinned capability file.',
 });
 
 /** agentDomainCommandCenterStory.ts: why autonomy:R8 cannot be reached. */
@@ -111,7 +138,41 @@ export const R8_UNREACHABLE = Object.freeze({
 /** agentChangeRequestRoutes.ts: what filing and deciding do. */
 export const REQUEST_RULE = Object.freeze({
   source: cite('backend/src/routes/admin/agentChangeRequestRoutes.ts'),
-  statement: 'Filing a request grants nothing. A decision records approved or declined and stops: it starts no build and grants no tool.',
+  statement: 'Filing a request grants nothing. A request is submitted, then approved, declined or withdrawn; a decision records '
+    + 'approved or declined and stops: it starts no build and grants no tool or capability.',
+});
+
+/**
+ * The governance request statuses, as the platform owner defined them (2026-11-14): submitted is the
+ * one pending status; approved, declined and withdrawn are terminal. Any other value is shown as
+ * recorded and labelled unrecognised, never guessed into one of these. No status grants anything.
+ */
+export const REQUEST_STATUSES = Object.freeze({
+  submitted: { terminal: false, tone: 'warn', words: 'Submitted: waiting on a human decision' },
+  approved: { terminal: true, tone: 'info', words: 'Approved: a decision is recorded; it grants nothing by itself' },
+  declined: { terminal: true, tone: 'neutral', words: 'Declined: a decision is recorded' },
+  withdrawn: { terminal: true, tone: 'neutral', words: 'Withdrawn: closed without a decision' },
+});
+
+/** Every request row says this in its own column, change and tool requests alike. */
+export const REQUEST_GRANTS_NOTHING = 'Nothing: a request is not a grant of any tool or capability';
+
+/**
+ * Panel 5's one source (the platform owner's decision: the whole queue). The platform's sync job fills
+ * the snapshot's governance section from AgentDomainChangeRequest WHERE domain_key = this domain, newest
+ * first, at most 200 rows, keeping no person fields (governanceForDomain in
+ * agentDomainCommandCenterForSync.ts at 992e0e01). The section's own label names
+ * GET /api/admin/agent-domain-change-requests-mine, a route that returns only the caller's own requests
+ * (listMyChangeRequests: WHERE requested_by_identity = caller, at 9d9aa3c3), so the label does not
+ * describe these rows. A personal capture of that route is never used for this panel.
+ */
+export const GOVERNANCE_SNAPSHOT = Object.freeze({
+  source: cite('backend/src/services/agentDomain/agentDomainCommandCenterForSync.ts', '992e0e01'),
+  limit: 200,
+  statement: `Every change and tool request filed against ${DOMAIN_KEY}, by anyone: the platform's synced snapshot (governance section of .colaberry/agent-domain.json).`,
+  limit_words: 'The platform includes at most the 200 newest requests in the snapshot; any older ones are not shown here.',
+  people_words: 'Not included in the platform snapshot',
+  mine_route: '/api/admin/agent-domain-change-requests-mine',
 });
 
 /**

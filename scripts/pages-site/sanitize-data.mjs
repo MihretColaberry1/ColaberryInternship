@@ -50,6 +50,8 @@ export const KEEP = Object.freeze({
   '.colaberry/agent-domain.json': ['.agent.agent_id', '.agent.autonomy_level', '.agent.autonomy_level_set_at',
     '.agent.autonomy_level_source', '.agent.display_name', '.agent.enabled', '.agent.exists', '.agent.tools_granted',
     '.agent.tools_granted_count', '.authority', '.authority_rule', '.domain_key', '.governance.requests',
+    // Panel 5 (since 2026-11-14) also reads the queue's source label, pending count and disclosure line.
+    '.governance.disclosure', '.governance.pending', '.sources.governance',
     '.not_recorded[].field', '.not_recorded[].reason', '.schema', '.verification.stories[].reasons[]',
     '.verification.stories[].story_id'],
   [CAPABILITY_FILE]: ['.accountable_human', '.capabilities[].blocked_by[]', '.capabilities[].capability_id',

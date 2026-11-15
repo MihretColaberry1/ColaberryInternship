@@ -1,14 +1,18 @@
 // Panel "Your governance queue" (brief panel 5): what am I waiting on a human for?
-// Reads GET /api/admin/agent-domain-change-requests-mine through a captured, redacted snapshot.
-// Criterion 5: nothing here states or implies that filing a request granted anything.
+// Shows the whole Product Experience governance queue from the platform's synced snapshot only: every
+// request filed against the domain, by anyone, newest 200 (GOVERNANCE_SNAPSHOT). A personal capture of
+// GET /api/admin/agent-domain-change-requests-mine holds only the capturer's own requests and is never
+// used here. The snapshot carries no person fields; free text is scrubbed of record ids and names. Statuses are the platform owner's: submitted is pending; approved, declined and withdrawn
+// are terminal; anything else is shown as recorded and labelled unrecognised.
+// Criterion 5: nothing here states or implies that filing or deciding a request granted anything.
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
-import { ENDPOINTS, REQUEST_RULE } from './agent-domain-facts.js';
-import { centralTime, endpointRead, endpointTags, platformTag, sourceFileTag } from './agent-domain-ui.js';
+import { GOVERNANCE_SNAPSHOT, REQUEST_GRANTS_NOTHING, REQUEST_RULE } from './agent-domain-facts.js';
+import { centralTime, lastChangedWords, platformTag, sourceFileTag, sourceTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock, notAvailable } from './console-ui.js';
 import { guardrailsSection, notesSection, pendingSignoffs } from './project-sections.js';
-import { CAPTURE_ACTION, unusableSource } from './panel-employee.js';
-import { recordedBy, toolGrantWords } from './agent-domain-model.js';
+import { recordedBy, requestStatus, toolGrantWords } from './agent-domain-model.js';
+import { withholdNames, withholdRecordIds } from './agent-domain-redact.js';
 
 /** One required tool's grant status: known only when the endpoint recorded the agent's grants. */
 function grantBadge(tool, link) {
@@ -23,34 +27,80 @@ function grantSentence(link) {
   return ' The research lists them. Whether the agent holds any of them was not captured.';
 }
 
-const STATUS_BADGE = { approved: 'info', declined: 'error' };
+/** Free text someone typed: no record id and no name the page withholds elsewhere. */
+const publicText = (text, names) => (text == null ? null : withholdNames(withholdRecordIds(String(text)), names));
 
-function requestTable(items, isTool) {
-  return table([
-    { label: 'Title', cell: (r) => r.title ?? 'not captured' },
-    { label: 'Status', cell: (r) => badge(STATUS_BADGE[r.status] ?? 'neutral', r.status ?? 'not stated') },
-    { label: 'Proposed by', cell: (r) => r.requested_by_identity ?? 'not recorded' },
-    { label: 'Proposed at', cell: (r) => (r.requested_at ? centralTime(r.requested_at) : 'not captured') },
-    { label: 'Decided by', cell: (r) => r.approved_by_identity ?? 'not decided' },
-    { label: 'Decided at', cell: (r) => (r.approved_at ? centralTime(r.approved_at) : 'not decided') },
-    isTool ? { label: 'Grants', cell: () => badge('neutral', 'Nothing: a request is not a grant') } : null,
-  ].filter(Boolean), items, isTool ? 'No tool requests filed.' : 'No change requests filed.');
+/** Who decided, and when, in words that fit the status: a submitted or withdrawn request has no decision. */
+function decision(r) {
+  const s = requestStatus(r.status);
+  if (s.status === 'submitted') return { by: 'Not decided yet', at: 'Not decided yet' };
+  if (s.status === 'withdrawn') return { by: 'No decision: withdrawn', at: 'No decision: withdrawn' };
+  return { by: r.approved_by_identity ?? GOVERNANCE_SNAPSHOT.people_words, at: r.approved_at ? centralTime(r.approved_at) : 'not recorded' };
 }
 
-export function governanceState(groups, snapshot) {
-  if (unusableSource(snapshot, groups.endpoint ?? groups)) return 'error';
+function requestTable(items, kindWords, names) {
+  return table([
+    { label: 'Title', cell: (r) => publicText(r.title, names) ?? 'not captured' },
+    { label: 'Status', cell: (r) => { const s = requestStatus(r.status); return badge(s.tone, s.words); } },
+    { label: 'Proposed by', cell: (r) => r.requested_by_identity ?? GOVERNANCE_SNAPSHOT.people_words },
+    { label: 'Proposed at', cell: (r) => (r.requested_at ? centralTime(r.requested_at) : 'not captured') },
+    { label: 'Decided by', cell: (r) => decision(r).by },
+    { label: 'Decided at', cell: (r) => decision(r).at },
+    { label: 'Grants', cell: () => badge('neutral', REQUEST_GRANTS_NOTHING) },
+  ], items, `No ${kindWords} in the queue.`);
+}
+
+export function governanceState(groups) {
   if (groups.state === 'loading') return 'loading';
-  if (groups.state === 'not_captured') return 'not_available';
+  if (groups.state === 'not_synced') return 'not_available';
   if (groups.state !== 'ok') return 'error';
-  return groups.change.length + groups.tool.length + groups.unknown_kind.length === 0 ? 'empty' : 'ready';
+  return groups.all.length === 0 ? 'empty' : 'ready';
 }
 
 const count = (groups, key) => (groups.state === 'ok' ? String(groups[key].length) : 'not captured');
 
+const snapshotTag = () => sourceTag('platform_sync', '.colaberry/agent-domain.json · governance: every product_experience request');
+
+/**
+ * Where the rows come from, said plainly: the snapshot, when it last changed, the 200-row limit, and the
+ * platform's own label for the section, which names a different route (one that holds only your own).
+ */
+function sourceNote(e, count) {
+  const label = e?.platform?.label;
+  const full = count >= GOVERNANCE_SNAPSHOT.limit;
+  return h('div', { class: 'reads' },
+    h('p', {}, snapshotTag(), ' ', GOVERNANCE_SNAPSHOT.statement, ` It was ${lastChangedWords(e?.last_changed ?? null)}. `,
+      'Read from this repository; this page called no endpoint.'),
+    h('p', { class: full ? 'error' : 'muted' }, GOVERNANCE_SNAPSHOT.limit_words,
+      full ? ` This snapshot holds ${count}, the limit, so older requests may be missing.` : ''),
+    label ? h('p', { class: 'muted' }, 'The snapshot labels this section ', h('code', {}, label), '. ',
+      label.includes(GOVERNANCE_SNAPSHOT.mine_route)
+        ? "That route returns only the signed-in person's own requests; the platform fills this section with every request on the domain, so the label does not describe these rows."
+        : 'This page does not use that label as the source.') : null);
+}
+
+/** The platform's own pending count, beside the rows it describes; a disagreement is said, not resolved. */
+function pendingCheck(groups) {
+  const pending = groups.endpoint?.platform?.pending;
+  if (pending == null || pending === groups.waiting.length) return null;
+  return h('p', { class: 'error', role: 'note' }, `The platform records ${pending} pending, but ${groups.waiting.length} `
+    + `${groups.waiting.length === 1 ? 'request in its queue is' : 'requests in its queue are'} submitted. Both are shown as recorded; this page does not choose.`);
+}
+
+function readyHeadline(groups) {
+  const closed = groups.decided.length + groups.withdrawn.length;
+  const odd = groups.unrecognised.length;
+  return `${groups.waiting.length} of ${groups.all.length} requests ${groups.waiting.length === 1 ? 'is' : 'are'} waiting on a human decision (submitted); `
+    + `${closed} ${closed === 1 ? 'is' : 'are'} closed (approved, declined or withdrawn)`
+    + (odd ? `; ${odd} ${odd === 1 ? 'has' : 'have'} a status this page does not recognise` : '') + '. None of them grants anything.';
+}
+
+const REFRESH_ACTION = Object.freeze({ href: '#/guide/refresh', label: 'How to refresh the data' });
+
 const UNKNOWN_LINK = Object.freeze({ state: 'unknown', reason: 'not_captured', tools_granted: null, tools_granted_count: null });
 
-export function renderGovernancePanel(groups, rows, { order, snapshot, project, link = UNKNOWN_LINK } = {}) {
-  const state = governanceState(groups, snapshot);
+export function renderGovernancePanel(groups, rows, { order, project, link = UNKNOWN_LINK, names = [] } = {}) {
+  const state = governanceState(groups);
   const tools = [...new Set(rows.flatMap((r) => r.required_tools))];
   const signoffs = project?.data ? pendingSignoffs(project.data, project.model) : [];
 
@@ -60,29 +110,31 @@ export function renderGovernancePanel(groups, rows, { order, snapshot, project, 
   if (state === 'loading') body = loadingBlock();
   if (state === 'not_available') {
     body = notAvailable({
-      missing: 'Your change requests and tool requests, with their status and who decided them.',
-      waitingFor: `A redacted snapshot of GET ${ENDPOINTS.requests}. It is an admin endpoint, so this public page cannot call it.`,
-      willShow: 'Change requests and tool requests listed separately, by kind and status. People are withheld; a tool request never reads as a grant.',
-      action: CAPTURE_ACTION,
+      missing: 'The Product Experience governance queue: every change and tool request on the domain, with its status.',
+      waitingFor: 'The platform to sync .colaberry/agent-domain.json into this repository with its governance section. A personal capture holds only your own requests, so it is not used in its place.',
+      willShow: 'Change and tool requests listed separately, each with its status (submitted, approved, declined or withdrawn). No person is shown; no request reads as a grant.',
+      action: REFRESH_ACTION,
     });
   }
   if (state === 'error') {
     body = errorBlock({
-      what: unusableSource(snapshot, groups.endpoint ?? groups) ?? `GET ${ENDPOINTS.requests}: ${groups.state}`,
-      why: groups.endpoint?.message ? `The platform said: ${groups.endpoint.message}` : 'Nothing from this endpoint is shown, and nothing is assumed in its place.',
-      action: CAPTURE_ACTION,
+      what: "The platform's synced snapshot could not be used for the governance queue.",
+      why: groups.endpoint?.message ?? groups.message ?? 'Nothing from it is shown, and nothing is assumed in its place.',
+      action: REFRESH_ACTION,
     });
   }
   if (state === 'empty') {
-    headline = `No change or tool requests are filed, as ${recordedBy(groups.endpoint.origin)} records. `
-      + 'Nothing is waiting on a human decision from this endpoint.';
-    body = endpointRead(ENDPOINTS.requests, groups.endpoint);
+    headline = 'No change or tool requests are in the Product Experience governance queue, as the platform snapshot records. '
+      + 'Nothing is waiting on a human decision.';
+    body = [sourceNote(groups.endpoint, 0), pendingCheck(groups)];
     action = { href: '#/guide/requests', label: 'How to file a tool request' };
   }
   if (state === 'ready') {
-    body = endpointRead(ENDPOINTS.requests, groups.endpoint);
-    action = { href: '#/guide/requests', label: 'Follow up a pending request' };
+    headline = readyHeadline(groups);
+    body = [sourceNote(groups.endpoint, groups.all.length), pendingCheck(groups)];
+    action = groups.waiting.length ? { href: '#/guide/requests', label: 'Follow up a submitted request' } : { href: '#/guide/requests', label: 'How to file a tool request' };
   }
+  const disclosure = groups.endpoint?.platform?.disclosure;
 
   return consolePanel({
     id: 'governance', order, state, headline, body, action,
@@ -91,15 +143,22 @@ export function renderGovernancePanel(groups, rows, { order, snapshot, project, 
     glance: [
       ['Change requests', count(groups, 'change')],
       ['Tool requests', count(groups, 'tool')],
+      ['Waiting on a human (submitted)', count(groups, 'waiting')],
+      ['Closed (approved, declined, withdrawn)', groups.state === 'ok' ? String(groups.decided.length + groups.withdrawn.length) : 'not captured'],
       ['Tools the capabilities will need', `${tools.length} listed`],
       ['Tools granted to the agent', toolGrantWords(link)],
       ['Sign-off waiting in this repo', signoffs.length ? signoffs.map((d) => `${d.id}: Accountable manager's R0 sign-off`).join('; ') : 'None'],
     ],
-    reads: [endpointTags(5), platformTag(REQUEST_RULE.source.path), ' ', sourceFileTag()],
+    reads: [snapshotTag(), ' ', platformTag(GOVERNANCE_SNAPSHOT.source.path, GOVERNANCE_SNAPSHOT.source.commit), ' ',
+      platformTag(REQUEST_RULE.source.path), ' ', sourceFileTag()],
     details: [
-      groups.state === 'ok' ? { title: 'Change requests', count: groups.change.length, body: requestTable(groups.change, false) } : null,
-      groups.state === 'ok' ? { title: 'Tool requests', count: groups.tool.length, body: requestTable(groups.tool, true) } : null,
-      groups.state === 'ok' && groups.unknown_kind.length ? { title: 'Requests with no stated kind', count: groups.unknown_kind.length, body: requestTable(groups.unknown_kind, false) } : null,
+      groups.state === 'ok' ? { title: 'Change requests', count: groups.change.length, body: requestTable(groups.change, 'change requests', names) } : null,
+      groups.state === 'ok' ? { title: 'Tool requests', count: groups.tool.length, body: requestTable(groups.tool, 'tool requests', names) } : null,
+      groups.state === 'ok' && groups.unknown_kind.length ? { title: 'Requests with no stated kind', count: groups.unknown_kind.length, body: requestTable(groups.unknown_kind, 'requests without a kind', names) } : null,
+      groups.state === 'ok' ? { title: 'What each status means', body: [
+        h('p', {}, platformTag(REQUEST_RULE.source.path), ' ', REQUEST_RULE.statement),
+        disclosure ? h('p', { class: 'muted' }, 'The platform\'s note: ', disclosure) : null,
+        h('ul', {}, ['submitted', 'approved', 'declined', 'withdrawn'].map((s) => h('li', {}, h('code', {}, s), ' ', requestStatus(s).words, '.')))] } : null,
       { title: 'Tools the capabilities will need', count: tools.length, body: [
         h('p', {}, sourceFileTag(), grantSentence(link), ' A tool not yet granted would need a tool request that a human decides.'),
         h('ul', { class: 'tool-list' }, tools.map((t) => h('li', {}, h('code', {}, t), ' ', grantBadge(t, link))))] },

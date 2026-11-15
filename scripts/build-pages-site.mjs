@@ -1,4 +1,4 @@
-// Builds the GitHub Pages folder for the Command Center demo: exactly the 37 allow-listed files, with
+// Builds the GitHub Pages folder for the Command Center demo: exactly the 43 allow-listed files, with
 // the five data files as sanitized public copies and names replaced by the published wording (public-wording.mjs).
 //
 //   node scripts/build-pages-site.mjs <output-folder>
@@ -13,7 +13,7 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import path from 'node:path';
-import { COPIED } from './pages-site/allowlist.mjs';
+import { BINARY, COPIED } from './pages-site/allowlist.mjs';
 import { sanitizeData, managerNames } from './pages-site/sanitize-data.mjs';
 import { publishSource } from './pages-site/comment-names.mjs';
 import { replacePublicNames } from './pages-site/public-wording.mjs';
@@ -55,6 +55,8 @@ export async function buildSite(out, root = REPO_ROOT) {
     const text = await readFile(path.join(root, f), 'utf8');
     files[f] = f.endsWith('.json') ? publishJson(f, text) : publishSource(f, text);
   }
+  // Fonts: read and written as bytes, never as text, so they are published unchanged.
+  for (const f of BINARY) files[f] = await readFile(path.join(root, f));
   for (const [f, text] of Object.entries(files)) {
     await mkdir(path.dirname(path.join(out, f)), { recursive: true });
     await writeFile(path.join(out, f), text);

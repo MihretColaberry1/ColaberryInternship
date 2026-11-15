@@ -1,8 +1,9 @@
 // Panels 1, 2 and 6 against the committed platform snapshot (Mihret's decisions D1 to D4, 2026-11-10).
 //   D1: Panel 1 shows the brief's employee fields at a glance; registry and runs move to the details.
 //   D2: Panel 2 keeps your ticks and the platform verifier apart; per-rung verifier records stay out.
-//   D3: Panel 6 names ticks ahead of the verifier, and the snapshot's authority sections as a
-//       data-integration limitation.
+//   D3: Panel 6 names ticks ahead of the verifier. (Its "authority sections not displayed" item was
+//       replaced on 2026-11-14, when Panel 3 began reading them: Panel 6 now names the two platform
+//       exposure gaps instead, human confirmation records and a route for the per-rung behaviours.)
 //   D4: no page these panels own shows the accountable manager's name or account-access records.
 // Run from the repository root: node --test tests/panels-1-2-6.test.mjs
 import { test } from 'node:test';
@@ -13,7 +14,7 @@ import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
 import {
-  CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_FILE, loadAgentDomainData, sectionsNotShown, verdictReasons,
+  CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_FILE, loadAgentDomainData, verdictReasons,
 } from '../command-center/agent-domain-data.js';
 import { REGISTRY_ENTRY } from '../command-center/agent-domain-facts.js';
 import {
@@ -141,12 +142,6 @@ test('verdictReasons keeps plan stories only, and only their reasons', () => {
   assert.deepEqual(verdictReasons(undefined), {});
 });
 
-test('sectionsNotShown names the authority sections by presence and size, never by value', () => {
-  assert.deepEqual(sectionsNotShown({ authority: [{}, {}], authority_rule: { rule: 'r' } }),
-    [{ section: 'authority[]', size: 2 }, { section: 'authority_rule', size: null }]);
-  assert.deepEqual(sectionsNotShown({}), []);
-});
-
 // ---- D1: Panel 1 on the real snapshot ----
 
 test('Panel 1 shows the brief\'s employee fields at a glance, exactly as the snapshot records them', async () => {
@@ -217,12 +212,14 @@ test('Panel 6 names your ticks ahead of the verifier, with both numbers and the 
   assert.equal(gaps.glance['Ticks ahead of verifier'], '1 story');
 });
 
-test('Panel 6 names the authority sections as a data-integration limitation, not an agent failure, without their values', async () => {
+test('Panel 6 names the two platform exposure gaps, and no longer says the authority sections are undisplayed', async () => {
   const { domain, project } = await realInputs();
   const { gaps } = render(domain, project);
-  assert.match(gaps.text, /Outstanding data-integration limitation, not an agent failure: the platform snapshot already carries authority\[\] \(25 rows\) and authority_rule, but this console does not display them yet\./);
+  assert.match(gaps.text, /Human confirmation of each capability is a separate platform record \(AgentDomainCapabilityConfirmation/);
+  assert.match(gaps.text, /never infers it from another field, approved_autonomy included/);
+  assert.match(gaps.text, /no route serves them yet, so they are read from the pinned capability file/);
+  assert.doesNotMatch(gaps.text, /data-integration limitation|does not display them yet/);
   assert.match(gaps.text, /^6What is not available.*8 things this console cannot show or cannot claim/);
-  assert.doesNotMatch(gaps.text, /binds_nothing|approved_above_r2/, 'no value from the authority sections is read');
 });
 
 // ---- D4: what these panels and their pages show ----

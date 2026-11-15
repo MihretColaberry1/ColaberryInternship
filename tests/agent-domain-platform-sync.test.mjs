@@ -10,7 +10,7 @@ import path from 'node:path';
 
 import { findAll, hasClass, installFakeDom } from './fake-dom.mjs';
 import {
-  PLATFORM_SYNC_FILE, PLATFORM_SYNC_SCHEMA, SNAPSHOT_FILE, combineEndpoints, loadAgentDomainData, readPlatformSync,
+  PLATFORM_SYNC_FILE, PLATFORM_SYNC_SCHEMA, SNAPSHOT_FILE, combineEndpoints, loadAgentDomainData, readAuthority, readPlatformSync,
 } from '../command-center/agent-domain-data.js';
 import { ENDPOINTS } from '../command-center/agent-domain-facts.js';
 import { PRESENT, RECORD_ID_PATTERN, WITHHELD } from '../command-center/agent-domain-redact.js';
@@ -137,9 +137,10 @@ test('a broken synced file makes Panels 1 and 5 an error, never "Not available" 
   for (const id of ['employee', 'governance']) {
     const p = panels[id];
     assert.equal(p.getAttribute('data-state'), 'error', id);
-    assert.match(p.textContent, /platform-synced file could not be used/, id);
     assert.equal(findAll(p, hasClass('not-available')).length, 0, id);
   }
+  assert.match(panels.employee.textContent, /platform-synced file could not be used/);
+  assert.match(panels.governance.textContent, /The platform's synced snapshot could not be used for the governance queue\./);
 });
 
 test('a manifest with no generated_at says "last changed: not recorded" rather than inventing a time', async () => {
@@ -161,8 +162,65 @@ test('your own capture wins wherever it answered; the sync fills only what it di
   assert.equal(out.endpoints.mine, captured);
   assert.equal(out.endpoints.requests.origin, 'platform_sync');
   assert.equal(out.endpoints.domain.state, 'not_captured');
-  // verdict_reasons and not_shown (decisions D2, D3) default to empty when the sync carries none.
-  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, not_shown: [] });
+  // verdict_reasons (decision D2) defaults to empty, and authority to "not synced", when the sync carries none.
+  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, governance: null,
+    authority: { status: 'not_synced', error: null, byId: {}, rule: null, size: 0 } });
+  // A broken synced file makes the authority section invalid too, with the same error, never "not synced".
+  const broken = combineEndpoints({ status: 'not_captured', endpoints: {} }, { status: 'invalid', error: 'E', endpoints: {} });
+  assert.equal(broken.sync.authority.status, 'invalid');
+  assert.equal(broken.sync.authority.error, 'E');
+});
+
+// ---- The platform's authority record (step 2, 2026-11-14): read as written, checked, never recalculated ----
+
+const realSyncJson = async () => JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8'));
+
+test('the real authority record is read for all 25 capabilities, as the platform wrote it', async () => {
+  const json = await realSyncJson();
+  const a = readAuthority(json);
+  assert.equal(a.status, 'ok');
+  assert.equal(a.size, 25);
+  assert.equal(Object.keys(a.byId).length, 25);
+  for (const row of json.authority) {
+    const got = a.byId[row.capability_id];
+    assert.equal(got.effective_autonomy, row.effective_autonomy, row.capability_id);
+    assert.deepEqual(got.reasons, row.reasons, row.capability_id);
+    assert.equal(got.max_permitted_autonomy, row.max_permitted_autonomy, row.capability_id);
+    assert.equal(got.ceiling_reason, row.ceiling_reason, row.capability_id);
+    // approved_autonomy is not a record of human approval, so it is not carried into the page at all.
+    assert.equal('approved_autonomy' in got, false);
+  }
+  assert.deepEqual(a.rule, { rule: json.authority_rule.rule, note: json.authority_rule.note,
+    approved_above_r2: json.authority_rule.approved_above_r2, binds_nothing: json.authority_rule.binds_nothing });
+});
+
+test('authority: a missing section is "missing"; a malformed row or rule makes the whole section invalid', async () => {
+  const json = await realSyncJson();
+  assert.equal(readAuthority({ ...json, authority: undefined }).status, 'missing');
+  const bad = (rows, rule = json.authority_rule) => readAuthority({ ...json, authority: rows, authority_rule: rule });
+  const row = json.authority[0];
+  for (const broken of [
+    { ...row, capability_id: '' }, { ...row, effective_autonomy: 'R0' }, { ...row, effective_autonomy: 'autonomy:R10' },
+    { ...row, reasons: 'no_tool_grants' }, { ...row, reasons: [1] }, { ...row, max_permitted_autonomy: 5 }, { ...row, ceiling_reason: 7 },
+  ]) {
+    const out = bad([broken]);
+    assert.equal(out.status, 'invalid', JSON.stringify(broken).slice(0, 80));
+    assert.match(out.error, /authority\[0\]/);
+    assert.deepEqual(out.byId, {}, 'nothing from an invalid section is shown');
+  }
+  assert.equal(bad([row, row]).status, 'invalid', 'a duplicated capability_id');
+  for (const rule of [null, { ...json.authority_rule, binds_nothing: 'yes' }, { ...json.authority_rule, approved_above_r2: -1 }, { ...json.authority_rule, rule: null }]) {
+    assert.equal(bad(json.authority, rule).status, 'invalid');
+  }
+  // A null effective rung is a value the platform can record (no authority), so it is kept as null.
+  assert.equal(bad([{ ...row, effective_autonomy: null }]).byId[row.capability_id].effective_autonomy, null);
+});
+
+test('authority: a record id in the platform text is withheld, as everywhere on this page', async () => {
+  const json = await realSyncJson();
+  const id = '5f0c1a2b-1111-4222-8333-944445555666';
+  const a = readAuthority({ ...json, authority: [{ ...json.authority[0], ceiling_reason: `held by ${id}` }] });
+  assert.doesNotMatch(a.byId[json.authority[0].capability_id].ceiling_reason, new RegExp(RECORD_ID_PATTERN));
 });
 
 // ---- Labels on the real page ----
@@ -197,18 +255,21 @@ test('the synced agent state changes no capability authority: still R0 for all, 
   const inputs = consoleInputs(await realDomain());
   assert.equal(inputs.link.state, 'linked');
   assert.deepEqual(inputs.link.tools_granted, []);
-  assert.ok(inputs.rows.every((r) => r.authority.effective_autonomy === 'autonomy:R0'));
-  assert.equal(toolRuleStatus(inputs.rows).held, 0);
+  assert.ok(inputs.rows.every((r) => r.platform.effective_autonomy === 'autonomy:R0'));
+  const status = toolRuleStatus(inputs.rows, inputs.authority);
+  assert.equal(status.held, 0);
+  assert.equal(status.binds_nothing, true);
+  assert.equal(status.consistent, true);
 });
 
 test('Panel 5 on real data: empty, said in words, read from the synced copy, and a request is never a grant', async () => {
   const domain = await realDomain();
   const p = rendered(() => renderPanels(consoleInputs(domain), null).governance);
   assert.equal(p.getAttribute('data-state'), 'empty');
-  assert.match(p.textContent, /No change or tool requests are filed, as the platform sync records\./);
+  assert.match(p.textContent, /No change or tool requests are in the Product Experience governance queue, as the platform snapshot records\./);
   assert.ok(findAll(p, hasClass('src-platform_sync')).length > 0);
   // A tool request arriving through the sync renders with the "not a grant" column.
-  const groups = requestGroups({ state: 'ok', origin: 'platform_sync', body: { change_requests: [{ kind: 'tool', status: 'pending', title: 'Grant repo_read' }] } });
+  const groups = requestGroups({ state: 'ok', origin: 'platform_sync', body: { change_requests: [{ kind: 'tool', status: 'submitted', title: 'Grant repo_read' }] } });
   const withTool = rendered(() => text(renderGovernancePanel(groups, [], {})));
   assert.match(withTool, /Nothing: a request is not a grant/);
 });

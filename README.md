@@ -27,9 +27,10 @@ python -m http.server 8000
 - **Theme:** light only, built on the Colaberry design-system tokens (pinned in
   `command-center/sources/SOURCES.json`). The design system's dark set is partial, so no dark theme is
   offered until one can be built from its own values.
-- **Font:** the design system's `--font-body` names Roboto first, but Roboto is not loaded. It would
-  come from the Google Fonts CDN, an external dependency pending a decision from Aleem or Ali, so the
-  page shows the system font the token falls back to.
+- **Font:** Roboto (400, 700) and Roboto Mono (400), Latin subset, woff2, self-hosted in
+  `command-center/vendor/fonts/` with their SIL Open Font License 1.1 and `font-display: swap`, as Aleem
+  decided on 2026-11-13 ("No font CDN"). The design system's tokens name them first; the page loads them
+  from this site only. Source, checksums and licence: `command-center/vendor/fonts/README.md`.
 - **Widths:** to review at phone, tablet and desktop widths, use the browser's device toolbar
   (390, 820 and 1440 px are the widths in the evidence).
 - **Detail pages:**
@@ -40,8 +41,8 @@ python -m http.server 8000
 - **State matrix:** `http://localhost:8000/docs/evidence/state-matrix.html` renders every panel in every
   state from labelled fixtures.
 
-**Published link:** not published yet. GitHub Pages is not enabled on this repository, and
-publishing waits for Mihret's approval and a choice of branch (see "Publishing" below).
+**Published link:** https://mihretcolaberry1.github.io/ColaberryInternship/ (GitHub Pages, enabled). It
+shows an earlier build, not this branch's current work; see "Publishing" below.
 
 ## The six panels, in the brief's order
 
@@ -201,7 +202,7 @@ panels are unchanged.
 | Request titles and dates | Same: v4 keeps only kind and status | 5: "not captured" in those columns |
 | Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 5: "withheld: identifies a person" |
 | `autonomy_level_set_by` | The platform has no column for it | 1: "Not recorded by the platform" |
-| An approved autonomy level for any capability | A named human approving one | 3: `autonomy:R0`, "Starting rung — no human approval yet" |
+| An approved autonomy level for any capability | A named human approving one | 3: the headline, in Aleem's wording of 2026-11-13: "All 25 at autonomy:R0, the starting rung, set by default. No human has approved a higher level." Separately, the "Human confirmation" row (Ali Muwwakkil's decisions of 2026-11-14): "Not available from the platform yet" |
 | The employee's current rung | A verified source that records an agent's rung on this ladder. None exists: the agent's `autonomy_level` is a different scale | 3: "Unknown: no source records an agent's rung on this ladder" |
 
 ## Tests
@@ -216,9 +217,11 @@ explains how to run it with tools installed outside this repository.
 
 ## Publishing
 
-GitHub Pages is not enabled. Publishing needs three things, each waiting on Mihret's approval:
-1. The work committed and pushed.
-2. A choice of which branch Pages serves.
-3. Pages turned on for that branch.
-
-Aleem asked that branch updates be published to Pages. Until then, review locally as described above.
+GitHub Pages is enabled on this repository and publishes https://mihretcolaberry1.github.io/ColaberryInternship/.
+It is built by the workflow `.github/workflows/command-center-pages.yml`, which runs on pushes to the
+`command-center-pages` branch and copies only the files on that branch's allow-list
+(`scripts/pages-site/allowlist.mjs`); only `command-center-pages` and `main` may deploy. The site
+currently serves commit `d7fc65a` from `command-center-pages` (deployed 9:52 PM CST on 2026-11-13), which
+predates this branch's latest work. Bringing it up to date, including adding the self-hosted fonts to
+the allow-list, is a separate step waiting on Mihret's approval. Until then, review this branch locally
+as described above.

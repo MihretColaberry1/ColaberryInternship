@@ -1,4 +1,4 @@
-// The GitHub Pages build (scripts/build-pages-site.mjs) publishes exactly the 37 allow-listed files, no
+// The GitHub Pages build (scripts/build-pages-site.mjs) publishes exactly the 43 allow-listed files, no
 // names, record ids or emails, and a page that reads exactly as the repository's page does.
 // Run from the repository root: node --test tests/pages-site.test.mjs
 import { test, before } from 'node:test';
@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildSite } from '../scripts/build-pages-site.mjs';
-import { PUBLISHED, SANITIZED, MUST_NOT_PUBLISH } from '../scripts/pages-site/allowlist.mjs';
+import { BINARY, PUBLISHED, SANITIZED, MUST_NOT_PUBLISH } from '../scripts/pages-site/allowlist.mjs';
 import { verifySite, listFiles, privacyProblems } from '../scripts/pages-site/verify-site.mjs';
 import { NAME_PLACEHOLDER, CAPABILITY_FILE } from '../scripts/pages-site/sanitize-data.mjs';
 import { jsCommentRanges, cssCommentRanges, withoutComments, publishSource } from '../scripts/pages-site/comment-names.mjs';
@@ -29,9 +29,31 @@ before(async () => {
   assert.deepEqual(problems, [], 'the build reports no problems');
 });
 
-test('the output is exactly the 37 allow-listed files', async () => {
-  assert.equal(PUBLISHED.length, 37);
+test('the output is exactly the 43 allow-listed files', async () => {
+  assert.equal(PUBLISHED.length, 43);
   assert.deepEqual(await listFiles(SITE), [...PUBLISHED]);
+});
+
+test('the three self-hosted fonts are published byte for byte, with their stylesheet and licences', async () => {
+  assert.deepEqual([...BINARY].sort(), ['command-center/vendor/fonts/roboto-latin-400-normal.woff2',
+    'command-center/vendor/fonts/roboto-latin-700-normal.woff2', 'command-center/vendor/fonts/roboto-mono-latin-400-normal.woff2']);
+  for (const f of BINARY) assert.equal(await sha(path.join(SITE, f)), await sha(path.join(ROOT, f)), f);
+  for (const f of ['command-center/vendor/fonts/fonts.css', 'command-center/vendor/fonts/LICENSE-Roboto.txt',
+    'command-center/vendor/fonts/LICENSE-RobotoMono.txt']) assert.ok(PUBLISHED.includes(f), f);
+  // A published font that differs from its original is refused.
+  const broken = await mkdtemp(path.join(tmpdir(), 'cc-pages-'));
+  assert.deepEqual(await buildSite(broken), []);
+  const { writeFile } = await import('node:fs/promises');
+  await writeFile(path.join(broken, BINARY[0]), 'not the font');
+  assert.ok((await verifySite(broken, ROOT, [])).some((p) => p.startsWith(`${BINARY[0]}: not byte for byte`)));
+});
+
+test('Panel 5 keeps its source label, pending count and disclosure in the public copy', async () => {
+  const pub = JSON.parse(await readFile(path.join(SITE, '.colaberry/agent-domain.json'), 'utf8'));
+  const orig = JSON.parse(await readFile(path.join(ROOT, '.colaberry/agent-domain.json'), 'utf8'));
+  assert.equal(pub.sources?.governance, orig.sources.governance);
+  assert.equal(pub.governance?.pending, orig.governance.pending);
+  assert.equal(pub.governance?.disclosure, orig.governance.disclosure);
 });
 
 test('no excluded file is in the output', async () => {

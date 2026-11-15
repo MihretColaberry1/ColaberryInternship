@@ -1,5 +1,5 @@
 # Publishes the Command Center demo to GitHub Pages from the command-center-pages branch only.
-# The build uploads exactly the 37 allow-listed files (scripts/pages-site/allowlist.mjs), with the data
+# The build uploads exactly the 43 allow-listed files (scripts/pages-site/allowlist.mjs), with the data
 # files as sanitized public copies, and fails before upload if any test or privacy check fails.
 # No secrets are used. Repository settings needed (not changed by this file): Pages source "GitHub
 # Actions", and the github-pages environment allowing the command-center-pages branch.

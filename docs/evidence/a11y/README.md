@@ -112,7 +112,9 @@ with no usable response". Measured: 254 px at 320, 324 at 390, 112 at 820, 185 a
 - **No session with a person using a screen reader**, and no manual zoom test at 200% or 400%.
 - **Chrome only**, on Windows. No Firefox, Safari or mobile browser.
 - **The keyboard pass is scripted at desktop width only.**
-- **The font.** Roboto is not loaded (it would come from the Google Fonts CDN, an external dependency
-  pending a decision from Aleem or Ali), so every measurement used the system font that the design
-  system's `--font-body` falls back to. Text widths, and so wrapping, will differ if Roboto is added.
+- **The font.** Since 2026-11-15 the page loads its own self-hosted Roboto (400, 700) and Roboto Mono
+  (400), as Aleem decided on 2026-11-13, so the measurements from the capture of 2026-11-15 onwards use
+  Roboto. Earlier captures used the system font that `--font-body` falls back to. Weights the stylesheet
+  asks for other than 400 and 700 (for example 650 on buttons) are drawn with the nearest file, and
+  italic text is slanted by the browser, because only these three files are shipped.
 - **axe cannot judge whether the wording is clear.** That is part of Aleem's review.

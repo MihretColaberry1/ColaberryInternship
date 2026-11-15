@@ -1,139 +1,210 @@
-// Criterion 4, as Mohammed Abdul Aleem decided it on 2026-11-03 (Option 1) and as the platform reworded
-// it on 2026-11-02: each capability's current rung (what effectiveAuthority() returns), whether a human
-// approved it, and what holds it back are shown separately, in the same words on the console and the
-// detail page; the no_tool_grants rule is named with the number it constrains, in words when zero; and
-// the R2 cap appears only as a labelled hypothetical. Nothing is invented to make the rule fire.
+// Criterion 4, from the platform's own record (step 2, 2026-11-14). Each capability's current rung,
+// reasons and ceiling are what the platform wrote in `authority[]`; the no_tool_grants rule, its wording
+// and its verdict are the platform's `authority_rule`. The page never recalculates them, never treats
+// approved_autonomy as approval, and shows human confirmation as not available until the platform
+// exposes AgentDomainCapabilityConfirmation. The same words appear on the console and the detail page.
+// Every case below is platform-shaped data; nothing is invented to make the rule fire on the real page.
 // Run from the repository root: node --test tests/agent-domain-tool-rule.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
-import { CAPABILITY_FILE } from '../command-center/agent-domain-data.js';
-import { AUTHORITY_WORDS, TOOL_RULE } from '../command-center/agent-domain-facts.js';
+import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, readAuthority } from '../command-center/agent-domain-data.js';
+import { AUTHORITY_WORDS, BEHAVIOUR_EXPOSURE } from '../command-center/agent-domain-facts.js';
 import { authorityView, capabilityRows, toolRuleStatus } from '../command-center/agent-domain-model.js';
-import { toolRuleBlock } from '../command-center/panel-ladder.js';
 import { renderRoute } from '../command-center/console.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const matrix = async () => JSON.parse(await readFile(path.join(ROOT, CAPABILITY_FILE), 'utf8'));
+const readJson = async (f) => JSON.parse(await readFile(path.join(ROOT, f), 'utf8'));
 const notCaptured = { state: 'not_captured' };
-const domainOf = async () => ({ status: 'loaded', source: { status: 'ok', matrix: await matrix(), record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } },
-  snapshot: { status: 'not_captured', endpoints: { mine: notCaptured, domain: notCaptured, coverage: notCaptured, requests: notCaptured } } });
+
+/** A loaded domain whose platform sync carries `authority` (a readAuthority() result). */
+async function domainOf(authority) {
+  return {
+    status: 'loaded',
+    source: { status: 'ok', matrix: await readJson(CAPABILITY_FILE), record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } },
+    snapshot: { status: 'not_captured', endpoints: { mine: notCaptured, domain: notCaptured, coverage: notCaptured, requests: notCaptured },
+      sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority } },
+  };
+}
+
+/** The real synced file, optionally changed: `rows` maps each authority row, `rule` overrides authority_rule. */
+async function platform({ rows = (r) => r, rule = {} } = {}) {
+  const json = await readJson(PLATFORM_SYNC_FILE);
+  return readAuthority({ ...json, authority: json.authority.map(rows).filter(Boolean), authority_rule: { ...json.authority_rule, ...rule } });
+}
 
 const allText = (out) => [out].flat(Infinity).map((n) => (n == null ? '' : n.textContent ?? String(n))).join('');
 function render(build) {
   const remove = installFakeDom();
   try { return build(); } finally { remove(); }
 }
+const ladderOf = (domain) => render(() => findAll(renderRoute([], domain, null), hasClass('panel')).find((p) => p.getAttribute('data-panel') === 'ladder'));
+const capabilityPage = (domain, id) => render(() => allText(renderRoute(['capability', id], domain, null)));
 
-test("Aleem's exact wording is what the page uses", () => {
-  assert.equal(AUTHORITY_WORDS.not_approved, 'Starting rung — no human approval yet');
+test("the wording: Aleem's phrases, and human confirmation as not available", () => {
+  assert.equal(AUTHORITY_WORDS.starting, 'Starting rung');
   assert.equal(AUTHORITY_WORDS.cap_idle, 'Tool-grant cap in force; constrains nothing today');
+  assert.equal(AUTHORITY_WORDS.cap_holding, 'Tool-grant cap in force; holding this capability at autonomy:R2');
+  assert.match(AUTHORITY_WORDS.confirmation_unavailable, /^Not available: the platform does not expose human confirmation records \(AgentDomainCapabilityConfirmation\) yet$/);
 });
 
-test('today, on the real file: autonomy:R0, no human approval, and the cap constrains nothing, for all 25', async () => {
-  const rows = capabilityRows(await matrix());
-  assert.equal(rows.length, 25);
-  for (const r of rows) {
-    const a = authorityView(r);
-    assert.equal(a.current, 'autonomy:R0', r.id);
-    assert.equal(a.approval, AUTHORITY_WORDS.not_approved, r.id);
-    assert.equal(a.constraint, AUTHORITY_WORDS.cap_idle, r.id);
-    assert.ok(!r.authority.reasons.includes('no_tool_grants'), `${r.id}: live data must not trigger the rule`);
-  }
-  assert.deepEqual(toolRuleStatus(rows), {
-    total: 25, held: 0, approved: 0, approved_above_r2: 0, starting_above_r2: 0, starting_r0: 25, with_tools: 0,
-    grants_known: false,
-  });
-  // Grants are not captured today: the rows say so (null), rather than claiming none.
-  assert.ok(rows.every((r) => r.granted_tools === null));
-});
-
-test('R0 holds whatever the grants are: not captured, none, or some (nothing is approved)', async () => {
-  const m = await matrix();
-  for (const grantedTools of [null, [], ['repo_read']]) {
-    for (const r of capabilityRows(m, { grantedTools })) {
-      assert.equal(authorityView(r).current, 'autonomy:R0', `${r.id} with ${JSON.stringify(grantedTools)}`);
-      assert.equal(authorityView(r).constraint, AUTHORITY_WORDS.cap_idle);
-    }
-  }
-  const known = toolRuleStatus(capabilityRows(m, { grantedTools: [] }));
-  assert.equal(known.grants_known, true);
-  assert.equal(known.with_tools, 0);
-});
-
-test('approved above R2 with no tool grants: effectiveAuthority() returns R2 with no_tool_grants, and the page says it binds', async () => {
-  const m = await matrix();
-  const id = m.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R5').capability_id;
-  const rows = capabilityRows(m, { approvals: { [id]: 'autonomy:R4' }, grantedTools: [] });
-  const r = rows.find((x) => x.id === id);
-  assert.equal(r.authority.effective_autonomy, 'autonomy:R2');
-  assert.ok(r.authority.reasons.includes('no_tool_grants'));
-  const a = authorityView(r);
-  assert.equal(a.approval, 'Approved by a named human at autonomy:R4');
-  assert.equal(a.constraint, AUTHORITY_WORDS.cap_holding);
-  const s = toolRuleStatus(rows);
-  assert.equal(s.held, 1);
-  const text = render(() => toolRuleBlock(s).textContent);
-  assert.match(text, /holding 1 of 25 capabilities at autonomy:R2/);
-  assert.doesNotMatch(text, /constrains nothing/);
-  // With grants not captured, the rule is read as if none were granted: it can only lower authority.
-  const unknown = capabilityRows(m, { approvals: { [id]: 'autonomy:R4' } }).find((x) => x.id === id);
-  assert.equal(unknown.authority.effective_autonomy, 'autonomy:R2');
-});
-
-test('control: the same approval with a tool granted is not capped', async () => {
-  const m = await matrix();
-  const id = m.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R5').capability_id;
-  const r = capabilityRows(m, { approvals: { [id]: 'autonomy:R4' }, grantedTools: ['repo_read'] }).find((x) => x.id === id);
-  assert.ok(!r.authority.reasons.includes('no_tool_grants'));
-  assert.notEqual(r.authority.effective_autonomy, 'autonomy:R2');
-});
-
-test('the rule block names the rule and says, in words, that it constrains nothing today', async () => {
-  const status = toolRuleStatus(capabilityRows(await matrix()));
-  const text = render(() => toolRuleBlock(status).textContent);
-  assert.match(text, /no_tool_grants/);
-  assert.ok(text.includes(TOOL_RULE.rule));
-  assert.ok(text.includes(`${AUTHORITY_WORDS.cap_idle}: it holds 0 of 25 capabilities.`));
-  assert.match(text, /0 of 25 have a level above autonomy:R2 approved by a human/);
-  // Grants not captured: said in words, never counted as "0 of 25 have a tool granted".
-  assert.match(text, /Tool grants were not captured\. That does not change the verdict/);
-  assert.doesNotMatch(text, /have a tool granted/);
-  const known = toolRuleStatus(capabilityRows(await matrix(), { grantedTools: [] }));
-  const knownText = render(() => toolRuleBlock(known).textContent);
-  assert.match(knownText, /0 of 25 have a tool granted/);
-});
-
-test('console ladder panel: Aleem\'s wording, never "None" as authority, and no hypothetical', async () => {
-  const domain = await domainOf();
-  const out = render(() => renderRoute([], domain, null));
-  const ladder = render(() => findAll(out, hasClass('panel')).find((p) => p.getAttribute('data-panel') === 'ladder'));
+test('today, on the real file: the platform records autonomy:R0 for all 25, and its rule constrains nothing', async () => {
+  const json = await readJson(PLATFORM_SYNC_FILE);
+  const domain = await domainOf(await platform());
+  const ladder = ladderOf(domain);
   const text = ladder.textContent;
-  assert.ok(text.includes(`autonomy:R0 for all 25: ${AUTHORITY_WORDS.not_approved}.`));
-  assert.ok(text.includes(AUTHORITY_WORDS.cap_idle));
-  assert.doesNotMatch(text, /Effective authority\s*None|\bNone \(no approved autonomy\)/);
-  assert.doesNotMatch(allText(out), /[Hh]ypothetical/);
+  assert.equal(ladder.getAttribute('data-state'), 'ready');
+  // The headline is Aleem's exact wording (re-review of PR #1, 2026-11-13), written out here so any change fails.
+  const headline = findAll(ladder, hasClass('panel-headline'))[0];
+  assert.equal(headline.textContent, 'All 25 at autonomy:R0, the starting rung, set by default. No human has approved a higher level.');
+  assert.equal(findAll(headline, (el) => el.tagName === 'CODE')[0]?.textContent, 'autonomy:R0', 'the rung is still shown as code');
+  assert.doesNotMatch(headline.textContent, /human confirmation not available/, 'Ali\'s platform statement is not merged into the headline');
+  assert.ok(text.includes(json.authority_rule.rule), 'the rule in the platform\'s own words');
+  assert.ok(text.includes(json.authority_rule.note), 'the platform\'s own note');
+  assert.ok(text.includes(`${AUTHORITY_WORDS.cap_idle}: it holds 0 of 25 capabilities.`));
+  assert.match(text, /The platform records 0 capabilities with a level above autonomy:R2 \(authority_rule\.approved_above_r2\)\./);
+  assert.match(text, /0 of 25 capabilities carry the reason no_tool_grants/);
+  assert.match(text, /Capabilities it holds at autonomy:R20Human confirmationNot available from the platform yet/);
+  assert.doesNotMatch(text, /Effective authority\s*None|[Hh]ypothetical|no human approval yet/);
+  // Every value is tagged as the platform's synced record of the per-domain endpoint.
+  assert.ok(findAll(ladder, hasClass('src-platform_sync')).some((t) => t.textContent.includes(PLATFORM_SYNC_FILE)));
 });
 
-test('detail page: the same wording as the console, plus the labelled R2-cap hypothetical', async () => {
-  const domain = await domainOf();
-  const m = domain.source.matrix;
-  const high = m.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R5');
-  const low = m.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R2');
-  const textHigh = render(() => allText(renderRoute(['capability', high.capability_id], domain, null)));
-  assert.ok(textHigh.includes(`Current rung (effectiveAuthority())autonomy:R0`));
-  assert.ok(textHigh.includes(`Human approval${AUTHORITY_WORDS.not_approved}`));
-  assert.ok(textHigh.includes(`What holds it back${AUTHORITY_WORDS.cap_idle}`));
-  assert.match(textHigh, /Hypothetical: not an approval, not data/);
-  assert.match(textHigh, /If a human approved this capability up to its autonomy:R5 ceiling and no tool were granted, the no-tool-grants rule would hold it at autonomy:R2\. Whether any tool is granted today was not captured\./);
-  assert.doesNotMatch(textHigh, /because no tools are granted/);
-  assert.match(textHigh, /Tools it will need \(grants not captured\)/);
+test("the rule binds: two capabilities the platform holds at R2 with no_tool_grants (Aleem's case)", async () => {
+  // Platform-shaped: approved above R2 with no tool grants, which the platform records as R2 + no_tool_grants.
+  let n = 0;
+  const authority = await platform({
+    rows: (r) => (r.max_permitted_autonomy !== 'autonomy:R2' && n++ < 2 ? { ...r, effective_autonomy: 'autonomy:R2', reasons: ['no_tool_grants'] } : r),
+    rule: { approved_above_r2: 2, binds_nothing: false },
+  });
+  const domain = await domainOf(authority);
+  const text = ladderOf(domain).textContent;
+  assert.match(text, /Tool-grant cap in force; holding 2 of 25 capabilities at autonomy:R2\./);
+  assert.match(text, /Capabilities it holds at autonomy:R22/);
+  assert.match(text, /Current rungs differ by capability/);
+  const held = Object.entries(authority.byId).find(([, r]) => r.reasons.includes('no_tool_grants'))[0];
+  const page = capabilityPage(domain, held);
+  assert.ok(page.includes('Current rung (platform)autonomy:R2'), 'the rung the platform recorded, not the ceiling');
+  assert.ok(page.includes(`What holds it back${AUTHORITY_WORDS.cap_holding}`));
+  assert.match(page, /no_tool_grants No tools are granted, so it is held at autonomy:R2\./);
+  assert.ok(page.includes(`Starting rung?${AUTHORITY_WORDS.not_starting} (started at autonomy:R0)`));
+});
+
+test('the platform data disagrees with itself: both are shown, and the page does not choose', async () => {
+  const authority = await platform({ rows: (r, i) => (i === 0 ? { ...r, reasons: ['no_tool_grants'] } : r) });
+  assert.equal(authority.rule.binds_nothing, true);
+  const status = toolRuleStatus(capabilityRows(await readJson(CAPABILITY_FILE), { authority }), authority);
+  assert.equal(status.consistent, false);
+  const text = ladderOf(await domainOf(authority)).textContent;
+  assert.match(text, /The platform's data disagrees with itself: authority_rule\.binds_nothing is true, but 1 of 25 capabilities carry the reason no_tool_grants\./);
+});
+
+test('approved_autonomy is never shown as approval, whatever it says', async () => {
+  const authority = await platform({ rows: (r) => ({ ...r, approved_autonomy: 'autonomy:R5' }) });
+  const domain = await domainOf(authority);
+  const id = Object.keys(authority.byId)[0];
+  for (const text of [ladderOf(domain).textContent, capabilityPage(domain, id)]) {
+    assert.doesNotMatch(text, /[Aa]pproved by|approved at autonomy|Human approvalautonomy/);
+    assert.doesNotMatch(text, /autonomy:R5 for all/);
+    assert.match(text, /Not available/);
+  }
+});
+
+test('no authority section: Panel 3 says "Not available" and calculates nothing in its place', async () => {
+  for (const authority of [{ status: 'not_synced', error: null, byId: {}, rule: null, size: 0 }, readAuthority({})]) {
+    const domain = await domainOf(authority);
+    const ladder = ladderOf(domain);
+    assert.equal(ladder.getAttribute('data-state'), 'not_available');
+    assert.match(ladder.textContent, /MissingThe platform's authority record \(authority\[\] and authority_rule\)/);
+    assert.match(ladder.textContent, /Nothing is calculated in its place\./);
+    assert.doesNotMatch(ladder.textContent, /autonomy:R0 for all/);
+    const id = domain.source.matrix.capabilities[0].capability_id;
+    const page = capabilityPage(domain, id);
+    assert.match(page, /Current rungNot in the platform snapshot/);
+    assert.match(page, /The platform's authority record is not in this repository/);
+  }
+});
+
+test('a malformed authority section is an error with the reason, never a partial picture', async () => {
+  const json = await readJson(PLATFORM_SYNC_FILE);
+  const authority = readAuthority({ ...json, authority: [{ ...json.authority[0], effective_autonomy: 'R0' }] });
+  const ladder = ladderOf(await domainOf(authority));
+  assert.equal(ladder.getAttribute('data-state'), 'error');
+  assert.match(ladder.textContent, /The platform's authority record could not be used\..*authority\[0\] is not a well-formed authority row/);
+});
+
+test('a capability the platform has no row for is said so, and counted, never defaulted', async () => {
+  const json = await readJson(PLATFORM_SYNC_FILE);
+  const gone = json.authority[0].capability_id;
+  const authority = await platform({ rows: (r) => (r.capability_id === gone ? null : r) });
+  const domain = await domainOf(authority);
+  const view = authorityView(capabilityRows(domain.source.matrix, { authority }).find((r) => r.id === gone));
+  assert.equal(view.recorded, false);
+  assert.equal(view.current, null);
+  const text = ladderOf(domain).textContent;
+  assert.match(text, /1 of 25 capabilities have no row in the platform's authority record\./);
+  assert.match(capabilityPage(domain, gone), new RegExp(`The platform's authority record has no row for ${gone.replace(/\./g, '\\.')}\\.`));
+});
+
+test('detail page: the console\'s words, the platform\'s rule in place of the old hypothetical, and honest sources', async () => {
+  const json = await readJson(PLATFORM_SYNC_FILE);
+  const domain = await domainOf(await platform());
+  const high = domain.source.matrix.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R5');
+  const page = capabilityPage(domain, high.capability_id);
+  assert.ok(page.includes('Current rung (platform)autonomy:R0'));
+  assert.ok(page.includes(`Starting rung?${AUTHORITY_WORDS.starting}`));
+  assert.ok(page.includes(`Human confirmation${AUTHORITY_WORDS.confirmation_unavailable}`));
+  assert.ok(page.includes(`What holds it back${AUTHORITY_WORDS.cap_idle}`));
+  assert.ok(page.includes('Ceiling (platform)autonomy:R5'));
+  assert.ok(page.includes(json.authority_rule.rule));
+  assert.ok(page.includes(`${AUTHORITY_WORDS.cap_idle}: it holds 0 of 25 capabilities.`), 'the verdict covers the whole domain');
+  assert.doesNotMatch(page, /[Hh]ypothetical|would hold it at|would return/);
+  assert.ok(page.includes(BEHAVIOUR_EXPOSURE.statement));
+  assert.match(page, /Tools it will need \(grants not captured\)/);
+  // The Authority section is tagged once, at the start of its read line, not on the heading as well.
+  assert.match(page, /AuthorityPlatform sync · \.colaberry\/agent-domain\.json · GET \/api\/admin\/agent-domains\/product_experience The platform's own authority record/);
+  assert.doesNotMatch(page, /Authority Platform sync/);
   // The research file's stale blocker is shown verbatim, with the label beside it.
-  assert.match(textHigh, /no_ai_employee_provisioned[^]*May be out of date[^]*seed value[^]*not evidence either way/);
-  const textLow = render(() => allText(renderRoute(['capability', low.capability_id], domain, null)));
-  assert.match(textLow, /Its ceiling is autonomy:R2, so the no-tool-grants rule would not change it/);
+  assert.match(page, /no_ai_employee_provisioned[^]*May be out of date[^]*seed value[^]*not evidence either way/);
+});
+
+test('long platform field names sit in <code>, which wraps, so Panel 3 cannot scroll sideways at 320 px', async () => {
+  // Found by the 320 px browser check on 2026-11-14: "(authority_rule.approved_above_r2)" as plain text
+  // widened Panel 3 by 18 px. tests/reflow.test.mjs covers only the guides, so this guards Panel 3.
+  const authority = await platform({ rows: (r, i) => (i === 0 ? { ...r, reasons: ['no_tool_grants'] } : r) });
+  const ladder = ladderOf(await domainOf(authority));
+  const codes = findAll(ladder, (el) => el.tagName === 'CODE').map((el) => el.textContent);
+  for (const name of ['authority_rule.approved_above_r2', 'authority_rule.binds_nothing']) {
+    assert.ok(codes.includes(name), `${name} is in a <code> element`);
+  }
+});
+
+test('no console module calculates authority: no copy, import or call of effectiveAuthority()', async () => {
+  const dir = path.join(ROOT, 'command-center');
+  for (const f of (await readdir(dir)).filter((x) => x.endsWith('.js'))) {
+    // Comments may name the platform's function; code may not define, import or call it.
+    const code = (await readFile(path.join(dir, f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+    assert.doesNotMatch(code, /effectiveAuthority/, `${f} defines, imports or calls effectiveAuthority`);
+  }
+});
+
+// Aleem's headline (2026-11-13) states a fact about today's records, so it appears only while it is true:
+// every capability at autonomy:R0, its starting rung. Any other picture keeps the neutral wording.
+test("Aleem's R0 headline appears only when all capabilities are at autonomy:R0, their starting rung", async () => {
+  const ALEEM = 'No human has approved a higher level.';
+  const headlineOf = async (authority) => findAll(ladderOf(await domainOf(authority)), hasClass('panel-headline'))[0].textContent;
+  assert.ok((await headlineOf(await platform())).endsWith(ALEEM), 'today: shown');
+  // All at R1 (platform-shaped, not today's data): not the starting rung, so the sentence would be untrue.
+  const allR1 = await headlineOf(await platform({ rows: (r) => ({ ...r, effective_autonomy: 'autonomy:R1' }) }));
+  assert.ok(!allR1.includes(ALEEM), allR1);
+  assert.match(allR1, /^autonomy:R1 for all 25: Not the starting rung/);
+  // Rungs that differ: said to differ, no R0 claim.
+  let n = 0;
+  const mixed = await headlineOf(await platform({ rows: (r) => (n++ === 0 ? { ...r, effective_autonomy: 'autonomy:R1' } : r) }));
+  assert.ok(!mixed.includes(ALEEM), mixed);
+  assert.match(mixed, /^Current rungs differ by capability/);
 });

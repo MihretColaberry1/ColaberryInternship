@@ -1,9 +1,10 @@
 // Turns the Agent domain inputs into what each panel shows. Pure functions: no DOM, no network.
-// Every value keeps its source: 'source_file', 'endpoint' or 'platform_code'. Values from one
-// source are never relabelled as another, and authority comes only from effectiveAuthority().
-import { AUTONOMY_LEVELS, AUTONOMY_MEANINGS, AUTONOMY_STAGES, autonomyIndex, effectiveAuthority } from './authority.js';
+// Every value keeps its source: 'source_file', 'endpoint', 'platform_sync' or 'platform_code'. Values
+// from one source are never relabelled as another. Authority is the platform's own record
+// (`authority[]` in the synced file), read as written and never recalculated here.
+import { AUTONOMY_LEVELS, AUTONOMY_MEANINGS, AUTONOMY_STAGES, autonomyIndex } from './authority.js';
 import {
-  AUTHORITY_WORDS, DOMAIN_KEY, MINE_AGENT_FIELDS, R8_UNREACHABLE, REGISTRY_ENTRY, SET_BY_NOT_RECORDED, UNAVAILABLE_FIELDS,
+  AUTHORITY_WORDS, DOMAIN_KEY, MINE_AGENT_FIELDS, R8_UNREACHABLE, REGISTRY_ENTRY, REQUEST_STATUSES, SET_BY_NOT_RECORDED, UNAVAILABLE_FIELDS,
 } from './agent-domain-facts.js';
 
 /**
@@ -71,87 +72,87 @@ export function toolGrantWords(link) {
 }
 
 /**
- * One row per capability, in the order the research file records them.
- *
- * Criterion 4 (Aleem's Option 1, 2026-11-03): three separate facts per capability.
- *   - `approved`: the level a named human approved. None is recorded anywhere today, so the real page
- *     passes no `approvals` and every row is null. Tests pass approvals to exercise the rule.
- *   - `authority`: what effectiveAuthority() returns for the level in force: the approved level, or,
- *     with no approval, the starting rung. That is how the platform's own snapshot computes it
- *     (agentDomainSnapshot.ts), so the page shows autonomy:R0, never "None".
- *   - `hypothetical`: what the same rule would return if a human approved up to the ceiling. Shown
- *     only on detail pages, always labelled; it is not data.
- *
- * `grantedTools` is null when the grants were not captured (the real page today: grantedToolsFor()).
- * The rule is then evaluated as if none were granted, the reading that can only lower authority, never
- * raise it. Today that changes nothing: no capability has an approved level, so all stay at R0.
- * `granted_tools` on the row keeps the null, so the page says "not captured" rather than "none".
+ * One row per capability, in the order the pinned research file records them. Names, starting rung,
+ * behaviours, tools and blockers come from that file (`source_file`). Authority comes only from the
+ * platform's own record for the same capability_id (`platform`, from `authority[]` in the synced
+ * file): effective_autonomy, reasons, ceiling and ceiling reason, exactly as the platform wrote them.
+ * `platform` is null when the snapshot has no row for the capability or no authority section at all;
+ * the page then says so and never substitutes a default or a calculation.
  */
-export function capabilityRows(matrix, { approvals = {}, grantedTools = null } = {}) {
-  return (matrix?.capabilities ?? []).map((c) => {
-    const ceiling = c.max_permitted_autonomy;
-    const approved = approvals[c.capability_id] ?? null;
-    const inputs = {
-      capability_id: c.capability_id,
-      max_permitted_autonomy: ceiling,
-      granted_tools: grantedTools ?? [],
-      environment: 'sandbox',
-      human_decision: c.human_decision === true,
-    };
-    return {
-      id: c.capability_id,
-      name: c.name,
-      classification: c.classification,
-      implementation_state: c.implementation_state,
-      validation: c.requirement_validation_state,
-      starting: c.starting_autonomy,
-      ceiling,
-      ceiling_reason: c.max_autonomy_rationale ?? null,
-      human_decision: c.human_decision === true,
-      behaviours: Array.isArray(c.release_behaviour) ? c.release_behaviour : [],
-      required_tools: Array.isArray(c.required_tools) ? c.required_tools : [],
-      blocked_by: Array.isArray(c.blocked_by) ? c.blocked_by : [],
-      approved,
-      granted_tools: grantedTools,
-      authority: effectiveAuthority({ ...inputs, approved_autonomy: approved ?? c.starting_autonomy }),
-      hypothetical: effectiveAuthority({ ...inputs, approved_autonomy: ceiling }),
-    };
-  });
+export function capabilityRows(matrix, { grantedTools = null, authority = null } = {}) {
+  const byId = authority?.status === 'ok' ? authority.byId : {};
+  return (matrix?.capabilities ?? []).map((c) => ({
+    id: c.capability_id,
+    name: c.name,
+    classification: c.classification,
+    implementation_state: c.implementation_state,
+    validation: c.requirement_validation_state,
+    starting: c.starting_autonomy,
+    ceiling: c.max_permitted_autonomy,
+    ceiling_reason: c.max_autonomy_rationale ?? null,
+    human_decision: c.human_decision === true,
+    behaviours: Array.isArray(c.release_behaviour) ? c.release_behaviour : [],
+    required_tools: Array.isArray(c.required_tools) ? c.required_tools : [],
+    blocked_by: Array.isArray(c.blocked_by) ? c.blocked_by : [],
+    granted_tools: grantedTools,
+    platform: Object.hasOwn(byId, c.capability_id) ? byId[c.capability_id] : null,
+  }));
 }
 
 /**
- * Criterion 4's three facts for one row, as the words the page shows. The same function feeds the
- * console and the detail page, so the wording cannot drift between them.
+ * Criterion 4 for one row, as the words the page shows. The same function feeds the console and the
+ * detail page, so the wording cannot drift between them. Every value is the platform's; the only
+ * comparison made here is whether its current rung is the research file's starting rung.
  */
 export function authorityView(row) {
-  const holding = row.authority.reasons.includes('no_tool_grants');
+  const p = row.platform;
+  if (!p) {
+    return { recorded: false, current: null, starting: row.starting, isStarting: null, approval: AUTHORITY_WORDS.confirmation_unavailable,
+      constraint: AUTHORITY_WORDS.not_in_snapshot, holding: false, reasons: [], ceiling: null, ceiling_note: null, ceiling_reason: null };
+  }
+  const holding = p.reasons.includes(TOOL_REASON);
   return {
-    current: row.authority.effective_autonomy,
-    approval: row.approved == null ? AUTHORITY_WORDS.not_approved : `${AUTHORITY_WORDS.approved} ${row.approved}`,
-    approved: row.approved != null,
+    recorded: true,
+    current: p.effective_autonomy,
+    starting: row.starting,
+    isStarting: p.effective_autonomy != null && p.effective_autonomy === row.starting,
+    approval: AUTHORITY_WORDS.confirmation_unavailable,
     constraint: holding ? AUTHORITY_WORDS.cap_holding : AUTHORITY_WORDS.cap_idle,
     holding,
-    reasons: row.authority.reasons,
+    reasons: p.reasons,
+    ceiling: p.max_permitted_autonomy,
+    ceiling_note: p.max_permitted_autonomy_note,
+    ceiling_reason: p.ceiling_reason,
   };
 }
 
+const TOOL_REASON = 'no_tool_grants';
+
 /**
- * Criterion 4: whether the no_tool_grants rule constrains anything, counted from the rows rather
- * than asserted. `held` is what effectiveAuthority() actually returned with no_tool_grants.
+ * Criterion 4: the tool-grant rule as the platform recorded it. `held` counts the capabilities whose
+ * platform reasons include no_tool_grants (a count of what the platform wrote, not a calculation).
+ * `consistent` is false when that count and the platform's own `binds_nothing` disagree; the page then
+ * says the platform data disagrees with itself instead of choosing one.
  */
-export function toolRuleStatus(rows) {
-  const aboveR2 = (stage) => stage != null && autonomyIndex(stage) > autonomyIndex('autonomy:R2');
+export function toolRuleStatus(rows, authority) {
+  const rule = authority?.status === 'ok' ? authority.rule : null;
+  const recorded = rows.filter((r) => r.platform);
+  const held = recorded.filter((r) => r.platform.reasons.includes(TOOL_REASON)).length;
   return {
+    known: rule != null,
     total: rows.length,
-    held: rows.filter((r) => r.authority.reasons.includes('no_tool_grants')).length,
-    approved: rows.filter((r) => r.approved != null).length,
-    approved_above_r2: rows.filter((r) => aboveR2(r.approved)).length,
-    starting_above_r2: rows.filter((r) => aboveR2(r.starting)).length,
-    starting_r0: rows.filter((r) => r.starting === 'autonomy:R0').length,
-    with_tools: rows.filter((r) => Array.isArray(r.granted_tools) && r.granted_tools.length > 0).length,
-    grants_known: rows.length > 0 && rows.every((r) => Array.isArray(r.granted_tools)),
+    recorded: recorded.length,
+    held,
+    rule: rule?.rule ?? null,
+    note: rule?.note ?? null,
+    approved_above_r2: rule?.approved_above_r2 ?? null,
+    binds_nothing: rule?.binds_nothing ?? null,
+    consistent: rule == null || rule.binds_nothing === (held === 0),
   };
 }
+
+/** A row as the ladder grid draws it: the research file's starting rung and the platform's ceiling. */
+export const platformLadderRow = (r) => ({ ...r, ceiling: r.platform?.max_permitted_autonomy ?? null, ceiling_reason: r.platform?.ceiling_reason ?? null });
 
 const COMPARED = [
   ['name', 'capability_name'],
@@ -250,14 +251,32 @@ export function employeeView(endpoints) {
 }
 
 /** Panel 5. Change and tool requests kept apart; a row with no kind is not guessed into either. */
+/** A request's status as the platform defines it: known (pending or terminal), or unrecognised. */
+export function requestStatus(status) {
+  const known = typeof status === 'string' && Object.hasOwn(REQUEST_STATUSES, status) ? REQUEST_STATUSES[status] : null;
+  return known ? { status, known: true, ...known } : { status: status ?? null, known: false, terminal: null, tone: 'neutral',
+    words: status == null ? 'No status recorded' : `Unrecognised status "${status}": shown as recorded, not counted as waiting or decided` };
+}
+
+/**
+ * Panel 5: the governance queue, grouped by kind (change, tool, no stated kind) and by status. Submitted
+ * is the only pending status; approved, declined and withdrawn are terminal (the platform owner's
+ * definition). A status outside those four is kept and counted as unrecognised, never guessed.
+ */
 export function requestGroups(endpoint) {
   if (endpoint.state !== 'ok') return { state: endpoint.state, endpoint };
   const all = Array.isArray(endpoint.body.change_requests) ? endpoint.body.change_requests : [];
+  const by = (status) => all.filter((r) => r.status === status);
   return {
     state: 'ok', endpoint,
+    all,
     change: all.filter((r) => r.kind === 'change'),
     tool: all.filter((r) => r.kind === 'tool'),
     unknown_kind: all.filter((r) => r.kind !== 'change' && r.kind !== 'tool'),
+    waiting: by('submitted'),
+    decided: [...by('approved'), ...by('declined')],
+    withdrawn: by('withdrawn'),
+    unrecognised: all.filter((r) => !requestStatus(r.status).known),
   };
 }
 

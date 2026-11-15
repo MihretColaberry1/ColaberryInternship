@@ -3,7 +3,8 @@
 // deliberately does not keep current (agentDomainAgentLink.ts, lines 9-22, at cc1ebc55); the platform
 // links the agent in agent_domain_projects.agent_id, which GET /api/admin/agent-domains-mine reads.
 // Three cases, across every panel: agent present, agent absent, and not captured. In every one, all 25
-// capabilities stay at autonomy:R0 with no human approval.
+// capabilities stay at autonomy:R0 and the autonomy ladder reads exactly the same: authority is the
+// platform's own record, so whether an agent is linked cannot change it.
 // Run from the repository root: node --test tests/agent-domain-link.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -12,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
-import { CAPABILITY_FILE, SNAPSHOT_SCHEMA, readSnapshot } from '../command-center/agent-domain-data.js';
+import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_SCHEMA, readAuthority, readSnapshot } from '../command-center/agent-domain-data.js';
 import { AUTHORITY_WORDS, ENDPOINTS, REGISTRY_ENTRY } from '../command-center/agent-domain-facts.js';
 import { agentLink, grantedToolsFor, toolGrantWords } from '../command-center/agent-domain-model.js';
 import { PRESENT } from '../command-center/agent-domain-redact.js';
@@ -35,9 +36,13 @@ const CASES = {
   not_captured: () => ({ status: 'not_captured', error: null, endpoints: snapshotOf([]).endpoints }),
 };
 
+// The platform's real authority record, as the synced file carries it, attached to each case.
+const authority = async () => readAuthority(JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8')));
+
 async function domainFor(snapshot) {
   return { status: 'loaded', source: { status: 'ok', matrix: await matrix(),
-    record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } }, snapshot };
+    record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } },
+  snapshot: { ...snapshot, sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority: await authority() } } };
 }
 
 async function render(caseKey) {
@@ -92,23 +97,28 @@ test('tool grants: null (not captured) unless an endpoint records them; none onl
 
 const UNSUPPORTED = /[Nn]o agent exists|none does|no agent exists to hold a grant|0 granted|None: no agent exists/;
 
+const LADDER = {};
 for (const caseKey of Object.keys(CASES)) {
   test(`${caseKey}: no panel claims "no agent exists", and all 25 capabilities stay at autonomy:R0`, async () => {
     const { panels, all, inputs } = await render(caseKey);
     assert.doesNotMatch(all, UNSUPPORTED);
     assert.equal(inputs.rows.length, 25);
-    for (const r of inputs.rows) {
-      assert.equal(r.authority.effective_autonomy, 'autonomy:R0', r.id);
-      assert.equal(r.approved, null, r.id);
-    }
-    assert.ok(panels.ladder.includes(`autonomy:R0 for all 25: ${AUTHORITY_WORDS.not_approved}.`));
+    for (const r of inputs.rows) assert.equal(r.platform.effective_autonomy, 'autonomy:R0', r.id);
+    assert.ok(panels.ladder.includes('All 25 at autonomy:R0, the starting rung, set by default. No human has approved a higher level.'));
     assert.ok(panels.ladder.includes(AUTHORITY_WORDS.cap_idle));
     // The employee's rung is unknown in every case: no source records an agent's rung on this ladder.
     assert.match(panels.ladder, /Your employee's rungUnknown: no source records an agent's rung on this ladder/);
     // The registry value is always labelled as a stale seed value wherever Panel 1 shows it.
     assert.ok(panels.employee.includes(REGISTRY_ENTRY.agent_id_label));
+    LADDER[caseKey] = panels.ladder;
   });
 }
+
+test('the autonomy ladder reads the same whether an agent is linked, absent or not captured', () => {
+  assert.equal(Object.keys(LADDER).length, 3, 'the three cases ran first');
+  assert.equal(LADDER.present, LADDER.absent);
+  assert.equal(LADDER.present, LADDER.not_captured);
+});
 
 test('present: Panel 1 says linked, and every detail it did not capture says "not captured"', async () => {
   const { panels } = await render('present');
@@ -120,7 +130,6 @@ test('present: Panel 1 says linked, and every detail it did not capture says "no
   assert.match(panels.governance, /Grant not captured/);
   assert.doesNotMatch(panels.governance, /Not granted/);
   assert.match(panels.gaps, /An agent is linked to this domain\. Its enabled state, autonomy level and tool grants were not captured/);
-  assert.match(panels.ladder, /Tool grants were not captured/);
 });
 
 test('absent: the endpoint links no agent, so "none granted" is supported and said with its source', async () => {
@@ -130,7 +139,6 @@ test('absent: the endpoint links no agent, so "none granted" is supported and sa
   assert.match(panels.employee, /Tools grantedNone: the endpoint links no agent to this domain/);
   assert.match(panels.governance, /Not granted/);
   assert.match(panels.gaps, /The captured response links no agent to this domain, so no agent holds a tool grant\./);
-  assert.match(panels.ladder, /0 of 25 have a tool granted/);
 });
 
 test('not captured: Panel 1 says it does not know, and does not lean on the registry', async () => {
@@ -140,5 +148,4 @@ test('not captured: Panel 1 says it does not know, and does not lean on the regi
   assert.match(panels.employee, /Agent linked \(live endpoint\)Not captured yet/);
   assert.match(panels.employee, /Tools grantedNot captured yet/);
   assert.match(panels.gaps, /Whether an agent is linked to this domain is not captured\. The registry's agent_id: null is a seed value, not kept current/);
-  assert.match(panels.ladder, /Tool grants were not captured/);
 });

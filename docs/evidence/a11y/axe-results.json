@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-11-11T03:46:22.810Z",
-  "base_url": "http://127.0.0.1:8765/",
+  "captured_at": "2026-11-15T21:28:43.833Z",
+  "base_url": "http://127.0.0.1:8768/",
   "tools": {
     "playwright-core": "1.48.2",
     "axe-core": "4.10.2"
@@ -9,7 +9,7 @@
   "runs": [
     {
       "label": "console, narrow, light, disclosures closed",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 106,
       "violations": [
         {
@@ -17,7 +17,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 159,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -40,7 +40,7 @@
     },
     {
       "label": "console, narrow, light, every disclosure open",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 107,
       "violations": [
         {
@@ -48,7 +48,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 681,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -68,7 +68,7 @@
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(1) > .disclosure-body > .table-wrap",
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(2) > .disclosure-body > .table-wrap",
             ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(2)",
-            ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
+            "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
           ]
         }
       ],
@@ -91,7 +91,7 @@
     },
     {
       "label": "console, phone, light, disclosures closed",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 106,
       "violations": [
         {
@@ -99,7 +99,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 159,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -122,7 +122,7 @@
     },
     {
       "label": "console, phone, light, every disclosure open",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 107,
       "violations": [
         {
@@ -130,7 +130,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 681,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -150,7 +150,7 @@
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(1) > .disclosure-body > .table-wrap",
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(2) > .disclosure-body > .table-wrap",
             ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(2)",
-            ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
+            "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
           ]
         }
       ],
@@ -173,7 +173,7 @@
     },
     {
       "label": "console, tablet, light, disclosures closed",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 106,
       "violations": [
         {
@@ -181,7 +181,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 159,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -204,7 +204,7 @@
     },
     {
       "label": "console, tablet, light, every disclosure open",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 107,
       "violations": [
         {
@@ -212,7 +212,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 681,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -232,7 +232,7 @@
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(1) > .disclosure-body > .table-wrap",
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(2) > .disclosure-body > .table-wrap",
             ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(2)",
-            ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
+            "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
           ]
         }
       ],
@@ -255,7 +255,7 @@
     },
     {
       "label": "console, desktop, light, disclosures closed",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 106,
       "violations": [
         {
@@ -263,7 +263,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 159,
+          "nodes": 156,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -286,7 +286,7 @@
     },
     {
       "label": "console, desktop, light, every disclosure open",
-      "url": "http://127.0.0.1:8765/",
+      "url": "http://127.0.0.1:8768/",
       "rules_run": 107,
       "violations": [
         {
@@ -294,7 +294,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 681,
+          "nodes": 762,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -314,7 +314,7 @@
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(1) > .disclosure-body > .table-wrap",
             "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(2) > .disclosure-body > .table-wrap",
             ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(2)",
-            ".disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
+            "#panel-inventory > .panel-details > .disclosure[open=\"\"]:nth-child(5) > .disclosure-body > .table-wrap:nth-child(4)"
           ]
         }
       ],
@@ -337,7 +337,7 @@
     },
     {
       "label": "detail #/capability/product_experience.design_token_drift_audit, narrow, light",
-      "url": "http://127.0.0.1:8765/#/capability/product_experience.design_token_drift_audit",
+      "url": "http://127.0.0.1:8768/#/capability/product_experience.design_token_drift_audit",
       "rules_run": 105,
       "violations": [
         {
@@ -345,7 +345,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 41,
+          "nodes": 48,
           "targets": [
             ".eyebrow",
             ".stamp",
@@ -361,43 +361,8 @@
           "help": "Elements in the focus order should have an appropriate role",
           "nodes": 2,
           "targets": [
-            ".table-wrap:nth-child(9)",
-            ".table-wrap:nth-child(11)"
-          ]
-        }
-      ],
-      "passes": 49,
-      "inapplicable": 54,
-      "incomplete": []
-    },
-    {
-      "label": "detail #/capability/product_experience.design_token_drift_audit, desktop, light",
-      "url": "http://127.0.0.1:8765/#/capability/product_experience.design_token_drift_audit",
-      "rules_run": 105,
-      "violations": [
-        {
-          "id": "color-contrast-enhanced",
-          "level": "wcag_aaa",
-          "impact": "serious",
-          "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 41,
-          "targets": [
-            ".eyebrow",
-            ".stamp",
-            ".back",
-            "dl:nth-child(4) > dt:nth-child(1)",
-            "dl:nth-child(4) > dt:nth-child(3)"
-          ]
-        },
-        {
-          "id": "focus-order-semantics",
-          "level": "experimental",
-          "impact": "minor",
-          "help": "Elements in the focus order should have an appropriate role",
-          "nodes": 2,
-          "targets": [
-            ".table-wrap:nth-child(9)",
-            ".table-wrap:nth-child(11)"
+            ".table-wrap:nth-child(10)",
+            ".table-wrap:nth-child(13)"
           ]
         }
       ],
@@ -406,8 +371,43 @@
       "incomplete": []
     },
     {
+      "label": "detail #/capability/product_experience.design_token_drift_audit, desktop, light",
+      "url": "http://127.0.0.1:8768/#/capability/product_experience.design_token_drift_audit",
+      "rules_run": 105,
+      "violations": [
+        {
+          "id": "color-contrast-enhanced",
+          "level": "wcag_aaa",
+          "impact": "serious",
+          "help": "Elements must meet enhanced color contrast ratio thresholds",
+          "nodes": 48,
+          "targets": [
+            ".eyebrow",
+            ".stamp",
+            ".back",
+            "dl:nth-child(4) > dt:nth-child(1)",
+            "dl:nth-child(4) > dt:nth-child(3)"
+          ]
+        },
+        {
+          "id": "focus-order-semantics",
+          "level": "experimental",
+          "impact": "minor",
+          "help": "Elements in the focus order should have an appropriate role",
+          "nodes": 2,
+          "targets": [
+            ".table-wrap:nth-child(10)",
+            ".table-wrap:nth-child(13)"
+          ]
+        }
+      ],
+      "passes": 47,
+      "inapplicable": 56,
+      "incomplete": []
+    },
+    {
       "label": "detail #/rung/autonomy:R1, narrow, light",
-      "url": "http://127.0.0.1:8765/#/rung/autonomy:R1",
+      "url": "http://127.0.0.1:8768/#/rung/autonomy:R1",
       "rules_run": 105,
       "violations": [
         {
@@ -441,7 +441,7 @@
     },
     {
       "label": "detail #/rung/autonomy:R1, desktop, light",
-      "url": "http://127.0.0.1:8765/#/rung/autonomy:R1",
+      "url": "http://127.0.0.1:8768/#/rung/autonomy:R1",
       "rules_run": 105,
       "violations": [
         {
@@ -475,7 +475,7 @@
     },
     {
       "label": "detail #/guide/capture, narrow, light",
-      "url": "http://127.0.0.1:8765/#/guide/capture",
+      "url": "http://127.0.0.1:8768/#/guide/capture",
       "rules_run": 105,
       "violations": [
         {
@@ -498,7 +498,7 @@
     },
     {
       "label": "detail #/guide/capture, desktop, light",
-      "url": "http://127.0.0.1:8765/#/guide/capture",
+      "url": "http://127.0.0.1:8768/#/guide/capture",
       "rules_run": 105,
       "violations": [
         {
@@ -521,7 +521,7 @@
     },
     {
       "label": "detail #/story/STORY-000, narrow, light",
-      "url": "http://127.0.0.1:8765/#/story/STORY-000",
+      "url": "http://127.0.0.1:8768/#/story/STORY-000",
       "rules_run": 105,
       "violations": [
         {
@@ -543,7 +543,7 @@
     },
     {
       "label": "detail #/story/STORY-000, desktop, light",
-      "url": "http://127.0.0.1:8765/#/story/STORY-000",
+      "url": "http://127.0.0.1:8768/#/story/STORY-000",
       "rules_run": 105,
       "violations": [
         {
@@ -565,7 +565,7 @@
     },
     {
       "label": "state matrix page (fixtures), desktop light",
-      "url": "http://127.0.0.1:8765/docs/evidence/state-matrix.html",
+      "url": "http://127.0.0.1:8768/docs/evidence/state-matrix.html",
       "rules_run": 106,
       "violations": [
         {
@@ -573,7 +573,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 983,
+          "nodes": 1069,
           "targets": [
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(1)",
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(2)",
@@ -589,7 +589,7 @@
         {
           "id": "color-contrast-enhanced",
           "level": "wcag_aaa",
-          "nodes": 48,
+          "nodes": 54,
           "help": "Elements must meet enhanced color contrast ratio thresholds"
         }
       ]

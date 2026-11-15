@@ -1,5 +1,5 @@
 // The GitHub Pages publishing allow-list for the Command Center demo (branch command-center-pages).
-// Exactly these 37 paths are published; the build fails if the output holds one more or one fewer.
+// Exactly these 43 paths are published; the build fails if the output holds one more or one fewer.
 // Nothing is published by folder or by pattern, so a file added to the repository later is never
 // published by accident: it has to be added here, in a reviewed change.
 
@@ -34,6 +34,10 @@ export const COPIED = Object.freeze([
   'command-center/vendor/colaberry-ds/tokens/colors.css',
   'command-center/vendor/colaberry-ds/tokens/spacing.css',
   'command-center/vendor/colaberry-ds/tokens/typography.css',
+  // Self-hosted fonts (the accountable manager's decision, 2026-11-13): the stylesheet and both OFL 1.1 licences.
+  'command-center/vendor/fonts/fonts.css',
+  'command-center/vendor/fonts/LICENSE-Roboto.txt',
+  'command-center/vendor/fonts/LICENSE-RobotoMono.txt',
   'command-center/notes.json',
   'command-center/draft-guardrails.json',
   // The page reads only its files[]; names in its documentation strings are reworded (see build).
@@ -49,7 +53,17 @@ export const SANITIZED = Object.freeze([
   'command-center/sources/product_experience.capabilities.json',
 ]);
 
-export const PUBLISHED = Object.freeze([...COPIED, ...SANITIZED].sort());
+/**
+ * Binary files, copied unchanged: no text is read or reworded. The verifier checks each one is byte for
+ * byte its original (SHA-256), since a font cannot be scanned as text.
+ */
+export const BINARY = Object.freeze([
+  'command-center/vendor/fonts/roboto-latin-400-normal.woff2',
+  'command-center/vendor/fonts/roboto-latin-700-normal.woff2',
+  'command-center/vendor/fonts/roboto-mono-latin-400-normal.woff2',
+]);
+
+export const PUBLISHED = Object.freeze([...COPIED, ...BINARY, ...SANITIZED].sort());
 
 /**
  * Files that exist in the repository (or could, such as a captured snapshot) and must never be

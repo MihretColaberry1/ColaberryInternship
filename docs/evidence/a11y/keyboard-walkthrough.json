@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-11-11T03:46:22.810Z",
-  "base_url": "http://127.0.0.1:8765/",
+  "captured_at": "2026-11-15T21:28:43.833Z",
+  "base_url": "http://127.0.0.1:8768/",
   "tools": {
     "playwright-core": "1.48.2",
     "axe-core": "4.10.2"
@@ -66,7 +66,7 @@
     {
       "n": 8,
       "tag": "summary",
-      "text": "Stories: your ticks and the platform verifier (32)",
+      "text": "Stories: your ticks and the platform verifier (36)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
@@ -74,7 +74,7 @@
     {
       "n": 9,
       "tag": "summary",
-      "text": "Release timeline (3)",
+      "text": "Release timeline (1)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
@@ -98,31 +98,31 @@
     {
       "n": 12,
       "tag": "a",
-      "text": "autonomy:R0",
+      "text": "Open a capability's authority record",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
       "n": 13,
-      "tag": "a",
-      "text": "autonomy:R1",
+      "tag": "summary",
+      "text": "The ten rungs, in the owner's words (10)",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
       "n": 14,
-      "tag": "a",
-      "text": "autonomy:R2",
+      "tag": "summary",
+      "text": "Each capability's authority (25)",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
       "n": 15,
-      "tag": "a",
-      "text": "autonomy:R3",
+      "tag": "summary",
+      "text": "Each capability against the ladder, with its ceiling (25)",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
@@ -130,85 +130,13 @@
     {
       "n": 16,
       "tag": "a",
-      "text": "autonomy:R4",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 17,
-      "tag": "a",
-      "text": "autonomy:R5",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 18,
-      "tag": "a",
-      "text": "autonomy:R6",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 19,
-      "tag": "a",
-      "text": "autonomy:R7",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 20,
-      "tag": "a",
-      "text": "autonomy:R8",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 21,
-      "tag": "a",
-      "text": "autonomy:R9",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 22,
-      "tag": "a",
-      "text": "See how the R2 cap would apply",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 23,
-      "tag": "summary",
-      "text": "Each capability's authority (25)",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 24,
-      "tag": "summary",
-      "text": "Each capability against the ladder, with its ceiling (25)",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 25,
-      "tag": "a",
       "text": "Read what autonomy:R1 requires",
       "panel": "behaviour",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
-      "n": 26,
+      "n": 17,
       "tag": "summary",
       "text": "Behaviours written for each rung (10)",
       "panel": "behaviour",
@@ -216,7 +144,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 27,
+      "n": 18,
       "tag": "summary",
       "text": "What autonomy:R1 requires, capability by capability (10)",
       "panel": "behaviour",
@@ -224,7 +152,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 28,
+      "n": 19,
       "tag": "a",
       "text": "How to file a tool request",
       "panel": "governance",
@@ -232,7 +160,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 29,
+      "n": 20,
       "tag": "summary",
       "text": "Change requests (0)",
       "panel": "governance",
@@ -240,7 +168,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 30,
+      "n": 21,
       "tag": "summary",
       "text": "Tool requests (0)",
       "panel": "governance",
@@ -248,7 +176,15 @@
       "outline_style": "solid"
     },
     {
-      "n": 31,
+      "n": 22,
+      "tag": "summary",
+      "text": "What each status means",
+      "panel": "governance",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 23,
       "tag": "summary",
       "text": "Tools the capabilities will need (21)",
       "panel": "governance",
@@ -256,7 +192,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 32,
+      "n": 24,
       "tag": "summary",
       "text": "Guardrails waiting on a human",
       "panel": "governance",
@@ -264,7 +200,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 33,
+      "n": 25,
       "tag": "summary",
       "text": "Decisions recorded in this repo",
       "panel": "governance",
@@ -272,7 +208,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 34,
+      "n": 26,
       "tag": "a",
       "text": "Refresh the data from the portal",
       "panel": "gaps",
@@ -280,7 +216,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 35,
+      "n": 27,
       "tag": "summary",
       "text": "Endpoints with no usable response (2)",
       "panel": "gaps",
@@ -288,7 +224,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 36,
+      "n": 28,
       "tag": "summary",
       "text": "Endpoints read from the platform sync (2)",
       "panel": "gaps",
@@ -296,7 +232,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 37,
+      "n": 29,
       "tag": "summary",
       "text": "Fields left blank because no verified source exists (2)",
       "panel": "gaps",
@@ -304,7 +240,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 38,
+      "n": 30,
       "tag": "summary",
       "text": "Not in the project plan yet",
       "panel": "gaps",
@@ -312,7 +248,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 39,
+      "n": 31,
       "tag": "body",
       "text": "Skip to content Colaberry · Command Center · product_experienceProduct",
       "panel": null,
@@ -320,7 +256,7 @@
       "outline_style": "none"
     },
     {
-      "n": 40,
+      "n": 32,
       "tag": "a",
       "text": "Skip to content",
       "panel": null,
@@ -328,7 +264,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 41,
+      "n": 33,
       "tag": "a",
       "text": "Product Experience & UI/UX agent domain",
       "panel": null,
@@ -336,7 +272,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 42,
+      "n": 34,
       "tag": "a",
       "text": "See what it is allowed to do",
       "panel": "employee",
@@ -344,7 +280,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 43,
+      "n": 35,
       "tag": "summary",
       "text": "The agent, as the endpoint records it (8)",
       "panel": "employee",
@@ -352,7 +288,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 44,
+      "n": 36,
       "tag": "summary",
       "text": "Registry entry, manager access and runs",
       "panel": "employee",
@@ -360,7 +296,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 45,
+      "n": 37,
       "tag": "a",
       "text": "Review a draft capability",
       "panel": "inventory",
@@ -368,7 +304,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 46,
+      "n": 38,
       "tag": "summary",
       "text": "All capabilities, in the order research recorded them (25)",
       "panel": "inventory",
@@ -376,23 +312,23 @@
       "outline_style": "solid"
     },
     {
-      "n": 47,
+      "n": 39,
       "tag": "summary",
-      "text": "Stories: your ticks and the platform verifier (32)",
+      "text": "Stories: your ticks and the platform verifier (36)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
-      "n": 48,
+      "n": 40,
       "tag": "summary",
-      "text": "Release timeline (3)",
+      "text": "Release timeline (1)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
-      "n": 49,
+      "n": 41,
       "tag": "summary",
       "text": "Requirements and which stories cover them (0)",
       "panel": "inventory",
@@ -400,7 +336,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 50,
+      "n": 42,
       "tag": "summary",
       "text": "Schedule and milestones",
       "panel": "inventory",
@@ -408,95 +344,23 @@
       "outline_style": "solid"
     },
     {
-      "n": 51,
+      "n": 43,
       "tag": "a",
-      "text": "autonomy:R0",
+      "text": "Open a capability's authority record",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
-      "n": 52,
-      "tag": "a",
-      "text": "autonomy:R1",
+      "n": 44,
+      "tag": "summary",
+      "text": "The ten rungs, in the owner's words (10)",
       "panel": "ladder",
       "outline_px": 3,
       "outline_style": "solid"
     },
     {
-      "n": 53,
-      "tag": "a",
-      "text": "autonomy:R2",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 54,
-      "tag": "a",
-      "text": "autonomy:R3",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 55,
-      "tag": "a",
-      "text": "autonomy:R4",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 56,
-      "tag": "a",
-      "text": "autonomy:R5",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 57,
-      "tag": "a",
-      "text": "autonomy:R6",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 58,
-      "tag": "a",
-      "text": "autonomy:R7",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 59,
-      "tag": "a",
-      "text": "autonomy:R8",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 60,
-      "tag": "a",
-      "text": "autonomy:R9",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 61,
-      "tag": "a",
-      "text": "See how the R2 cap would apply",
-      "panel": "ladder",
-      "outline_px": 3,
-      "outline_style": "solid"
-    },
-    {
-      "n": 62,
+      "n": 45,
       "tag": "summary",
       "text": "Each capability's authority (25)",
       "panel": "ladder",
@@ -504,7 +368,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 63,
+      "n": 46,
       "tag": "summary",
       "text": "Each capability against the ladder, with its ceiling (25)",
       "panel": "ladder",
@@ -512,7 +376,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 64,
+      "n": 47,
       "tag": "a",
       "text": "Read what autonomy:R1 requires",
       "panel": "behaviour",
@@ -520,7 +384,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 65,
+      "n": 48,
       "tag": "summary",
       "text": "Behaviours written for each rung (10)",
       "panel": "behaviour",
@@ -528,7 +392,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 66,
+      "n": 49,
       "tag": "summary",
       "text": "What autonomy:R1 requires, capability by capability (10)",
       "panel": "behaviour",
@@ -536,7 +400,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 67,
+      "n": 50,
       "tag": "a",
       "text": "How to file a tool request",
       "panel": "governance",
@@ -544,7 +408,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 68,
+      "n": 51,
       "tag": "summary",
       "text": "Change requests (0)",
       "panel": "governance",
@@ -552,7 +416,7 @@
       "outline_style": "solid"
     },
     {
-      "n": 69,
+      "n": 52,
       "tag": "summary",
       "text": "Tool requests (0)",
       "panel": "governance",
@@ -560,10 +424,146 @@
       "outline_style": "solid"
     },
     {
-      "n": 70,
+      "n": 53,
+      "tag": "summary",
+      "text": "What each status means",
+      "panel": "governance",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 54,
       "tag": "summary",
       "text": "Tools the capabilities will need (21)",
       "panel": "governance",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 55,
+      "tag": "summary",
+      "text": "Guardrails waiting on a human",
+      "panel": "governance",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 56,
+      "tag": "summary",
+      "text": "Decisions recorded in this repo",
+      "panel": "governance",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 57,
+      "tag": "a",
+      "text": "Refresh the data from the portal",
+      "panel": "gaps",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 58,
+      "tag": "summary",
+      "text": "Endpoints with no usable response (2)",
+      "panel": "gaps",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 59,
+      "tag": "summary",
+      "text": "Endpoints read from the platform sync (2)",
+      "panel": "gaps",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 60,
+      "tag": "summary",
+      "text": "Fields left blank because no verified source exists (2)",
+      "panel": "gaps",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 61,
+      "tag": "summary",
+      "text": "Not in the project plan yet",
+      "panel": "gaps",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 62,
+      "tag": "body",
+      "text": "Skip to content Colaberry · Command Center · product_experienceProduct",
+      "panel": null,
+      "outline_px": 3,
+      "outline_style": "none"
+    },
+    {
+      "n": 63,
+      "tag": "a",
+      "text": "Skip to content",
+      "panel": null,
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 64,
+      "tag": "a",
+      "text": "Product Experience & UI/UX agent domain",
+      "panel": null,
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 65,
+      "tag": "a",
+      "text": "See what it is allowed to do",
+      "panel": "employee",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 66,
+      "tag": "summary",
+      "text": "The agent, as the endpoint records it (8)",
+      "panel": "employee",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 67,
+      "tag": "summary",
+      "text": "Registry entry, manager access and runs",
+      "panel": "employee",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 68,
+      "tag": "a",
+      "text": "Review a draft capability",
+      "panel": "inventory",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 69,
+      "tag": "summary",
+      "text": "All capabilities, in the order research recorded them (25)",
+      "panel": "inventory",
+      "outline_px": 3,
+      "outline_style": "solid"
+    },
+    {
+      "n": 70,
+      "tag": "summary",
+      "text": "Stories: your ticks and the platform verifier (36)",
+      "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
     }
