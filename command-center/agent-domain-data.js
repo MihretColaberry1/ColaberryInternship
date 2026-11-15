@@ -6,7 +6,8 @@
 // No DOM access, so the same code runs in the browser and under `node --test`.
 import { DATA_FILES, DataLoadError, loadJson } from './data.js';
 import { DOMAIN_KEY, ENDPOINTS } from './agent-domain-facts.js';
-import { redactSnapshot } from './agent-domain-redact.js';
+import { redactSnapshot, withholdRecordIds } from './agent-domain-redact.js';
+import { isAutonomyStage } from './authority.js';
 import { isPerRungRecord } from './verification-model.js';
 
 export const CAPABILITY_FILE = 'command-center/sources/product_experience.capabilities.json';
@@ -111,7 +112,51 @@ export function readPlatformSync(json, lastChanged) {
     endpoints[key] = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null, body: s.body };
   }
   return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints,
-    verdict_reasons: verdictReasons(json.verification), not_shown: sectionsNotShown(json) };
+    verdict_reasons: verdictReasons(json.verification), authority: readAuthority(json) };
+}
+
+const NOT_SYNCED_AUTHORITY = Object.freeze({ status: 'not_synced', error: null, byId: {}, rule: null, size: 0 });
+const textOrNull = (v) => (v == null ? null : typeof v === 'string' ? withholdRecordIds(v) : undefined);
+
+/**
+ * The platform's own authority record for each capability (`authority[]`) and its tool-grant rule
+ * (`authority_rule`), from the synced copy of GET /api/admin/agent-domains/product_experience. Read as
+ * the platform wrote it and never recalculated (the platform owner's decision). Every row is checked;
+ * one malformed row makes the whole section `invalid`, so the page reports the problem instead of
+ * showing some rows and guessing the rest. `approved_autonomy` is deliberately not read: it is not a
+ * record of human approval. AgentDomainCapabilityConfirmation is, and the snapshot does not carry it.
+ */
+export function readAuthority(json) {
+  const invalid = (error) => ({ status: 'invalid', error, byId: {}, rule: null, size: 0 });
+  if (!Array.isArray(json?.authority)) {
+    return { status: 'missing', error: `${PLATFORM_SYNC_FILE} has no authority[] section`, byId: {}, rule: null, size: 0 };
+  }
+  const byId = {};
+  for (const [i, a] of json.authority.entries()) {
+    const id = a?.capability_id;
+    const row = {
+      effective_autonomy: a?.effective_autonomy ?? null,
+      reasons: a?.reasons,
+      max_permitted_autonomy: a?.max_permitted_autonomy ?? null,
+      max_permitted_autonomy_note: textOrNull(a?.max_permitted_autonomy_note),
+      ceiling_reason: textOrNull(a?.ceiling_reason),
+    };
+    const ok = typeof id === 'string' && id.length > 0 && !Object.hasOwn(byId, id)
+      && (row.effective_autonomy === null || isAutonomyStage(row.effective_autonomy))
+      && (row.max_permitted_autonomy === null || isAutonomyStage(row.max_permitted_autonomy))
+      && Array.isArray(row.reasons) && row.reasons.every((x) => typeof x === 'string')
+      && row.max_permitted_autonomy_note !== undefined && row.ceiling_reason !== undefined;
+    if (!ok) return invalid(`${PLATFORM_SYNC_FILE} authority[${i}] is not a well-formed authority row`);
+    byId[id] = row;
+  }
+  const r = json.authority_rule;
+  const rule = r && typeof r === 'object'
+    ? { rule: textOrNull(r.rule), note: textOrNull(r.note), approved_above_r2: r.approved_above_r2, binds_nothing: r.binds_nothing }
+    : null;
+  const ruleOk = rule && typeof rule.rule === 'string' && rule.note !== undefined
+    && Number.isInteger(rule.approved_above_r2) && rule.approved_above_r2 >= 0 && typeof rule.binds_nothing === 'boolean';
+  if (!ruleOk) return invalid(`${PLATFORM_SYNC_FILE} authority_rule is missing or not well-formed`);
+  return { status: 'ok', error: null, byId, rule, size: json.authority.length };
 }
 
 /**
@@ -125,18 +170,6 @@ export function verdictReasons(verification) {
     if (typeof s?.story_id !== 'string' || isPerRungRecord(s.story_id)) continue;
     out[s.story_id] = Array.isArray(s.reasons) ? s.reasons.filter((x) => typeof x === 'string') : [];
   }
-  return out;
-}
-
-/**
- * Sections the snapshot carries that this console deliberately does not display yet, because the
- * platform's capability projection for Panels 3, 4 and 5 is being extended (the platform engineering
- * contact's direction, 2026-11-10). Only their presence and size are read, never their values.
- */
-export function sectionsNotShown(json) {
-  const out = [];
-  if (Array.isArray(json?.authority)) out.push({ section: 'authority[]', size: json.authority.length });
-  if (json?.authority_rule && typeof json.authority_rule === 'object') out.push({ section: 'authority_rule', size: null });
   return out;
 }
 
@@ -164,7 +197,9 @@ export function combineEndpoints(snapshot, sync) {
     if (out[key]?.state !== 'ok') out[key] = e;
   }
   return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null,
-    verdict_reasons: sync?.verdict_reasons ?? {}, not_shown: sync?.not_shown ?? [] } };
+    verdict_reasons: sync?.verdict_reasons ?? {},
+    authority: sync?.authority
+      ?? (sync?.status === 'invalid' ? { ...NOT_SYNCED_AUTHORITY, status: 'invalid', error: sync.error } : NOT_SYNCED_AUTHORITY) } };
 }
 
 export async function loadAgentDomainData(options = {}) {

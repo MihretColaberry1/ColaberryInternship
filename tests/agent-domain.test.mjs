@@ -38,7 +38,7 @@ function diskFetch(snapshot = null, { sync = true } = {}) {
 
 async function realRows() {
   const d = await loadAgentDomainData({ fetchImpl: diskFetch() });
-  return { d, rows: capabilityRows(d.source.matrix) };
+  return { d, rows: capabilityRows(d.source.matrix, { authority: d.snapshot.sync.authority }) };
 }
 
 const snap = (entries) => ({ schema: SNAPSHOT_SCHEMA, captured_at: '2026-10-31T22:00:00Z', snapshots: entries });
@@ -60,14 +60,18 @@ test('rows keep the order the research recorded them in', async () => {
   assert.deepEqual(rows.map((r) => r.id), d.source.matrix.capabilities.map((c) => c.capability_id));
 });
 
-test('with no approval recorded, authority is effectiveAuthority() of the starting rung: autonomy:R0, never the ceiling', async () => {
-  const { rows } = await realRows();
+test('authority comes from the platform row with the same capability_id, never from the research file or a default', async () => {
+  const { d, rows } = await realRows();
+  const json = JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8'));
+  const byId = Object.fromEntries(json.authority.map((a) => [a.capability_id, a]));
   for (const r of rows) {
-    assert.equal(r.approved, null, r.id);
-    assert.equal(r.authority.effective_autonomy, 'autonomy:R0', r.id);
-    assert.ok(!r.authority.reasons.includes('no_tool_grants'), r.id);
-    assert.notEqual(r.authority.effective_autonomy, r.ceiling);
+    assert.equal(r.platform.effective_autonomy, byId[r.id].effective_autonomy, r.id);
+    assert.deepEqual(r.platform.reasons, byId[r.id].reasons, r.id);
+    assert.equal(r.platform.max_permitted_autonomy, byId[r.id].max_permitted_autonomy, r.id);
+    assert.equal('authority' in r || 'approved' in r || 'hypothetical' in r, false, `${r.id} carries no calculated authority`);
   }
+  // With no platform authority section, no row has authority at all: nothing is filled in.
+  for (const r of capabilityRows(d.source.matrix)) assert.equal(r.platform, null, r.id);
 });
 
 test('human_decision is read as a strict boolean from the source file', async () => {

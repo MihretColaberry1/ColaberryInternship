@@ -1,13 +1,17 @@
 // Panel "The autonomy ladder" (brief panel 3): where is this going?
-// Criterion 3: all ten rungs in the owner's words, each ceiling marked. Criterion 4: the authority
-// effectiveAuthority() returns, and the no_tool_grants rule with the number it constrains, in words.
+// Criterion 3: all ten rungs in the owner's words, each ceiling marked against the rung it stops at.
+// Criterion 4: each capability's authority and the no_tool_grants rule, exactly as the platform recorded
+// them (`authority[]` and `authority_rule` in .colaberry/agent-domain.json), never recalculated here.
+// Human confirmation is a separate platform record the snapshot does not carry, so it is shown as
+// not available rather than inferred.
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
-import { AUTONOMY_STAGES } from './authority.js';
-import { AUTHORITY_WORDS, R8_UNREACHABLE, TOOL_RULE } from './agent-domain-facts.js';
-import { authorityView, ladderCell, toolRuleStatus } from './agent-domain-model.js';
-import { capabilitySourceNote, endpointTags, platformTag, sourceFileTag, unavailableTag } from './agent-domain-ui.js';
-import { consolePanel, loadingBlock, errorBlock } from './console-ui.js';
+import { AUTONOMY_STAGES, autonomyIndex } from './authority.js';
+import { AUTHORITY_WORDS, ENDPOINTS, R8_UNREACHABLE, TOOL_RULE } from './agent-domain-facts.js';
+import { authorityView, ladderCell, platformLadderRow, toolRuleStatus } from './agent-domain-model.js';
+import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
+import { PLATFORM_SYNC_FILE } from './agent-domain-data.js';
+import { consolePanel, loadingBlock, errorBlock, notAvailable } from './console-ui.js';
 import { capabilityHref } from './panel-inventory.js';
 
 export const rungHref = (stage) => `#/rung/${encodeURIComponent(stage)}`;
@@ -17,6 +21,10 @@ const CELL = {
   above_ceiling: 'unreachable', unreachable_by_fact: 'unreachable by fact', no_ceiling: 'no ceiling recorded',
 };
 
+/** The tag for a value from the platform's own authority record, as synced into this repository. */
+export const authorityTag = () => valueTag(ENDPOINTS.domain, { origin: 'platform_sync' });
+
+/** Rows must already carry the platform's ceiling (platformLadderRow): the grid draws what it is given. */
 export function ladderGrid(rows) {
   return h('div', { class: 'table-wrap', tabindex: '0' }, h('table', { class: 'ladder' },
     h('caption', { class: 'visually-hidden' }, 'Each capability against the ten rungs'),
@@ -32,79 +40,134 @@ export function ladderGrid(rows) {
       }))))));
 }
 
-/** Criterion 4: the rule, the number it constrains (in words when zero), and why. Counted, never asserted. */
-export function toolRuleBlock(s) {
-  const verdict = s.held > 0
-    ? `${AUTHORITY_WORDS.cap_holding.replace('this capability', `${s.held} of ${s.total} capabilities`)}.`
-    : `${AUTHORITY_WORDS.cap_idle}: it holds 0 of ${s.total} capabilities.`;
-  return h('div', { class: 'tool-rule', role: 'note' },
-    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, 'no_tool_grants'), ' ', platformTag(TOOL_RULE.source.path, TOOL_RULE.source.commit)),
-    h('p', {}, TOOL_RULE.rule),
-    h('p', {}, h('strong', {}, verdict)),
-    s.held > 0 ? null : h('ul', {},
-      h('li', {}, `${s.approved_above_r2} of ${s.total} have a level above autonomy:R2 approved by a human (${s.approved} have any approved level at all).`),
-      h('li', {}, `${s.starting_r0} of ${s.total} are at their starting rung, autonomy:R0; ${s.starting_above_r2} start above autonomy:R2.`),
-      h('li', {}, s.grants_known ? `${s.with_tools} of ${s.total} have a tool granted.`
-        : 'Tool grants were not captured. That does not change the verdict: the rule acts only on an approved level above autonomy:R2, and none exists.'),
-      h('li', {}, 'A ceiling above R2 is a proposal, not an approval, so the rule does not act on it.')),
-    h('p', { class: 'muted' }, 'Nothing here is invented to make the rule fire. It binds only when a named human approves a level above autonomy:R2 while no tools are granted.'));
+/** One line saying where the authority values came from, and when the platform last rewrote them. */
+export function authorityReadLine(sync) {
+  return h('p', { class: 'reads' }, authorityTag(),
+    ` The platform's own authority record (authority[] and authority_rule) in its synced copy of GET ${ENDPOINTS.domain}, `
+    + `${lastChangedWords(sync?.last_changed ?? null)}. Read from this repository as the platform wrote it; this page did not call `
+    + 'the endpoint and does not recalculate anything.');
 }
 
-/** Each capability's current rung, approval and constraint: the same words as its detail page. */
+/** The rule's verdict in words, also when zero, and plainly when the platform's data disagrees with itself. */
+export function toolRuleVerdict(s) {
+  // Field names go in <code>, which may wrap anywhere, so a long name never forces sideways scrolling at 320 px.
+  return !s.consistent
+    ? ["The platform's data disagrees with itself: ", h('code', {}, 'authority_rule.binds_nothing'), ` is ${s.binds_nothing}, but ${s.held} of ${s.recorded} `
+      + 'capabilities carry the reason no_tool_grants. Both are shown as recorded; this page does not choose between them.']
+    : s.held > 0
+      ? `${AUTHORITY_WORDS.cap_holding.replace('this capability', `${s.held} of ${s.total} capabilities`)}.`
+      : `${AUTHORITY_WORDS.cap_idle}: it holds 0 of ${s.total} capabilities.`;
+}
+
+/** Criterion 4: the platform's rule, its verdict, the counts behind it, and the platform's own note. */
+export function toolRuleBlock(s) {
+  return h('div', { class: 'tool-rule', role: 'note' },
+    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, TOOL_RULE.reason), ' ', authorityTag(), ' ', platformTag(TOOL_RULE.source.path, TOOL_RULE.source.commit)),
+    h('p', {}, s.rule),
+    h('p', {}, h('strong', {}, toolRuleVerdict(s))),
+    h('ul', {},
+      h('li', {}, `The platform records ${s.approved_above_r2} ${s.approved_above_r2 === 1 ? 'capability' : 'capabilities'} with a level above autonomy:R2 (`,
+        h('code', {}, 'authority_rule.approved_above_r2'), ').'),
+      h('li', {}, `${s.held} of ${s.recorded} capabilities carry the reason no_tool_grants in the platform's authority record.`),
+      s.recorded < s.total ? h('li', {}, `${s.total - s.recorded} of ${s.total} capabilities have no row in the platform's authority record.`) : null),
+    s.note ? h('p', { class: 'muted' }, 'The platform\'s note: ', s.note) : null);
+}
+
+/** Each capability's current rung, confirmation and constraint: the same words as its detail page. */
 function authorityTable(rows) {
   return table([
     { label: 'Capability', cell: (r) => h('a', { href: capabilityHref(r.id) }, r.name) },
-    { label: 'Current rung (effectiveAuthority())', cell: (r) => h('code', {}, authorityView(r).current ?? 'none') },
-    { label: 'Human approval', cell: (r) => authorityView(r).approval },
+    { label: 'Current rung (platform)', cell: (r) => (r.platform ? h('code', {}, authorityView(r).current ?? 'none recorded') : AUTHORITY_WORDS.not_in_snapshot) },
+    { label: 'Starting rung?', cell: (r) => startingWords(authorityView(r)) },
+    { label: 'Human confirmation', cell: () => ['Not available ', unavailableTag()] },
     { label: 'What holds it back', cell: (r) => authorityView(r).constraint },
-    { label: 'Reasons returned', cell: (r) => (r.authority.reasons.length ? r.authority.reasons.map((x) => h('div', {}, h('code', {}, x))) : '—') },
+    { label: 'Reasons (platform)', cell: (r) => (r.platform?.reasons.length ? r.platform.reasons.map((x) => h('div', {}, h('code', {}, x))) : '—') },
   ], rows);
 }
 
-/** All ten rungs, in the owner's words, with the ceilings that stop at each (criterion 3). */
+/** "Starting rung", or which rung it started at; the starting rung is the research file's. */
+export function startingWords(v) {
+  if (v.isStarting == null) return '—';
+  return v.isStarting ? AUTHORITY_WORDS.starting : `${AUTHORITY_WORDS.not_starting} (started at ${v.starting})`;
+}
+
+/** All ten rungs, in the owner's words, with the platform's ceilings that stop at each (criterion 3). */
 function rungList(rows, rungs) {
-  return h('ol', { class: 'rung-list' }, rungs.map((g) => h('li', {},
-    h('a', { href: rungHref(g.stage), class: 'rung-code' }, h('code', {}, g.stage)),
-    h('span', { class: 'rung-meaning' }, g.meaning),
-    h('span', { class: 'rung-marks' },
-      g.ceilings_here.length ? badge('warn', `Ceiling for ${g.ceilings_here.length} of ${rows.length}`) : null,
-      g.unreachable_by_fact ? badge('error', 'Unreachable by fact for every capability')
-        : g.above_ceiling ? h('span', { class: 'muted' }, `Unreachable for ${g.above_ceiling} of ${rows.length} (above their ceiling)`) : null))));
+  const ceilings = rows.map((r) => r.platform?.max_permitted_autonomy ?? null);
+  return h('ol', { class: 'rung-list' }, rungs.map((g) => {
+    const i = autonomyIndex(g.stage);
+    const here = ceilings.filter((c) => c === g.stage).length;
+    const above = ceilings.filter((c) => c != null && autonomyIndex(c) < i).length;
+    return h('li', {},
+      h('a', { href: rungHref(g.stage), class: 'rung-code' }, h('code', {}, g.stage)),
+      h('span', { class: 'rung-meaning' }, g.meaning),
+      h('span', { class: 'rung-marks' },
+        here ? badge('warn', `Ceiling for ${here} of ${rows.length}`) : null,
+        g.unreachable_by_fact ? badge('error', 'Unreachable by fact for every capability')
+          : above ? h('span', { class: 'muted' }, `Unreachable for ${above} of ${rows.length} (above their ceiling)`) : null));
+  }));
 }
 
 /** The single phrase for the console headline: identical to the per-row and detail-page wording. */
 function authorityHeadline(rows) {
   const views = rows.map(authorityView);
-  const same = views.every((v) => v.current === views[0].current && v.approval === views[0].approval);
-  if (!same) return `Current rungs differ by capability; open "Each capability's authority" for each one.`;
-  return [h('code', {}, views[0].current ?? 'none'), ` for all ${rows.length}: ${views[0].approval}.`];
+  const same = views.every((v) => v.current === views[0].current && v.isStarting === views[0].isStarting);
+  if (!same || views[0].current == null) return 'Current rungs differ by capability; open "Each capability\'s authority" for each one.';
+  return [h('code', {}, views[0].current), ` for all ${rows.length}: ${startingWords(views[0])} — ${AUTHORITY_WORDS.confirmation_short}.`];
 }
 
-export function renderLadderPanel(rows, rungs, { order, sourceState = 'ready', sourceError } = {}) {
-  const state = sourceState !== 'ready' ? sourceState : rows.length === 0 ? 'empty' : 'ready';
-  const status = toolRuleStatus(rows);
-  const capped = rows.find((r) => r.hypothetical.reasons.includes('no_tool_grants'));
+function ladderState(rows, sourceState, authority) {
+  if (sourceState !== 'ready') return sourceState;
+  if (!authority || authority.status === 'not_synced' || authority.status === 'missing') return 'not_available';
+  if (authority.status !== 'ok') return 'error';
+  return rows.length === 0 ? 'empty' : 'ready';
+}
+
+function stateBody(state, { sourceError, authority }) {
+  if (state === 'loading') return loadingBlock();
+  if (state === 'not_available') {
+    return notAvailable({
+      missing: `The platform's authority record (authority[] and authority_rule) in ${PLATFORM_SYNC_FILE}.`,
+      waitingFor: `The platform to sync ${PLATFORM_SYNC_FILE} into this repository with its authority section. Nothing is calculated in its place.`,
+      willShow: "Each capability's current rung, reasons and ceiling as the platform recorded them, and the no_tool_grants rule's verdict.",
+      action: { href: '#/guide/refresh', label: 'How to refresh the data' },
+    });
+  }
+  if (state === 'error') {
+    const what = authority && authority.status !== 'ok' ? "The platform's authority record could not be used." : 'The capability source file could not be read.';
+    return errorBlock({ what, why: authority?.error ?? sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } });
+  }
+  return null;
+}
+
+export function renderLadderPanel(rows, rungs, { order, sourceState = 'ready', sourceError, authority = null, sync = null } = {}) {
+  const state = ladderState(rows, sourceState, authority);
+  const status = toolRuleStatus(rows, authority);
+  const ready = state === 'ready';
   return consolePanel({
     id: 'ladder', order, state,
-    headline: state === 'ready' ? authorityHeadline(rows) : null,
+    headline: ready ? authorityHeadline(rows) : null,
     title: 'The autonomy ladder',
     question: 'Where is this going?',
-    glance: state === 'ready' ? [
+    glance: ready ? [
       ['Tool-grant cap', status.held > 0 ? AUTHORITY_WORDS.cap_holding : AUTHORITY_WORDS.cap_idle],
       ['Capabilities it holds at autonomy:R2', String(status.held)],
+      ['Human confirmation', ['Not available from the platform yet ', unavailableTag()]],
       ['Your employee\'s rung', ['Unknown: no source records an agent\'s rung on this ladder ', unavailableTag()]],
       ['autonomy:R8', 'Unreachable by fact: no agent handoff exists'],
     ] : null,
-    body: state === 'ready' ? [toolRuleBlock(status), h('h3', { class: 'section-title' }, "The ten rungs, in the owner's words"), rungList(rows, rungs)]
-      : state === 'loading' ? loadingBlock()
-        : state === 'error' ? errorBlock({ what: 'The capability source file could not be read.', why: sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } }) : null,
-    action: state === 'ready' && capped ? { href: capabilityHref(capped.id), label: 'See how the R2 cap would apply' } : null,
-    reads: [endpointTags(3), platformTag('autonomyLadder.ts'), ' ', sourceFileTag(), ' ', platformTag(R8_UNREACHABLE.source.path)],
-    details: state === 'ready' ? [
-      { title: "Each capability's authority", count: rows.length, body: [capabilitySourceNote(), authorityTable(rows)] },
+    body: ready ? [toolRuleBlock(status), h('h3', { class: 'section-title' }, "The ten rungs, in the owner's words"), rungList(rows, rungs)]
+      : stateBody(state, { sourceError, authority }),
+    action: ready ? { href: capabilityHref(rows[0].id), label: "Open a capability's authority record" } : null,
+    reads: [endpointTags(3), authorityTag(), ' ', platformTag('autonomyLadder.ts'), ' ', sourceFileTag(), ' ', platformTag(R8_UNREACHABLE.source.path)],
+    details: ready ? [
+      { title: "Each capability's authority", count: rows.length, body: [authorityReadLine(sync),
+        h('p', { class: 'muted source-note' }, sourceFileTag(), ' Capability names and starting rungs come from the pinned research file. ',
+          sourceTag('unavailable', 'no verified source'), ' Human confirmation is a separate platform record (AgentDomainCapabilityConfirmation) that the platform does not expose yet.'),
+        authorityTable(rows)] },
       { title: 'Each capability against the ladder, with its ceiling', count: rows.length, body: [
-        h('p', { class: 'muted' }, 'Rungs above a ceiling are unreachable for that capability, not future work. Each ceiling is proposed in the draft research with its reason on record; no one has approved it yet.'),
-        ladderGrid(rows)] },
+        h('p', { class: 'muted' }, 'Ceilings are the platform\'s max_permitted_autonomy for each capability. Rungs above a ceiling are unreachable for that capability, not future work.'),
+        ladderGrid(rows.map(platformLadderRow))] },
     ] : [],
   });
 }

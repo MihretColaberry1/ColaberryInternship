@@ -3,7 +3,7 @@
 // (outcomes, roles, systems, data tables) are listed here as named gaps, not as empty pages.
 import { h } from './dom.js';
 import { table } from './ui.js';
-import { AGENT_LINK_SOURCE, ENDPOINTS, NO_APPROVALS_RECORDED, R8_UNREACHABLE, REGISTRY_ENTRY } from './agent-domain-facts.js';
+import { AGENT_LINK_SOURCE, BEHAVIOUR_EXPOSURE, ENDPOINTS, R8_UNREACHABLE, REGISTRY_ENTRY } from './agent-domain-facts.js';
 import { toolGrantWords } from './agent-domain-model.js';
 import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
 import { consolePanel, loadingBlock } from './console-ui.js';
@@ -31,17 +31,16 @@ export function aheadItems(rows, reasons = {}, names = []) {
 }
 
 /**
- * Decision D3, second item: an outstanding data-integration limitation, not an agent failure. Names the
- * snapshot sections the console deliberately does not display yet; never reads their values.
+ * Two platform exposure gaps, not agent failures (the platform owner's confirmation, 2026-11-14): the
+ * records exist on the platform, but nothing serves them to this repository yet. Named, never filled in.
  */
-export function integrationItem(notShown = []) {
-  if (!notShown.length) return null;
-  const list = notShown.map((s) => (s.size == null ? s.section : `${s.section} (${s.size} rows)`)).join(' and ');
-  return [syncTag(),
-    `Outstanding data-integration limitation, not an agent failure: the platform snapshot already carries ${list}, `
-    + 'but this console does not display them yet. The platform\'s capability projection for the autonomy ladder, per-rung behaviour '
-    + 'and governance panels is being extended; those panels will read the updated structure once it is confirmed. Until then the '
-    + 'autonomy ladder computes authority from the pinned research file, as it says.'];
+export function exposureItems() {
+  return [
+    [unavailableTag(), 'Human confirmation of each capability is a separate platform record (AgentDomainCapabilityConfirmation: who '
+      + 'confirmed, with evidence, and no verdict or autonomy column). The platform does not expose it yet, so this console shows '
+      + 'confirmation as not available and never infers it from another field, approved_autonomy included.'],
+    [sourceFileTag(), `${BEHAVIOUR_EXPOSURE.statement} The behaviours shown are the pinned file's, with its commit.`],
+  ];
 }
 
 const ENDPOINT_WORDS = { not_captured: 'Not captured yet: left blank.', loading: 'Loading…' };
@@ -70,7 +69,7 @@ export function agentGapItem(agent) {
  * The gaps, in a fixed order: the first six are capability and agent gaps (renderGapsPanel keeps items
  * 0 and 3 onward when the source file is missing), then the two decision D3 items.
  */
-export function gapItems(gaps, { rows = [], reasons = {}, names = [], notShown = [] } = {}) {
+export function gapItems(gaps, { rows = [], reasons = {}, names = [] } = {}) {
   return [
     [platformTag(R8_UNREACHABLE.source.path), R8_UNREACHABLE.statement],
     [sourceFileTag(), `${gaps.drafts.count} of ${gaps.drafts.total} capabilities are draft. A draft capability has not been agreed by anyone.`],
@@ -78,11 +77,10 @@ export function gapItems(gaps, { rows = [], reasons = {}, names = [], notShown =
       ? `${gaps.no_behaviour.length} capabilities have an empty release_behaviour[]: no next rung is defined, and defining it is the first piece of work on each.`
       : `None of the ${gaps.drafts.total} capabilities has an empty release_behaviour[]. Every one has at least one rung written, all of it draft.`],
     agentGapItem(gaps.agent),
-    [platformTag(NO_APPROVALS_RECORDED.source.path), NO_APPROVALS_RECORDED.statement],
     // Decision D4: neutral words; no name, no account records.
     [platformTag(REGISTRY_ENTRY.source.path), REGISTRY_ENTRY.blocker],
     ...aheadItems(rows, reasons, names),
-    integrationItem(notShown),
+    ...exposureItems(),
   ].filter(Boolean);
 }
 
@@ -99,7 +97,7 @@ function planGapTable(project) {
 
 export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, names = [], sync = null } = {}) {
   const state = sourceState === 'loading' ? 'loading' : 'ready';
-  const extra = { rows: project?.model?.rows ?? [], reasons: sync?.verdict_reasons ?? {}, names, notShown: sync?.not_shown ?? [] };
+  const extra = { rows: project?.model?.rows ?? [], reasons: sync?.verdict_reasons ?? {}, names };
   const ahead = ticksAheadOfVerifier(extra.rows);
   // With no source file, capability counts would read "0 of 0": say the file is missing instead.
   const items = sourceState === 'ready' ? gapItems(gaps, extra)

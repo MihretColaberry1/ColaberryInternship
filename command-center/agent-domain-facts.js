@@ -72,33 +72,41 @@ export const AGENT_LINK_SOURCE = Object.freeze({
     + 'column. Linking grants nothing: it does not change the agent\'s enabled state, autonomy level or tools.',
 });
 
-/** coverageMatrix.ts rowFor(): effective_authority is null on every row, because nothing is approved. */
-export const NO_APPROVALS_RECORDED = Object.freeze({
-  source: cite('backend/src/services/agentDomain/coverageMatrix.ts'),
-  statement: 'No approved autonomy is recorded for any capability. The platform sets effective_authority to null on every coverage row.',
-});
-
 /**
- * The tool throttle in effectiveAuthority() (autonomyLadder.ts). Criterion 4 as Ali Muwwakkil
- * confirmed it on 2026-11-02: show the rule, and say whether it constrains anything and why.
- * Never fabricate a capability above R2 to make the rule fire.
+ * The tool throttle in the platform's effectiveAuthority() (autonomyLadder.ts). Criterion 4: show the
+ * rule and whether it constrains anything. The rule's wording, its verdict and every capability's
+ * reasons are the platform's own (`authority_rule` and `authority[]` in .colaberry/agent-domain.json);
+ * this page never recalculates them. Only where the rule is defined is cited here.
  */
 export const TOOL_RULE = Object.freeze({
   source: cite('backend/src/services/agentDomain/autonomyLadder.ts'),
-  rule: 'When a capability\'s approved level is above autonomy:R2 and no tools are granted, effectiveAuthority() '
-    + 'holds it at autonomy:R2, with the reason no_tool_grants. It acts on the approved level, not on the '
-    + 'starting rung or the ceiling the research proposes.',
+  reason: 'no_tool_grants',
 });
 
 /**
- * Criterion 4 wording, exactly as Mohammed Abdul Aleem approved it on 2026-11-03 (Option 1). Used
- * verbatim on the console and on every capability detail page.
+ * Criterion 4 wording. "Starting rung" and the two cap phrases are Mohammed Abdul Aleem's (2026-11-03).
+ * Human approval is a separate platform record, AgentDomainCapabilityConfirmation, which the snapshot
+ * does not carry yet (the platform owner's confirmation), so the page says it is not available rather
+ * than inferring it from any other field. Used verbatim on the console and on every capability page.
  */
 export const AUTHORITY_WORDS = Object.freeze({
-  not_approved: 'Starting rung — no human approval yet',
-  approved: 'Approved by a named human at',
+  starting: 'Starting rung',
+  not_starting: 'Not the starting rung',
+  confirmation_unavailable: 'Not available: the platform does not expose human confirmation records (AgentDomainCapabilityConfirmation) yet',
+  confirmation_short: 'human confirmation not available from the platform yet',
   cap_idle: 'Tool-grant cap in force; constrains nothing today',
   cap_holding: 'Tool-grant cap in force; holding this capability at autonomy:R2',
+  not_in_snapshot: 'Not in the platform snapshot',
+});
+
+/**
+ * Per-rung behaviours: the platform holds all of them in its release ladder and capability records, but
+ * no route serves them yet (the platform owner's confirmation). Until one does, the page reads them from
+ * the pinned capability file and says so; it never makes a second copy.
+ */
+export const BEHAVIOUR_EXPOSURE = Object.freeze({
+  statement: 'The platform holds these behaviours in its release ladder and capability records, but no route serves them yet, '
+    + 'so they are read from the pinned capability file.',
 });
 
 /** agentDomainCommandCenterStory.ts: why autonomy:R8 cannot be reached. */

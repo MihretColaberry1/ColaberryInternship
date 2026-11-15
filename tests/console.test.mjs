@@ -81,12 +81,14 @@ test('today, from the platform sync: Panel 1 is ready, Panel 5 is empty (no requ
   for (const id of ['employee', 'governance']) assert.equal(findAll(panels[id], hasClass('not-available')).length, 0, id);
 });
 
-test('with neither a snapshot nor the platform sync: Panels 1 and 5 are "Not available", the other four are ready', async () => {
+test('with neither a snapshot nor the platform sync: Panels 1, 3 and 5 are "Not available", the other three are ready', async () => {
+  // Panel 3 reads the platform's authority record from the synced file (2026-11-14), so without the
+  // sync it says what is missing rather than calculating anything.
   const { domain, project } = await realInputs({ sync: false });
   const panels = byId(renderPanels(domain, project));
   const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
-  assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'ready', ladder: 'ready', behaviour: 'ready', gaps: 'ready' });
-  for (const id of ['employee', 'governance']) {
+  assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'ready', ladder: 'not_available', behaviour: 'ready', gaps: 'ready' });
+  for (const id of ['employee', 'ladder', 'governance']) {
     const block = findAll(panels[id], hasClass('not-available'));
     assert.equal(block.length, 1, id);
     for (const word of ['Missing', 'Waiting for', 'Will show']) assert.match(block[0].textContent, new RegExp(word), id);
