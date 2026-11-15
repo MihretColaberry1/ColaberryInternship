@@ -2,7 +2,7 @@
 
 **Capability:** `product_experience.design_token_drift_audit` · **Autonomy:** R0 (definition only)
 **Accountable manager:** Mohammed Abdul Aleem · **DRI:** Ali Muwwakkil
-**Prepared by:** Mihret Netsereab · first draft 2026-10-30 · **revision 2, 2026-10-30**
+**Prepared by:** Mihret Netsereab · first draft 2026-10-30 · revision 2, 2026-10-30 · **revision 3, 2026-11-02, completed 2026-11-04**
 **Status:** **draft, ready for review, not signed.** This document is the thing the R0 criterion
 asks Mohammed Abdul Aleem to sign. Until Aleem's sign-off is recorded in [Sign-off](#sign-off),
 the criterion stays unpassed and the capability stays `draft`. It can be reviewed and signed by
@@ -33,6 +33,35 @@ wrong. The platform loads **three token layers**, and the last one reassigns 18 
 collision table, the spacing scale, the file scope, the chart rule and the stop conditions on the
 **effective** values. It also adds six open questions (OQ1–OQ6) that have to be answered before
 sign-off.
+
+### What changed in revision 3
+
+Ali Muwwakkil (DRI) answered the architecture and token-cascade questions by email on 2026-11-02
+[S28]. Ali answered only those, and left every policy question to Aleem. Revision 3 records:
+
+- **The cascade order is the contract, in load order** (1.1). Ali confirmed it, and the order was
+  re-read at platform `ebe81e68` on 2026-11-02: unchanged.
+- **The audited files are the ones we author:** `tokens.css`, `brand-bridge.css` and the component
+  CSS (2.2). The vendored `frontend/src/colaberry/` stays excluded from the violation inventory.
+- **A new, separate output: reconciliation items** (3.7). A mismatch between one of our layers and
+  the vendored layer is recorded as a reconciliation item, not as a violation.
+- **Light theme only in the first pass.** Dark is left unclassified, and the report says so (2.3).
+- **Ali's advice** is now filled in on OQ2, OQ5 and the theme question (§8). **Aleem's approval is
+  still pending on every row.** Ali's answer is the DRI's technical direction, not Aleem's sign-off.
+
+Completing revision 3 (2026-11-04) closed the remaining gaps against Ali's answer. These are
+Mihret's working decisions, with Aleem's approval pending:
+
+- **Spacing gaps are now their own open question, OQ7, for Aleem** (§5, §8). Ali left them to
+  Aleem. Until Aleem answers, spacing is **reported but not ratcheted** (2.3, 6).
+- **Dark-only values are counted on their own line**, tagged `dark-only` and kept out of the
+  ratcheted drift count (2.3, 3.2, 6), so "unclassified until confirmed" adds no false drift.
+- **D0 is now presented as Ali-confirmed technical guidance for Aleem to acknowledge,** not as a
+  choice between three contracts (§1.4, Decisions).
+- **Who owns the vendored copy's local edits stays Unknown.** It's on neither Ali's list nor the
+  list of questions Ali left to Aleem (OQ5, D8).
+- **Ali's list doesn't shrink the sign-off.** It names what's still genuinely open. Aleem's
+  sign-off still covers the whole scope, including D1, D3, D4, D6 and D7 (§8, Sign-off).
 
 ---
 
@@ -87,6 +116,22 @@ layer gave 208. The 215 figure is the one this definition uses.
 Later layers win when a name is declared twice. The bridge says this is deliberate: it is
 "imported LAST … so these mappings win every name collision" and "Remove this one import to fully
 revert the rebrand" (`brand-bridge.css:10-14`).
+
+**The precedence, stated in the direction people get wrong** (confirmed by Ali Muwwakkil [S28];
+`index.tsx` re-read at platform `ebe81e68` on 2026-11-02, lines unchanged):
+
+1. `index.tsx:22` loads `styles/global.css`, which begins with `@import './tokens.css'`. **Our
+   `tokens.css` is first, so it loses every collision.**
+2. `index.tsx:24` loads `colaberry/styles.css`, the vendored design system. It `@import`s its own
+   fonts, colours, typography, spacing and base token files, and **overrides `tokens.css`**.
+3. `index.tsx:25` loads `styles/brand-bridge.css`. **It overrides both, and is the final word on
+   any token that more than one layer defines.**
+
+(`index.tsx:23` loads `responsive.css`, which declares no `:root` tokens.)
+
+The intuitive reading is the reverse: that `tokens.css` is canonical and the vendored system sits
+downstream of it. **It is not.** An audit that reads a value from `tokens.css` will sometimes be
+reading a value the page never uses. Anyone extending this audit should start from this order.
 
 ### 1.2 What the bridge and the DS change (Verified)
 
@@ -169,6 +214,16 @@ layer the audit treats as the contract is OQ2.**
 what renders, so it is the only definition under which "this raw value equals a token" is
 true on screen. Which *name* a fix should use is a separate question (section 3.3).
 
+**Ali's advice (2026-11-02, [S28]):** "the three layer cascade is the right contract for the
+audit", in the load order of 1.1. Whether the platform is retiring the legacy layer was not
+answered.
+
+**So D0 is presented to Aleem as confirmed technical guidance to acknowledge, not as an open
+choice** (Mihret's working decision). The "DS only" and "`tokens.css` only" alternatives are no
+longer offered, because Ali confirmed that either would misclassify what renders. Aleem can still
+disagree in writing, and that answer would be recorded. **Aleem's acknowledgement of D0 is still
+pending.**
+
 ---
 
 ## 2. Scope
@@ -206,7 +261,22 @@ definition has to state it and Aleem has to sign it. Neither source defines "the
 there would either diverge further from upstream or be overwritten by the next copy. That's the
 same reasoning the story applies to `apps/*/src/assets/design` [S3].
 **What is not settled:** the copy already carries local edits (1.3) that no upstream owns.
-**Who owns those edits, and whether the folder should be excluded at all, is OQ5.**
+**Who owns those edits is OQ5.**
+
+**Ali's advice (2026-11-02, [S28]):** keep `frontend/src/colaberry/` excluded from the violation
+inventory. "It is upstream, we do not author it", and a report that lists upstream values as
+violations gives "a long list you cannot act on". **Audit what we author: `tokens.css`,
+`brand-bridge.css` and the component CSS.** The cascade is the reason the vendored layer matters,
+not a sign that we own it.
+
+**How the authored token files are audited (Mihret's working decision, following [S27]):**
+- `tokens.css` and the bridge's `:root` block are still the contract, so their own declarations are
+  not reported as hard-coded values. They are audited **against the vendored layer**: any name the
+  two declare with different effective values is a **reconciliation item** (3.7).
+- `brand-bridge.css` after line 84 and all component CSS are scanned for violations as in the
+  table above.
+- The vendored files are read, never scanned: they are needed to compute effective values (1.1)
+  and to find reconciliation items.
 
 ### 2.3 Which values (decision D2)
 
@@ -224,8 +294,11 @@ The outcome names "a colour **or spacing** value" [S1].
   - legacy: 0.25, 0.5, 1, 1.5, 2 and 3 rem. That is 4, 8, 16, 24, 32 and 48 px, **assuming a
     16 px root font size (Unknown, not verified)**. Every legacy step is also a DS step.
 
-  With 14 steps and a 4 px grid (DS `BRAND.md:184`), spacing is ratcheted with colour, but as a
-  **separate line** so the two numbers can be driven down independently.
+  With 14 steps and a 4 px grid (DS `BRAND.md:184`), spacing is reported as its own **separate
+  line**, so it can be driven down independently of colour. **It is not ratcheted yet.** How
+  spacing gaps (off-scale values) are handled is Aleem's decision (OQ7, §5), and Ali left it to
+  Aleem [S28]. Until Aleem answers, the spacing line is **reported, not ratcheted** (Mihret's
+  working decision).
 - **Spacing values that match more than one token (Proposal, part of D3).** Because every legacy
   step equals a DS step, six values have two names each:
 
@@ -255,6 +328,16 @@ The outcome names "a colour **or spacing** value" [S1].
   (`VisitorSankeyFlow.tsx`, `journeyPalette.ts`). **Whether admin pages ever render dark is
   Unknown.** A value that matches only a dark-theme token is reported as `unclassified`, not as a
   match.
+
+  **Ali's advice (2026-11-02, [S28]): cover the light theme only in the first pass, leave dark
+  unclassified, and say so in the report.** Dark mode here is not a straight inversion, so
+  classifying it from light values "would produce confident wrong answers". Every report therefore
+  carries the line: "Dark theme: not classified in this pass."
+
+  **How dark-only values are counted (Mihret's working decision):** they stay `unclassified`, as
+  Ali advised, but with the tag `dark-only`. They're reported on **their own line, outside the
+  ratcheted drift count** (3.2, 6). Counting them as drift before dark mode is classified would
+  inflate the number with values nobody has judged.
 
 ### 2.4 What an inline `style={{ }}` is
 
@@ -303,7 +386,7 @@ definition.** Whether it should be counted at all is OQ4 (3.4).
 | `near` | Within the D4 threshold of a token, but not equal | No. Candidate and distance listed |
 | `gap` | No token within the threshold | No. Escalated as a design decision (section 5) |
 | `allow-listed` | Covered by a signed rule in section 4 | No. The rule ID is recorded |
-| `unclassified` | The classifier couldn't decide (parse error, dynamic value, dark-only match, unclear context) | No. **Counted as drift, never as a pass** [S1] |
+| `unclassified` | The classifier couldn't decide (parse error, dynamic value, unclear context), or the value matches only a dark-theme token (tagged `dark-only`, 2.3) | No. **Never a pass** [S1]. Counted as drift, **except `dark-only`**, which is reported on its own line outside the ratcheted count until dark mode is classified [S28] |
 
 ### 3.3 Value collisions across the contract (decision D3, OQ3)
 
@@ -385,6 +468,23 @@ alpha matches. Near matches are never auto-substituted [S1]. Spacing has no "nea
 either on the 2.3 scale (`exact`, or `exact-ambiguous` for the six two-name values until D3 is
 signed) or a `gap`. Zero is covered by A6.
 
+### 3.7 Reconciliation items: a separate list, not a violation (Ali's advice [S28])
+
+A **reconciliation item** is a mismatch between one of our authored layers (`tokens.css`, the
+bridge's `:root` block) and the vendored design system. Ali's words: record it "as a
+RECONCILIATION item, named separately, because that is a real finding and a different kind of
+work from a drift fix".
+
+- **What it is:** a token name both layers declare with different effective values, or a value one
+  of our layers copies from the DS under another name and has since drifted from. The Design E
+  `--amber-bg` (`#FDF4E6` against DS `--amber-50` `#FCF1DD`, 3.5) is the first known example.
+- **What it is not:** one of the six outcomes in 3.2. It is never counted in the colour or spacing
+  drift lines, never ratcheted, and never gets a proposed substitution.
+- **Who resolves it:** a person deciding which value is meant. That is a design decision, so it
+  goes to Aleem with the gap list (section 5).
+- **Each item records:** the token name, the value in each layer, the file and line of each, the
+  effective value after the cascade, and which layer wins.
+
 ---
 
 ## 4. Exception list (allow-list), decision D5
@@ -412,7 +512,8 @@ change to A1–A6 is a new entry here, signed by Aleem.
 
 ## 5. Token-set gaps, and who decides them (decision D7)
 
-A raw colour with no token equivalent is **a token-set gap, not a code defect**. It is escalated as
+A raw colour (or, under OQ7, an off-scale spacing value) with no token equivalent is **a token-set
+gap, not a code defect**. It is escalated as
 a design decision, never auto-substituted [S1].
 
 **Proposal for D7:** Mohammed Abdul Aleem decides every gap, in line with Ali's recommendation
@@ -421,6 +522,17 @@ grouped by value with counts and files. For each one Aleem picks one of:
 1. add a token;
 2. map it to an existing token;
 3. add an allow-list rule.
+
+**Spacing gaps (OQ7, Aleem's decision pending).** A spacing value that isn't on the 2.3 scale, for
+example `14px`, is a **spacing gap**. It's reported in the spacing line with its value, count and
+files, the same way colour gaps are. It is never auto-substituted. How spacing gaps should be
+handled is **Aleem's decision** (OQ7); Ali left it to Aleem [S28]. The choices include:
+- counting them as drift and ratcheting the spacing line;
+- reporting them as information only;
+- treating recurring values as a reason to add spacing tokens.
+
+Until Aleem answers, spacing gaps are **reported but not ratcheted**, and no spacing token is
+proposed (Mihret's working decision).
 
 **Revision 2 adds one constraint:** a new token now has to go into a specific layer. Adding it to
 the DS layer means either changing upstream (owned by the design-system repository) or adding
@@ -438,12 +550,19 @@ code calls "older". **Where new tokens go depends on OQ1, OQ2 and OQ5.**
    is not applied, not committed and not pushed. A human merges and deploys it, because both
    `push_to_protected_main` and `production_deploy` are default-denied [S2].
 3. **A drift count shaped like the copy-lint baseline:** a per-file map of exact counts that can
-   only go down, with a zero entry deleted [S16]. There are two ratcheted lines:
-   - **colour drift** = `exact` + `exact-ambiguous` + `near` + `gap` + `unclassified`;
-   - **spacing drift**, made up the same way.
+   only go down, with a zero entry deleted [S16]. There is **one ratcheted line**:
+   - **colour drift** = `exact` + `exact-ambiguous` + `near` + `gap` + `unclassified` (not
+     counting `dark-only`).
 
-   Two lines are reported but not ratcheted: **dataviz** (A1) and **legacy references** (D9).
+   Four lines are **reported but not ratcheted**:
+   - **spacing drift**, made up the same way, including spacing gaps, until Aleem answers OQ7 (§5);
+   - **dark-only** values (2.3), until dark mode is classified [S28];
+   - **dataviz** (A1);
+   - **legacy references** (D9).
 4. **A gap list for Aleem** (section 5), with unknown values left as unknown [S1].
+4a. **A reconciliation list** (3.7), reported under its own heading, separate from the violation
+   inventory and the drift counts.
+4b. **A coverage statement:** "Light theme only. Dark theme: not classified in this pass." [S28]
 5. **A denominator on every count:** "N findings across F of M in-scope files scanned".
 6. **A contract snapshot:** the per-layer declaration counts and the effective value of every token
    used in classification, so a reviewer can check a finding against the contract as it was at
@@ -493,8 +612,17 @@ is not in this repository):
 So each open question below keeps three things separate:
 - **Mihret's working decision**: made by Mihret Netsereab so the work can continue. It is **not**
   Aleem's approval and **not** platform policy.
-- **Ali's advice**: technical input where Ali is placed to give it. **None has been received for
-  these questions yet.**
+- **Ali's advice**: technical input where Ali is placed to give it. **Received 2026-11-02 [S28] on
+  OQ2, the exclusion half of OQ5, and the theme (D2).** Ali said the policy questions would not be
+  pre-empted: the canonical upstream (OQ1), whether legacy names count as drift (OQ4), the A2
+  brand-mark allow-list (D5), how spacing gaps are handled (OQ7) and chart colours (OQ6). Those
+  stay with Aleem.
+  - **Ali's list doesn't shrink the sign-off.** It names what's still genuinely open. Aleem's
+    sign-off still covers the whole written scope, so D1, D3, D4, D6 and D7 also stay pending
+    Aleem, even though Ali didn't list them. (This reading is Mihret's; Ali didn't say the list
+    was complete.)
+  - **One question is on neither list:** who owns the vendored copy's local edits (OQ5). Ali
+    didn't answer it and didn't assign it to Aleem. **Who decides it is Unknown.**
 - **Aleem's approval**: **pending on every row.**
 
 **What a working decision can and cannot do** (Mihret's working decision, following [S27]):
@@ -509,12 +637,13 @@ So each open question below keeps three things separate:
 
 | # | Question | Why it matters | Blocks | Mihret's working decision, and why | Ali's advice | Aleem's approval |
 |---|---|---|---|---|---|---|
-| **OQ1** | Is `Colaberry-DS-School-Final` or `colaberry-design-system` the canonical upstream? Their tokens are identical today, but the platform's history names the second (`PROGRESS.md:7364`). | Decides what the vendored copy is checked against (7.1) and where new tokens go (5) | 7.1, D7 | **Use `Colaberry-DS-School-Final` as the reference for the 7.1 divergence check.** It's the repository Aleem shared, and its token files are byte-identical to the other one today (1.3), so the choice changes no value. Revisit if the two ever differ. | Not needed. Both repos are under the `aleemcolaberry` account. | **Pending** |
-| **OQ2** | Which token set is the audit's contract: the effective three-layer cascade, the DS layer only, or `tokens.css` only? | Every classification depends on it. Today's platform rules disagree (1.4) | Everything in 3–7 | **The effective three-layer cascade** (1.4). It's what renders (1.1–1.2). Either single layer would misclassify values the bridge reassigns. | **Requested:** whether retiring the legacy layer is the platform's direction. | **Pending** (D0) |
+| **OQ1** | Is `Colaberry-DS-School-Final` or `colaberry-design-system` the canonical upstream? Their tokens are identical today, but the platform's history names the second (`PROGRESS.md:7364`). | Decides what the vendored copy is checked against (7.1) and where new tokens go (5) | 7.1, D7 | **Use `Colaberry-DS-School-Final` as the reference for the 7.1 divergence check.** It's the repository Aleem shared, and its token files are byte-identical to the other one today (1.3), so the choice changes no value. Revisit if the two ever differ. | Not needed. Both repos are under the `aleemcolaberry` account. **Ali (2026-11-02, [S28]): this is Aleem's call**, a question about which repository we agree to follow. | **Pending** |
+| **OQ2** | Which token set is the audit's contract: the effective three-layer cascade, the DS layer only, or `tokens.css` only? | Every classification depends on it. Today's platform rules disagree (1.4) | Everything in 3–7 | **The effective three-layer cascade** (1.4). It's what renders (1.1–1.2). Either single layer would misclassify values the bridge reassigns. | **Answered technically 2026-11-02 [S28]:** the three-layer cascade is the contract, in load order (1.1). Whether the legacy layer is being retired: not answered. | **Acknowledgement pending** (D0) |
 | **OQ3** | When a fix is proposed for admin code, should it name a DS semantic token (`--text-muted`) or a legacy name (`--color-text-light`)? | Decides the D3 precedence order, and so whether the patch is near-empty | D3 | **Colour: a DS semantic token chosen by property role, otherwise `exact-ambiguous`. Spacing: the DS `--space-N` name** (3.3, 2.3). The DS says to use semantic tokens [S24], the admin shell already reads DS tokens (1.4), and the fix list stays small enough to review. | **Requested:** legacy names or DS names for admin code. | **Pending** (D3) |
-| **OQ4** | Does a remaining reference to a legacy-only token name count as drift? | Decides whether D9 stays informational or becomes ratcheted | D9 | **No. It's counted as a separate informational line, not ratcheted** (3.4). Through the bridge, most legacy names render DS values, so they aren't visual drift, and ratcheting them would be a migration decision this audit shouldn't make. | **Requested:** whether legacy names should be migrated at all. | **Pending** (D9) |
-| **OQ5** | Who owns the local edits in `frontend/src/colaberry/`, and should that folder be excluded like `apps/*`? | Decides D8, and whether gaps can be fixed by editing the vendored copy | D8, D7 | **Exclude the folder from the inventory** (2.2). It's a copy of an upstream system, for the same reason the story excludes `apps/*`. **Who owns the local edits stays Unknown.** Code ownership isn't something Mihret can decide. | **Requested:** who maintains the vendored copy's local edits. | **Pending** (D8) |
-| **OQ6** | Is the DS chart palette (`--chart-*`, `--seq-*`, `--div-*`) the "dataviz guidance" the `dataviz_quality_audit` capability refers to? | Decides whether A1's dataviz line joins the ratcheted count | A1 | **Classify chart literals against the DS chart palette, and keep them in the separate dataviz line outside the ratchet** (A1). The DS says charts use this palette [S24]. Keeping them outside the ratchet means a wrong assumption adds no false drift. | **Requested:** who owns product-surface charts (the dataviz capability lists this as unknown). | **Pending** (A1, under D5) |
+| **OQ4** | Does a remaining reference to a legacy-only token name count as drift? | Decides whether D9 stays informational or becomes ratcheted | D9 | **No. It's counted as a separate informational line, not ratcheted** (3.4). Through the bridge, most legacy names render DS values, so they aren't visual drift, and ratcheting them would be a migration decision this audit shouldn't make. | **Not answered:** Ali left this to Aleem [S28]. | **Pending** (D9) |
+| **OQ5** | Who owns the local edits in `frontend/src/colaberry/`, and should that folder be excluded like `apps/*`? | Decides D8, and whether gaps can be fixed by editing the vendored copy | D8, D7 | **Exclude the folder from the inventory** (2.2). It's a copy of an upstream system, for the same reason the story excludes `apps/*`. **Who owns the local edits stays Unknown.** Code ownership isn't something Mihret can decide. | **Received 2026-11-02 [S28]:** keep the folder excluded; audit what we author; record authored-vs-vendored mismatches as reconciliation items (3.7). Who maintains the local edits: not answered, and not assigned to Aleem either. **Who decides it is Unknown.** | **Pending** (D8) |
+| **OQ6** | Is the DS chart palette (`--chart-*`, `--seq-*`, `--div-*`) the "dataviz guidance" the `dataviz_quality_audit` capability refers to? | Decides whether A1's dataviz line joins the ratcheted count | A1 | **Classify chart literals against the DS chart palette, and keep them in the separate dataviz line outside the ratchet** (A1). The DS says charts use this palette [S24]. Keeping them outside the ratchet means a wrong assumption adds no false drift. | **Not answered:** Ali left chart classification to Aleem [S28]. | **Pending** (A1, under D5) |
+| **OQ7** | How should spacing gaps be handled? An off-scale spacing value (for example `14px`) could count as drift and be ratcheted, be reported as information only, or be a reason to add spacing tokens. | Decides whether the spacing line is ratcheted, and whether the spacing scale grows | D2, D7 | **Report spacing gaps on the spacing line, but don't ratchet it, and propose no new spacing token** (2.3, §5, 6). Spacing is in scope by the capability's outcome [S1], so it must be visible. Not ratcheting it means a wrong guess about the scale adds no false drift while Aleem decides. | **Not answered:** Ali left spacing gaps to Aleem [S28]. | **Pending** (D2, D7) |
 
 ---
 
@@ -524,8 +653,9 @@ So each open question below keeps three things separate:
 accountable manager. Only a formal change by whoever owns the capability record could change that,
 and who that is is **Unknown**. Ali Muwwakkil's recommendations [S4] and guidance [S27], and
 Mihret's working decisions (§8), are inputs to this sign-off, not a substitute for it.
-D0, D3, D5 (A1), D7, D8 and D9 depend on the open questions in §8, so Aleem can answer each
-question and its decision row together.
+D0, D2 (OQ7), D3, D5 (A1), D7, D8 and D9 depend on the open questions in §8, so Aleem can answer
+each question and its decision row together. Ali's 2026-11-02 list of questions left to Aleem
+[S28] doesn't narrow this: **Aleem's sign-off covers every row, D0–D9.**
 
 ### How to review and sign this without portal access
 
@@ -548,15 +678,15 @@ question and its decision row together.
 
 | # | Decision | Mihret's working decision (in effect for preparation only) | Ali can advise on | Aleem's approval (pending) |
 |---|---|---|---|---|
-| D0 | The token contract (OQ2) | Effective three-layer cascade (1.4) | Whether the legacy layer is being retired | ☐ agree ☐ DS only ☐ `tokens.css` only |
+| D0 | The token contract (OQ2) | Effective three-layer cascade, in load order (1.1, 1.4) | **Confirmed by Ali 2026-11-02: the cascade, in load order** [S28] (**Reported**). Presented for acknowledgement, not as a choice | ☐ acknowledged ☐ disagree: ______ |
 | D1 | Which surfaces | Files reachable from `adminRoutes.tsx`; shared files reported, not patched | Already recommended the admin portal (**Reported**, [S4]) | ☐ agree ☐ change: ______ |
-| D2 | Which values | Colour and spacing, ratcheted separately; light theme only | Whether admin pages ever render dark; the root font size behind the rem assumption | ☐ agree ☐ change: ______ |
+| D2 | Which values | Colour ratcheted. Spacing reported but **not ratcheted until OQ7** is answered. Light theme only; `dark-only` values on their own line, outside the ratchet | **Ali advised 2026-11-02: light only, dark unclassified and said so** [S28]. Root font size still open | ☐ agree ☐ change: ______ |
 | D3 | Same value, several tokens (OQ3) | Colour: DS semantic token by property role, else `exact-ambiguous`. Spacing: DS `--space-N` | Legacy or DS names for admin code | ☐ agree ☐ other order: ______ |
 | D4 | "Near" threshold | CIEDE2000 ≤ 2.0, alpha equal | (none) | ☐ agree ☐ value: ______ |
 | D5 | Allow-list rules A1–A6 | A1, A3, A4, A5 and A6 as listed. **A2 stays empty: nothing is excluded as a brand mark until Aleem names the files** | Product-surface chart ownership (A1, OQ6) | ☐ A1 ☐ A2 (files: ______) ☐ A3 ☐ A4 ☐ A5 ☐ A6 |
 | D6 | Styles built as preview strings | `unclassified` until ruled | How `frameHtml` output is used | ☐ in scope ☐ allow-list as A7 |
-| D7 | Who decides gaps and keeps the list | Aleem decides gaps. Until then, gaps stay open in the drift count | (none) | ☐ agree ☐ name: ______ |
-| D8 | Vendored `frontend/src/colaberry/` (OQ5) | Excluded, upstream-owned. Owner of the local edits Unknown | Who maintains the local edits | ☐ agree ☐ in scope |
+| D7 | Who decides gaps and keeps the list | Aleem decides gaps: colour gaps, and spacing gaps under OQ7. Until then, colour gaps stay in the ratcheted colour count and spacing gaps are reported only | None on who decides. Ali left spacing gaps to Aleem [S28] | ☐ agree ☐ name: ______ |
+| D8 | Vendored `frontend/src/colaberry/` (OQ5) | Excluded, upstream-owned; mismatches are reconciliation items (3.7). Owner of the local edits Unknown, and **who decides it is Unknown** | **Ali advised 2026-11-02: excluded** [S28]. Who maintains the local edits still open | ☐ agree ☐ in scope |
 | D9 | Legacy token references (OQ4) | Counted, informational, not ratcheted | Whether legacy names should be migrated | ☐ agree ☐ ratchet ☐ ignore |
 
 The scan's technical mechanics, the normalisation rules (§3.1), the outputs (§6) and the stop
@@ -638,3 +768,4 @@ means `aleemcolaberry/Colaberry-DS-School-Final`, read through the GitHub API on
 | S25 | Two upstream repos with identical token files; platform history names `colaberry-design-system` | GitHub API blob hashes (2026-10-30); platform `PROGRESS.md:7364`; `apps/ai-flotation-public/src/assets/design/DESIGN_SYSTEM.md:11` |
 | S26 | Effective-cascade figures: 330 names; 69 distinct hex values and 32 shared (both minimums: 3 `rgba()`/`color-mix()` colour tokens not counted); 21 + 6 legacy names reassigned; 0 unresolved `var()` references | Computed 2026-10-30 by resolving the light-theme `:root` blocks of the contract files in S17 (no application code read) |
 | S27 | Ali Muwwakkil's guidance on not waiting indefinitely and on documenting the preparer's own decisions (**Reported**) | Email from Ali Muwwakkil to Mihret Netsereab dated 2026-10-27, as relayed by Mihret on 2026-10-30. Not in this repository |
+| S28 | Ali Muwwakkil's answers on the token cascade, the vendored folder, reconciliation items and the light theme (**Reported**) | Email from Ali Muwwakkil to Mihret Netsereab (copied to Aleem), 2026-11-02 at 1:05 PM as shown in Mihret's mail client, relayed by Mihret the same day. Not in this repository. Load order re-read at platform `ebe81e68` (`frontend/src/index.tsx:22-26`; `styles/global.css:1`) |

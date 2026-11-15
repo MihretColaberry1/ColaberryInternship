@@ -7,7 +7,7 @@ Disposition of this domain's 0 inherited legacy agent record(s).
 ### Not covered by this plan
 The 21 legacy records whose `proposed_owner_domain` is `unresolved` belong to no domain and are therefore not in any project's plan. Five of them are live production rows. They need an owner decision, and naming that here is the point.
 
-**Release:** r1 · Legacy migration plan (weeks 0–0)
+**Release:** autonomy:R0 · Legacy migration plan (weeks 0–0)
 **Owner:** 
 **Blocked by:** nothing — you can start this now
 

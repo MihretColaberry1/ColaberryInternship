@@ -1,14 +1,4 @@
-# STORY-000 · Build your Command Center
-
-**Story id:** `product_experience.STORY-000`
-**Rung:** `autonomy:R0` -- the first story of the first rung, before any of this
-domain's own work
-**Owner:** you, with Claude Code
-**Blocked by:** nothing -- this is the first thing you build
-
----
-
-## The brief
+# product_experience.STORY-000 — STORY-000 · Build your Command Center
 
 Build one page that shows what you are building and how far along it is, so you can see your
 own domain and demonstrate from it.
@@ -31,33 +21,15 @@ invent; they are yours to read, render and then satisfy one rung at a time.
 has reviewed it. This page must show that state honestly rather than rendering a plan as a
 plan that somebody agreed to.
 
-## The capability this fulfils
+**Release:** autonomy:R0 · Legacy migration plan (weeks 0–0)
+**Owner:** 
+**Blocked by:** nothing — you can start this now
 
-The Command Center fulfils no capability of this domain because it is not part of the system being built -- it is the window onto it. Every builder gets the same one so the programme can be taught, reviewed and demonstrated as one thing, and so a builder can see the whole of what they are walking their agent through before they start walking it.
+## The requirement this satisfies
 
-## Acceptance -- your stop condition
+_No requirement linked._
 
-Every one of these is checkable by looking at the page. None of them can be satisfied by
-marking this story complete.
-
-- [ ] Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.
-- [ ] Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.
-- [ ] Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.
-- [ ] Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.
-- [ ] Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.
-- [ ] Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced.
-
-## Who closes this story
-
-Reviewed by the domain's accountable human against the page itself, on the evidence the page renders. Marking this story complete is not evidence that it is done.
-
----
-
-## The build prompt
-
-This is the prompt attached to this story on the portal. It is reproduced here so a Claude Code
-session opening this repository cold has the whole brief locally and does not have to author it
-from memory of a page it has never seen.
+## How to build it
 
 # STORY-000 · Build your Command Center -- Product Experience & UI/UX
 
@@ -174,3 +146,22 @@ Cite the real thing: a named passing test, a screenshot of the rendered page bes
 endpoint response it was built from, or a file:line. **None of these count:** this story being
 marked complete, elapsed time, a conversation that went well, or a mocked test passing.
 Mohammed Abdul Aleem evaluates the evidence.
+
+## Failure paths you must handle
+
+
+## Acceptance — your stop condition
+
+Tick each box as it genuinely passes. This file is yours — the platform reads
+the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
+step (see the managed block in CLAUDE.md). Ticking something you have not
+actually met only misleads you.
+
+- [ ] Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.
+- [ ] Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.
+- [ ] Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.
+- [ ] Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.
+- [ ] Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.
+- [ ] Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced.
+
+When every box above is ticked, stop and show the demo.

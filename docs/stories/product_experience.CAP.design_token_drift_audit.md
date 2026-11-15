@@ -1,5 +1,7 @@
 # product_experience.CAP.design_token_drift_audit — Design-token drift audit across every styled surface
 
+**IN FLIGHT.** This capability is the one this domain is building right now. The work itself is its four ladder stories -- do it by hand, do it in the app, request the tool, then let the agent do it watched -- and they run in that order. This row is the capability they belong to, not a fifth piece of work.
+
 One list of every place the UI paints a colour or spacing value outside the token contract, so brand drift is a measured number that can be driven down instead of an impression.
 
 **Built today:** absent. **Requirement validated:** draft -- Mohammed Abdul Aleem must confirm scope, exceptions and success measures; he has no admin login today
@@ -12,7 +14,7 @@ One list of every place the UI paints a colour or spacing value outside the toke
 
 Full build prompt is attached to this story.
 
-**Release:** r2 · r2 (weeks 0–0)
+**Release:** autonomy:R0 · Legacy migration plan (weeks 0–0)
 **Owner:** 
 **Blocked by:** nothing — you can start this now
 
