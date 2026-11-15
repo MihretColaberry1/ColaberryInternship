@@ -34,11 +34,16 @@ export function consoleInputs(domain) {
   const link = agentLink(endpoints);
   // Authority is the platform's own record from the synced file, never recalculated (step 2, 2026-11-14).
   const authority = d.snapshot?.sync?.authority ?? null;
+  // Panel 5 reads only the platform's synced whole-domain queue. A personal capture of the -mine route
+  // holds only the capturer's own requests, so it is never used in its place (2026-11-14).
+  const sync0 = d.snapshot?.sync;
+  const queue = d.status === 'loading' ? { state: 'loading' }
+    : sync0?.governance ?? { state: sync0?.status === 'invalid' ? 'invalid' : 'not_synced', message: sync0?.error ?? null };
   const rows = sourceState === 'ready' ? capabilityRows(d.source.matrix, { grantedTools: grantedToolsFor(link), authority }) : [];
   // Decision D4: the accountable manager's name, read from the pinned file, so the page can withhold it.
   const names = sourceState === 'ready' ? accountableNames(d.source.matrix) : [];
   return { d, sourceState, sourceError: d.source?.error ?? null, endpoints, link, rows, rungs: rungSummary(rows),
-    checks: coverageCheck(rows, endpoints.coverage), snapshot: d.snapshot ?? null, names, sync: d.snapshot?.sync ?? null, authority };
+    checks: coverageCheck(rows, endpoints.coverage), snapshot: d.snapshot ?? null, names, sync: d.snapshot?.sync ?? null, authority, queue };
 }
 
 function syncText(sync) {
@@ -64,12 +69,12 @@ function intro(inputs) {
 }
 
 export function renderPanels(inputs, project) {
-  const { d, sourceState, sourceError, endpoints, link, rows, rungs, checks, snapshot, names, sync, authority } = inputs;
+  const { d, sourceState, sourceError, endpoints, link, rows, rungs, checks, snapshot, names, sync, authority, queue } = inputs;
   const order = (id) => PANEL_ORDER.indexOf(id) + 1;
   const common = { sourceState, sourceError };
   return {
     employee: renderEmployeePanel(employeeView(endpoints), { order: order('employee'), snapshot }),
-    governance: renderGovernancePanel(requestGroups(endpoints.requests), rows, { order: order('governance'), snapshot, project, link }),
+    governance: renderGovernancePanel(requestGroups(queue), rows, { order: order('governance'), project, link, names }),
     inventory: renderInventoryPanel(rows, checks, endpoints.coverage, { ...common, order: order('inventory'), project, names }),
     ladder: renderLadderPanel(rows, rungs, { ...common, order: order('ladder'), authority, sync }),
     behaviour: renderBehaviourPanel(rows, rungs, { ...common, order: order('behaviour'), names }),

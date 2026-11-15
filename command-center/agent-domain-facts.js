@@ -22,7 +22,9 @@ export const PANEL_ENDPOINTS = Object.freeze({
   2: ['domain', 'coverage'],
   3: ['domain'],
   4: ['domain'],
-  5: ['requests'],
+  // Panel 5 reads no endpoint: it reads the whole-domain queue from the platform's synced snapshot
+  // (GOVERNANCE_SNAPSHOT), never GET .../agent-domain-change-requests-mine, which holds only the caller's own.
+  5: [],
   6: ['mine', 'domain', 'coverage', 'requests'],
 });
 
@@ -119,7 +121,41 @@ export const R8_UNREACHABLE = Object.freeze({
 /** agentChangeRequestRoutes.ts: what filing and deciding do. */
 export const REQUEST_RULE = Object.freeze({
   source: cite('backend/src/routes/admin/agentChangeRequestRoutes.ts'),
-  statement: 'Filing a request grants nothing. A decision records approved or declined and stops: it starts no build and grants no tool.',
+  statement: 'Filing a request grants nothing. A request is submitted, then approved, declined or withdrawn; a decision records '
+    + 'approved or declined and stops: it starts no build and grants no tool or capability.',
+});
+
+/**
+ * The governance request statuses, as the platform owner defined them (2026-11-14): submitted is the
+ * one pending status; approved, declined and withdrawn are terminal. Any other value is shown as
+ * recorded and labelled unrecognised, never guessed into one of these. No status grants anything.
+ */
+export const REQUEST_STATUSES = Object.freeze({
+  submitted: { terminal: false, tone: 'warn', words: 'Submitted: waiting on a human decision' },
+  approved: { terminal: true, tone: 'info', words: 'Approved: a decision is recorded; it grants nothing by itself' },
+  declined: { terminal: true, tone: 'neutral', words: 'Declined: a decision is recorded' },
+  withdrawn: { terminal: true, tone: 'neutral', words: 'Withdrawn: closed without a decision' },
+});
+
+/** Every request row says this in its own column, change and tool requests alike. */
+export const REQUEST_GRANTS_NOTHING = 'Nothing: a request is not a grant of any tool or capability';
+
+/**
+ * Panel 5's one source (the platform owner's decision: the whole queue). The platform's sync job fills
+ * the snapshot's governance section from AgentDomainChangeRequest WHERE domain_key = this domain, newest
+ * first, at most 200 rows, keeping no person fields (governanceForDomain in
+ * agentDomainCommandCenterForSync.ts at 992e0e01). The section's own label names
+ * GET /api/admin/agent-domain-change-requests-mine, a route that returns only the caller's own requests
+ * (listMyChangeRequests: WHERE requested_by_identity = caller, at 9d9aa3c3), so the label does not
+ * describe these rows. A personal capture of that route is never used for this panel.
+ */
+export const GOVERNANCE_SNAPSHOT = Object.freeze({
+  source: cite('backend/src/services/agentDomain/agentDomainCommandCenterForSync.ts', '992e0e01'),
+  limit: 200,
+  statement: `Every change and tool request filed against ${DOMAIN_KEY}, by anyone: the platform's synced snapshot (governance section of .colaberry/agent-domain.json).`,
+  limit_words: 'The platform includes at most the 200 newest requests in the snapshot; any older ones are not shown here.',
+  people_words: 'Not included in the platform snapshot',
+  mine_route: '/api/admin/agent-domain-change-requests-mine',
 });
 
 /**

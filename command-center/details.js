@@ -4,7 +4,7 @@
 import { h } from './dom.js';
 import { badge, facts } from './ui.js';
 import { REASON_TEXT } from './authority.js';
-import { AUTHORITY_WORDS, BEHAVIOUR_EXPOSURE, ENDPOINTS, REGISTRY_ENTRY, TOOL_RULE } from './agent-domain-facts.js';
+import { AUTHORITY_WORDS, BEHAVIOUR_EXPOSURE, ENDPOINTS, REGISTRY_ENTRY, REQUEST_RULE, TOOL_RULE } from './agent-domain-facts.js';
 import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE } from './agent-domain-data.js';
 import { publicBlockerText } from './agent-domain-redact.js';
 import { authorityView, platformLadderRow, toolRuleStatus } from './agent-domain-model.js';
@@ -107,7 +107,7 @@ export function rungDetail(g, { names = [] } = {}) {
 const GUIDES = {
   capture: {
     panel: 'employee',
-    title: 'Capture Panels 1 and 5 (Your employee and Your governance queue) with your own sign-in',
+    title: 'Capture Panel 1 (Your employee) with your own sign-in',
     steps: [
       'Sign in to the portal yourself, in your own browser. Never use anyone else\'s login.',
       `Run the reviewed capture snippet (v4) in that tab's console. It only reads GET ${ENDPOINTS.mine} and GET ${ENDPOINTS.requests}, and downloads one file.`,
@@ -115,15 +115,16 @@ const GUIDES = {
       'The redaction and privacy check are done for you, outside this repository, and the report is shown to you. If redaction would empty a panel, the process stops and the platform owner is asked.',
       `Only the redacted file, after you have reviewed it, is placed at ${SNAPSHOT_FILE}. Nothing that identifies another person is committed.`,
     ],
-    why: 'This page is public. Panels 1 and 5 (Your employee and Your governance queue) read admin endpoints that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (the platform owner\'s direction, 2026-11-02).',
+    why: 'This page is public. Panel 1 (Your employee) reads an admin endpoint that a public page cannot and should not call, so a reviewed snapshot is the intended pattern (the platform owner\'s direction, 2026-11-02). Panel 5 (Your governance queue) is not captured: it reads only the platform\'s synced whole-domain snapshot.',
   },
   requests: {
     panel: 'governance',
     title: 'File or follow up a request',
     steps: [
       'Change requests and tool requests are filed and decided in the portal, not on this page.',
-      'Filing a request grants nothing. A decision records approved or declined and stops: it starts no build and grants no tool.',
-      'After a decision, capture Panel 5 again so this console shows the new status.',
+      REQUEST_RULE.statement,
+      'A submitted request is waiting on a human; approved, declined and withdrawn are closed. None of them grants a tool or capability.',
+      "After a decision, the platform's next sync of .colaberry/agent-domain.json brings the new status here. Refresh is manual; this page does not poll.",
     ],
     why: 'This console is read-only. It shows the queue; it never changes it.',
   },

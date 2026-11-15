@@ -110,12 +110,13 @@ test('criterion 2: a loading panel says "Loading", is aria-busy, and carries no 
 test('a refused capture is an error with the HTTP status, not "Not available" and not loading', async () => {
   const { domain, project } = await realInputs();
   const refused = { state: 'refused', status: 403, fetched_at: '2026-11-03T18:00:00Z', message: null };
-  const panels = byId(renderPanels({ ...domain, snapshot: { status: 'captured', endpoints: { ...domain.snapshot.endpoints, mine: refused, requests: refused } } }, project));
-  for (const id of ['employee', 'governance']) {
-    assert.equal(panels[id].getAttribute('data-state'), 'error', id);
-    assert.equal(findAll(panels[id], hasClass('error-block'))[0].getAttribute('role'), 'alert');
-  }
+  const panels = byId(renderPanels({ ...domain, snapshot: { ...domain.snapshot, status: 'captured', endpoints: { ...domain.snapshot.endpoints, mine: refused, requests: refused } } }, project));
+  assert.equal(panels.employee.getAttribute('data-state'), 'error');
+  assert.equal(findAll(panels.employee, hasClass('error-block'))[0].getAttribute('role'), 'alert');
   assert.match(findAll(panels.employee, hasClass('error-block'))[0].textContent, /HTTP 403/);
+  // Panel 5 reads only the platform's synced whole-domain queue, so a refused personal capture of the
+  // -mine route does not touch it (2026-11-14).
+  assert.equal(panels.governance.getAttribute('data-state'), 'empty');
 });
 
 test('a missing source file puts the capability panels in an error state, said in words', async () => {
@@ -130,10 +131,9 @@ test('a missing source file puts the capability panels in an error state, said i
 
 test('an empty governance queue says so, instead of an empty table', async () => {
   const { domain, project } = await realInputs();
-  const empty = { state: 'ok', status: 200, fetched_at: '2026-11-03T18:00:00Z', body: { change_requests: [] } };
-  const panels = byId(renderPanels({ ...domain, snapshot: { status: 'captured', endpoints: { ...domain.snapshot.endpoints, requests: empty } } }, project));
+  const panels = byId(renderPanels(domain, project));
   assert.equal(panels.governance.getAttribute('data-state'), 'empty');
-  assert.match(panels.governance.textContent, /No change or tool requests are filed/);
+  assert.match(panels.governance.textContent, /No change or tool requests are in the Product Experience governance queue/);
 });
 
 test('every panel has exactly one primary action, and every disclosure starts collapsed', async () => {

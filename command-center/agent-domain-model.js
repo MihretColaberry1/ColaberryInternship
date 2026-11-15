@@ -4,7 +4,7 @@
 // (`authority[]` in the synced file), read as written and never recalculated here.
 import { AUTONOMY_LEVELS, AUTONOMY_MEANINGS, AUTONOMY_STAGES, autonomyIndex } from './authority.js';
 import {
-  AUTHORITY_WORDS, DOMAIN_KEY, MINE_AGENT_FIELDS, R8_UNREACHABLE, REGISTRY_ENTRY, SET_BY_NOT_RECORDED, UNAVAILABLE_FIELDS,
+  AUTHORITY_WORDS, DOMAIN_KEY, MINE_AGENT_FIELDS, R8_UNREACHABLE, REGISTRY_ENTRY, REQUEST_STATUSES, SET_BY_NOT_RECORDED, UNAVAILABLE_FIELDS,
 } from './agent-domain-facts.js';
 
 /**
@@ -251,14 +251,32 @@ export function employeeView(endpoints) {
 }
 
 /** Panel 5. Change and tool requests kept apart; a row with no kind is not guessed into either. */
+/** A request's status as the platform defines it: known (pending or terminal), or unrecognised. */
+export function requestStatus(status) {
+  const known = typeof status === 'string' && Object.hasOwn(REQUEST_STATUSES, status) ? REQUEST_STATUSES[status] : null;
+  return known ? { status, known: true, ...known } : { status: status ?? null, known: false, terminal: null, tone: 'neutral',
+    words: status == null ? 'No status recorded' : `Unrecognised status "${status}": shown as recorded, not counted as waiting or decided` };
+}
+
+/**
+ * Panel 5: the governance queue, grouped by kind (change, tool, no stated kind) and by status. Submitted
+ * is the only pending status; approved, declined and withdrawn are terminal (the platform owner's
+ * definition). A status outside those four is kept and counted as unrecognised, never guessed.
+ */
 export function requestGroups(endpoint) {
   if (endpoint.state !== 'ok') return { state: endpoint.state, endpoint };
   const all = Array.isArray(endpoint.body.change_requests) ? endpoint.body.change_requests : [];
+  const by = (status) => all.filter((r) => r.status === status);
   return {
     state: 'ok', endpoint,
+    all,
     change: all.filter((r) => r.kind === 'change'),
     tool: all.filter((r) => r.kind === 'tool'),
     unknown_kind: all.filter((r) => r.kind !== 'change' && r.kind !== 'tool'),
+    waiting: by('submitted'),
+    decided: [...by('approved'), ...by('declined')],
+    withdrawn: by('withdrawn'),
+    unrecognised: all.filter((r) => !requestStatus(r.status).known),
   };
 }
 

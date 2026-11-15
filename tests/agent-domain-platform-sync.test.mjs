@@ -137,9 +137,10 @@ test('a broken synced file makes Panels 1 and 5 an error, never "Not available" 
   for (const id of ['employee', 'governance']) {
     const p = panels[id];
     assert.equal(p.getAttribute('data-state'), 'error', id);
-    assert.match(p.textContent, /platform-synced file could not be used/, id);
     assert.equal(findAll(p, hasClass('not-available')).length, 0, id);
   }
+  assert.match(panels.employee.textContent, /platform-synced file could not be used/);
+  assert.match(panels.governance.textContent, /The platform's synced snapshot could not be used for the governance queue\./);
 });
 
 test('a manifest with no generated_at says "last changed: not recorded" rather than inventing a time', async () => {
@@ -162,7 +163,7 @@ test('your own capture wins wherever it answered; the sync fills only what it di
   assert.equal(out.endpoints.requests.origin, 'platform_sync');
   assert.equal(out.endpoints.domain.state, 'not_captured');
   // verdict_reasons (decision D2) defaults to empty, and authority to "not synced", when the sync carries none.
-  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {},
+  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, governance: null,
     authority: { status: 'not_synced', error: null, byId: {}, rule: null, size: 0 } });
   // A broken synced file makes the authority section invalid too, with the same error, never "not synced".
   const broken = combineEndpoints({ status: 'not_captured', endpoints: {} }, { status: 'invalid', error: 'E', endpoints: {} });
@@ -265,10 +266,10 @@ test('Panel 5 on real data: empty, said in words, read from the synced copy, and
   const domain = await realDomain();
   const p = rendered(() => renderPanels(consoleInputs(domain), null).governance);
   assert.equal(p.getAttribute('data-state'), 'empty');
-  assert.match(p.textContent, /No change or tool requests are filed, as the platform sync records\./);
+  assert.match(p.textContent, /No change or tool requests are in the Product Experience governance queue, as the platform snapshot records\./);
   assert.ok(findAll(p, hasClass('src-platform_sync')).length > 0);
   // A tool request arriving through the sync renders with the "not a grant" column.
-  const groups = requestGroups({ state: 'ok', origin: 'platform_sync', body: { change_requests: [{ kind: 'tool', status: 'pending', title: 'Grant repo_read' }] } });
+  const groups = requestGroups({ state: 'ok', origin: 'platform_sync', body: { change_requests: [{ kind: 'tool', status: 'submitted', title: 'Grant repo_read' }] } });
   const withTool = rendered(() => text(renderGovernancePanel(groups, [], {})));
   assert.match(withTool, /Nothing: a request is not a grant/);
 });

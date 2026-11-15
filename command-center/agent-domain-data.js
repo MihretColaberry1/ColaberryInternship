@@ -111,7 +111,18 @@ export function readPlatformSync(json, lastChanged) {
     const key = Object.keys(ENDPOINTS).find((k) => ENDPOINTS[k] === s.endpoint);
     endpoints[key] = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null, body: s.body };
   }
+  // Panel 5: what the platform says about its own governance queue, kept beside the redacted rows:
+  // the label it gives the section, its pending count, and its disclosure line. Never a person.
+  // (The label names GET .../agent-domain-change-requests-mine, but the platform's sync job fills the
+  // section with every request on this domain, not the caller's own: see GOVERNANCE_SNAPSHOT.)
+  endpoints.requests.platform = {
+    label: typeof json.sources?.governance === 'string' ? json.sources.governance : null,
+    pending: Number.isInteger(json.governance.pending) && json.governance.pending >= 0 ? json.governance.pending : null,
+    disclosure: typeof json.governance.disclosure === 'string' ? withholdRecordIds(json.governance.disclosure) : null,
+  };
   return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints,
+    // The whole-domain queue, kept apart from the endpoints so a personal capture can never replace it.
+    governance: endpoints.requests,
     verdict_reasons: verdictReasons(json.verification), authority: readAuthority(json) };
 }
 
@@ -198,6 +209,7 @@ export function combineEndpoints(snapshot, sync) {
   }
   return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null,
     verdict_reasons: sync?.verdict_reasons ?? {},
+    governance: sync?.governance ?? null,
     authority: sync?.authority
       ?? (sync?.status === 'invalid' ? { ...NOT_SYNCED_AUTHORITY, status: 'invalid', error: sync.error } : NOT_SYNCED_AUTHORITY) } };
 }
