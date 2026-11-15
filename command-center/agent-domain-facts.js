@@ -113,7 +113,9 @@ export const R0_DEFAULT_HEADLINE = Object.freeze({
   rung: 'autonomy:R0',
   before: (count) => `All ${count} at `,
   after: ', the starting rung, set by default. No human has approved a higher level.',
-  source: "Mohammed Abdul Aleem, re-review of PR #1, 2026-11-13",
+  // Attribution as a role, not a name: this value ships in the published code, where only comments may
+  // carry names (they are reworded on publishing). The comment above names Mohammed Abdul Aleem.
+  source: 'Accountable manager, re-review of PR #1, 2026-11-13',
 });
 
 /**
