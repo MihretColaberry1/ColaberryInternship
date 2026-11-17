@@ -20,8 +20,9 @@ export class DataLoadError extends Error {
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_ATTEMPTS = 2;
 
-// Fetch one JSON file with a timeout. Timeouts and network errors are retried
-// (capped at `attempts`); a 404 or invalid JSON is not, because retrying cannot fix it.
+// Fetch one JSON file with a timeout that covers both the request and the body read.
+// Timeouts and network errors are retried (capped at `attempts`); a 404 or invalid JSON
+// is not, because retrying cannot fix it.
 export async function loadJson(url, options = {}) {
   const {
     fetchImpl = globalThis.fetch,
@@ -38,6 +39,9 @@ export async function loadJson(url, options = {}) {
       try {
         return await response.json();
       } catch (err) {
+        // The timer can fire while the body is still arriving. That is a timeout, so it goes
+        // to the retry below instead of being reported as invalid JSON.
+        if (controller.signal.aborted || (err && err.name === 'AbortError')) throw err;
         throw new DataLoadError(url, 'the file is not valid JSON', err);
       }
     } catch (err) {
