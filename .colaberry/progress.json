@@ -22,9 +22,15 @@
           "passed": false
         }
       ],
-      "files_touched": [],
-      "tests_added": [],
-      "notes": null,
+      "files_touched": [
+        "docs/definitions/brand_design_system_sync_review.R0.md",
+        "tests/brand-sync-review-r0.test.mjs",
+        "docs/sessions/CC-20261114-m8db.md"
+      ],
+      "tests_added": [
+        "tests/brand-sync-review-r0.test.mjs"
+      ],
+      "notes": "R0 note definition drafted (revision 2, 2026-11-14) and unsigned. The criterion stays false: Mohammed Abdul Aleem's written confirmation of the note format (D2) and his answer to OQ1 are outstanding. The test checks the document's structure and that it claims no approval; it does not test the platform and does not pass the criterion. The story is marked CANDIDATE on the platform; picking it (OQ10) needs Aleem's agreement.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
