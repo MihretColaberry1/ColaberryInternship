@@ -3,11 +3,19 @@
 **Capability:** `product_experience.wcag_aa_accessibility_audit` · **Autonomy:** R0 (definition only)
 **Accountable manager:** Mohammed Abdul Aleem · **DRI:** Ali Muwwakkil
 **Prepared by:** Mihret Netsereab · first draft 2026-11-06
-**Status:** **draft, ready for review, not signed.** This document is what the R0 criterion asks
+**Status:** **draft; Aleem's decisions of 2026-11-13 recorded in [Sign-off](#sign-off); not passed,
+because D8 still needs the Website manager's half.** This document is what the R0 criterion asks
 Mohammed Abdul Aleem to approve: *"A written, manager-approved standard per surface class; no audit
 has run."* [S1] `:85`. Until Aleem's approval is recorded in [Sign-off](#sign-off), the criterion
 stays `passed: false` [S3] and the capability stays `draft`. He can review and approve it by email or in
 confirmed meeting notes. He doesn't need admin portal access.
+
+> **Version note (added 2026-11-17): this document was written against WCAG 2.1 AA, and Aleem chose
+> WCAG 2.2 AA (D1, 2026-11-13).** The body below still follows 2.1: the §4 mapping, the §4.3 gap
+> analysis, checks 7 and 12, the tag set in E1, and 4.1.1 Parsing listed as a criterion (Aleem: record
+> it as obsolete, not as a check). It needs a **separate 2.2 revision**. Moving this document to its
+> own PR copied Aleem's decisions into §9 and [Sign-off](#sign-off) only; the body was deliberately not
+> rewritten here.
 
 Each claim is tagged **Verified** (checked against a repository, or against the W3C text, while
 writing this), **Story** (stated in the capability record), **Reported** (stated by someone, or in
@@ -483,15 +491,15 @@ ownership).
 
 | # | Decision | Why it matters | Mihret's working decision (preparation only), and why | Aleem's approval |
 |---|---|---|---|---|
-| **D1** | **WCAG 2.1 AA or WCAG 2.2 AA?** | 2.2 adds AA criteria that 2.1 lacks, for example 2.5.8 Target Size (24 px) and 2.4.11 Focus Not Obscured, and removes 4.1.1 Parsing [S20]. It changes checks 7 and 12 and the tag set in E1 | **WCAG 2.1 AA**, because that is what the capability's title and the skill name. 2.2-only results are recorded as a separate label (V1), so switching later loses nothing | **Pending** |
-| **D2** | **Surface classes and the obligation for each** (§3: C1-C8) | The story forbids one standard for all [S1] `:51` | C1, C2, C3, C5: full AA of the D1 version. C6: upstream (X1). C7, C8: out of the first pass. **C4 internal admin: no working decision. Aleem chooses (a), (b) or (c) in §3.4** | **Pending** |
-| **D3** | **Surface priority order** | The story's workflow starts from it [S1] `:37`, `:45` | None proposed. Ordering depends on D2 and D8, and on Aleem's view of exposure | **Pending** |
-| **D4** | **Required passing evidence, per class** (§5: E1-E6) | Decides what "conformant" means | E1, E2, E3, E4 and E6 for every class with an obligation. **E5 (screen reader) only for C1 and C3 key journeys, which Aleem names.** C4 per D2 | **Pending** |
-| **D5** | **Treatment of advisory checks** (7, 8, 9b, and the advisory halves of 3, 4, 11 and 12) | Decides whether the skill's non-AA items can fail a page | Reported in a separate advisory list; never a conformance failure unless Aleem raises one (§5.2) | **Pending** |
-| **D6** | **Boundary rules:** third-party libraries (C6), generated previews (C7), student content (C2, X5) | Decides what we are answerable for on a page | Libraries count as our content. Preview contents and student content are reported separately, not as template defects | **Pending** |
-| **D7** | **Severity definitions** (§7) | The ranked list is the capability's main output | Keep the skill's three levels as written. Add the obligation label (V1), an Unknown status (V2), the affected user group (V3) and breadth (V4) as separate fields | **Pending** |
-| **D8** | **Who audits public pages (C1, C2, possibly C8):** this domain or Website Portfolio & Conversion? | The Website domain's public accessibility audit covers the same checks [S16] `:220-221` | **None.** It needs Aleem **with Sai Tejesh Kowtharapu** [S16] `:297`. A working decision would pre-empt the Website manager | **Pending** (with the Website manager) |
-| **D9** | **Findings only, or a proposed patch per finding, in the first version?** | The story's workflow includes patches [S1] `:40`; RESEARCH-5 proposed findings only [S17] `:72` | **Findings only**, with a "proposed fix" text per finding and no branch. Patches need a sandbox branch and the tool grants that B1, B2 and B7 block, and most fixes route to the approval gate anyway (X2) | **Pending** |
+| **D1** | **WCAG 2.1 AA or WCAG 2.2 AA?** | 2.2 adds AA criteria that 2.1 lacks, for example 2.5.8 Target Size (24 px) and 2.4.11 Focus Not Obscured, and removes 4.1.1 Parsing [S20]. It changes checks 7 and 12 and the tag set in E1 | **WCAG 2.1 AA**, because that is what the capability's title and the skill name. 2.2-only results are recorded as a separate label (V1), so switching later loses nothing | **Decided 2026-11-13: WCAG 2.2 AA**; 4.1.1 Parsing recorded as obsolete, not as a check. Differs from the working decision; see the version note at the top |
+| **D2** | **Surface classes and the obligation for each** (§3: C1-C8) | The story forbids one standard for all [S1] `:51` | C1, C2, C3, C5: full AA of the D1 version. C6: upstream (X1). C7, C8: out of the first pass. **C4 internal admin: no working decision. Aleem chooses (a), (b) or (c) in §3.4** | **Decided 2026-11-13:** C1, C2, C3 and C5 full AA; C6 upstream; C7 and C8 out of the first pass; **C4 option (b)**, AA with named criterion-level exceptions in the exception register |
+| **D3** | **Surface priority order** | The story's workflow starts from it [S1] `:37`, `:45` | None proposed. Ordering depends on D2 and D8, and on Aleem's view of exposure | **Decided 2026-11-13:** C3, then C1, C5, C2, C4 |
+| **D4** | **Required passing evidence, per class** (§5: E1-E6) | Decides what "conformant" means | E1, E2, E3, E4 and E6 for every class with an obligation. **E5 (screen reader) only for C1 and C3 key journeys, which Aleem names.** C4 per D2 | **Decided 2026-11-13: agree.** E5 journeys: C1 home → programme page → enquiry or application form; C3 sign in → dashboard → lesson → submit an assignment; each step mapped to its route |
+| **D5** | **Treatment of advisory checks** (7, 8, 9b, and the advisory halves of 3, 4, 11 and 12) | Decides whether the skill's non-AA items can fail a page | Reported in a separate advisory list; never a conformance failure unless Aleem raises one (§5.2) | **Decided 2026-11-13: agree** |
+| **D6** | **Boundary rules:** third-party libraries (C6), generated previews (C7), student content (C2, X5) | Decides what we are answerable for on a page | Libraries count as our content. Preview contents and student content are reported separately, not as template defects | **Decided 2026-11-13: agree** |
+| **D7** | **Severity definitions** (§7) | The ranked list is the capability's main output | Keep the skill's three levels as written. Add the obligation label (V1), an Unknown status (V2), the affected user group (V3) and breadth (V4) as separate fields | **Decided 2026-11-13: agree** |
+| **D8** | **Who audits public pages (C1, C2, possibly C8):** this domain or Website Portfolio & Conversion? | The Website domain's public accessibility audit covers the same checks [S16] `:220-221` | **None.** It needs Aleem **with Sai Tejesh Kowtharapu** [S16] `:297`. A working decision would pre-empt the Website manager | **Aleem's half, 2026-11-13: split** (this domain: design-system layer, shared templates and components; Website: page content and conversion flows). **Sai Tejesh Kowtharapu's half: pending** |
+| **D9** | **Findings only, or a proposed patch per finding, in the first version?** | The story's workflow includes patches [S1] `:40`; RESEARCH-5 proposed findings only [S17] `:72` | **Findings only**, with a "proposed fix" text per finding and no branch. Patches need a sandbox branch and the tool grants that B1, B2 and B7 block, and most fixes route to the approval gate anyway (X2) | **Decided 2026-11-13:** findings only, with a proposed fix written for each finding. No patches |
 
 **Related decisions owned elsewhere:**
 - **Ali Muwwakkil:** skill findings K1-K11; any new dependency (B2); sandbox environment (B1).
@@ -501,8 +509,10 @@ ownership).
 
 ## Sign-off
 
-**Not signed. Aleem's approval is pending on every decision.** Mohammed Abdul Aleem is the
-accountable manager. Ali Muwwakkil's guidance [S24] and Mihret's working decisions (§9) are inputs
+**Aleem's written decisions of 2026-11-13 are recorded below: D1-D7, D9, and his half of D8. The
+criterion is not passed:** D8 needs Sai Tejesh Kowtharapu's half (or C1 and C2 recorded as excluded
+until it is agreed). The body still follows WCAG 2.1 and needs a separate 2.2 revision (version note
+at the top). Mohammed Abdul Aleem is the accountable manager. Ali Muwwakkil's guidance [S24] and Mihret's working decisions (§9) are inputs
 to this sign-off, not a substitute for it.
 
 ### How to review and sign this without portal access
@@ -523,23 +533,46 @@ to this sign-off, not a substitute for it.
 
 ### Decisions
 
-| # | Decision | Mihret's working decision (preparation only) | Aleem's approval (pending) |
+| # | Decision | Mihret's working decision (preparation only) | Aleem's decision (2026-11-13) |
 |---|---|---|---|
-| D1 | WCAG version | 2.1 AA; 2.2-only items labelled separately | ☐ 2.1 AA ☐ 2.2 AA ☐ other: ______ |
-| D2 | Classes and obligations | C1, C2, C3, C5 full AA; C6 upstream; C7, C8 out of first pass; **C4: none** | ☐ agree ☐ change: ______ · C4: ☐ (a) ☐ (b) ☐ (c) ☐ other: ______ |
-| D3 | Priority order | none | Order: ______ |
-| D4 | Passing evidence | E1-E4 + E6; E5 on named C1/C3 journeys | ☐ agree ☐ change: ______ · journeys: ______ |
-| D5 | Advisory checks | Separate list; never a failure | ☐ agree ☐ raise to obligation: ______ |
-| D6 | Libraries, previews, user content | Libraries ours; previews and user content separate | ☐ agree ☐ change: ______ |
-| D7 | Severity | Three levels as written + obligation label, Unknown, user group, breadth | ☐ agree ☐ change: ______ |
-| D8 | Public-page ownership | **none** (with Sai Tejesh Kowtharapu) | ☐ this domain ☐ Website ☐ split: ______ |
-| D9 | Findings only or patches | Findings only, fix described in text | ☐ findings only ☐ patches ☐ other: ______ |
+| D1 | WCAG version | 2.1 AA; 2.2-only items labelled separately | ☐ 2.1 AA ☒ **2.2 AA** ☐ other · 4.1.1 Parsing recorded as obsolete, not as a check |
+| D2 | Classes and obligations | C1, C2, C3, C5 full AA; C6 upstream; C7, C8 out of first pass; **C4: none** | ☒ agree ☐ change · C4: ☐ (a) ☒ **(b)** ☐ (c) ☐ other |
+| D3 | Priority order | none | Order: **C3, C1, C5, C2, C4** |
+| D4 | Passing evidence | E1-E4 + E6; E5 on named C1/C3 journeys | ☒ agree ☐ change · journeys: **C1** home → programme page → enquiry or application form; **C3** sign in → dashboard → lesson → submit an assignment; each step mapped to its route |
+| D5 | Advisory checks | Separate list; never a failure | ☒ agree ☐ raise to obligation |
+| D6 | Libraries, previews, user content | Libraries ours; previews and user content separate | ☒ agree ☐ change |
+| D7 | Severity | Three levels as written + obligation label, Unknown, user group, breadth | ☒ agree ☐ change |
+| D8 | Public-page ownership | **none** (with Sai Tejesh Kowtharapu) | Aleem's half: ☐ this domain ☐ Website ☒ **split:** design-system layer, shared templates and components to this domain; page content and conversion flows to Website. **Sai Tejesh Kowtharapu: pending** |
+| D9 | Findings only or patches | Findings only, fix described in text | ☒ **findings only**, with a proposed fix written for each ☐ patches ☐ other |
 
 ### Sign-off record
 
 | Date (Central) | Channel | Decisions covered | Aleem's words (quote, or a summary Aleem confirmed) | Where the original is kept | Recorded by |
 |---|---|---|---|---|---|
-| (none) | (none) | (none) | *No response recorded yet.* | (none) | (none) |
+| 5:04 AM CST on 2026-11-13 | Written comment by Mohammed Abdul Aleem on PR #1 of this repository | D1-D7, D9; D8 (his half only) | Quoted in full below this table | <https://github.com/MihretColaberry1/ColaberryInternship/pull/1#issuecomment-6850999330> | Mihret Netsereab, 2026-11-17 (session CC-20261117-w4cg) |
+
+Aleem's words, copied exactly from that comment (he asked: *"Copy them into that document's sign-off
+record when it moves to its own PR."*):
+
+> **Decisions: WCAG AA accessibility audit R0 (`wcag_aa_accessibility_audit.R0.md`)**
+> These are my written, dated decisions. Copy them into that document's sign-off record when it moves to its own PR.
+>
+> - **D1:** WCAG **2.2** AA. It is the current W3C Recommendation and the standard I hold my own work to. Record 4.1.1 Parsing as obsolete, not as a check.
+> - **D2:** C1, C2, C3 and C5: full AA. C6: upstream. C7 and C8: out of the first pass. **C4 internal admin: option (b),** AA with named criterion-level exceptions in the exception register. Staff are users too.
+> - **D3:** priority order: C3 authenticated portal, then C1 public marketing, C5 referral, C2 shareable records, C4 internal admin. Learners use C3 every day, and C1 is the first impression.
+> - **D4:** agree: E1 to E4 and E6 for every class. E5 screen-reader journeys: on C1, home to a programme page to the enquiry or application form. On C3, sign in, open the dashboard, open a lesson, submit an assignment. Map each step to its route.
+> - **D5:** agree. Advisory checks go on a separate list and are never a failure.
+> - **D6:** agree. Libraries count as ours; previews and student content are reported separately.
+> - **D7:** agree. The three severity levels as written, plus the obligation label, the Unknown status, the user group and breadth (V1 to V4) as separate fields.
+> - **D8:** my half: **split.** This domain audits the design-system layer and the shared templates and components, where most AA failures start. The Website domain audits page content and conversion flows. Findings go to the owner of the layer. Sai Tejesh must confirm his half before D8 is settled.
+> - **D9:** findings only, with a proposed fix written for each finding. No patches.
+
+**Channel note:** the evidence rule above names an email reply or confirmed meeting notes. This is a
+written, dated comment from Aleem's own account, and he directed that it be copied here. Whether the
+platform accepts it as evidence for the criterion remains **Unknown**, as stated above.
+
+**Criterion state after this record:** still `passed: false` in `.colaberry/progress.json`, which this
+PR does not change. Outstanding: Sai Tejesh Kowtharapu's half of D8.
 
 When the conditions above are met, the R0 criterion in `.colaberry/progress.json` can be set to
 `passed: true`, citing this file and the sign-off record. **Not before. Working decisions never
