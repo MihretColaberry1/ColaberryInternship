@@ -43,6 +43,8 @@ export function exposureItems() {
   ];
 }
 
+export const GAP_LIST_TITLE = 'Things this console cannot show or claim';
+
 const ENDPOINT_WORDS = { not_captured: 'Not captured yet: left blank.', loading: 'Loading…' };
 
 /**
@@ -99,10 +101,13 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, n
   const state = sourceState === 'loading' ? 'loading' : 'ready';
   const extra = { rows: project?.model?.rows ?? [], reasons: sync?.verdict_reasons ?? {}, names };
   const ahead = ticksAheadOfVerifier(extra.rows);
-  // With no source file, capability counts would read "0 of 0": say the file is missing instead.
+  // With no source file, capability counts would read "0 of 0": say the file is missing instead. That
+  // sentence stays in the panel body; only the gap list itself is folded.
+  const fileError = sourceState === 'error'
+    ? [sourceFileTag(), 'The capability source file could not be read, so no capability gap can be counted.'] : null;
   const items = sourceState === 'ready' ? gapItems(gaps, extra)
-    : sourceState === 'error' ? [[sourceFileTag(), 'The capability source file could not be read, so no capability gap can be counted.'],
-      ...gapItems(gaps, extra).filter((_, i) => i === 0 || i >= 3)] : [];
+    : sourceState === 'error' ? [fileError, ...gapItems(gaps, extra).filter((_, i) => i === 0 || i >= 3)] : [];
+  const folded = fileError ? items.slice(1) : items;
   const endpointsDown = gaps?.endpoints_not_ready ?? [];
   const synced = gaps?.endpoints_synced ?? [];
   return consolePanel({
@@ -119,11 +124,15 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, n
       // Short label: the glance grid gives a long label its full width and squeezes the value (820 px check).
       ['Ticks ahead of verifier', project?.model ? `${ahead.length} ${ahead.length === 1 ? 'story' : 'stories'}` : 'project plan not loaded'],
     ] : null,
+    // The gap list is folded into the first disclosure (Aleem, 2026-11-17, point 2), as the ten rungs were.
+    // The file-error sentence keeps its original plain list-item markup, only moved out of the fold.
     body: state === 'loading' ? loadingBlock()
-      : h('ul', { class: 'gap-list' }, items.map(([tag, text]) => h('li', {}, tag, h('p', {}, text)))),
+      : fileError ? h('ul', { class: 'gap-list' }, h('li', {}, fileError[0], h('p', {}, fileError[1]))) : null,
     action: state === 'ready' ? { href: '#/guide/refresh', label: 'Refresh the data from the portal' } : null,
     reads: [endpointTags(6), platformTag('autonomyLadder.ts'), ' ', sourceFileTag()],
     details: state === 'ready' ? [
+      { title: GAP_LIST_TITLE, count: folded.length,
+        body: h('ul', { class: 'gap-list' }, folded.map(([tag, text]) => h('li', {}, tag, h('p', {}, text)))) },
       { title: 'Endpoints with no usable response', count: endpointsDown.length, body: endpointsDown.length
         ? h('ul', { class: 'gap-list' }, endpointsDown.map((e) => h('li', {}, sourceTag('endpoint', `GET ${ENDPOINTS[e.key]}`),
           h('p', {}, ENDPOINT_WORDS[e.state] ?? `Not read (${e.state}${e.status ? `, HTTP ${e.status}` : ''}): left blank.`))))

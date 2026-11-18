@@ -61,22 +61,31 @@ const count = (groups, key) => (groups.state === 'ok' ? String(groups[key].lengt
 
 const snapshotTag = () => sourceTag('platform_sync', '.colaberry/agent-domain.json · governance: every product_experience request');
 
+export const SOURCE_NOTE_TITLE = 'Where these rows come from';
+
 /**
  * Where the rows come from, said plainly: the snapshot, when it last changed, the 200-row limit, and the
  * platform's own label for the section, which names a different route (one that holds only your own).
+ * Folded into the panel's first disclosure (Aleem, 2026-11-17, point 2); limitWarning keeps the one part
+ * that can become a warning in the panel body.
  */
-function sourceNote(e, count) {
+function sourceNote(e) {
   const label = e?.platform?.label;
-  const full = count >= GOVERNANCE_SNAPSHOT.limit;
   return h('div', { class: 'reads' },
     h('p', {}, snapshotTag(), ' ', GOVERNANCE_SNAPSHOT.statement, ` It was ${lastChangedWords(e?.last_changed ?? null)}. `,
       'Read from this repository; this page called no endpoint.'),
-    h('p', { class: full ? 'error' : 'muted' }, GOVERNANCE_SNAPSHOT.limit_words,
-      full ? ` This snapshot holds ${count}, the limit, so older requests may be missing.` : ''),
+    h('p', { class: 'muted' }, GOVERNANCE_SNAPSHOT.limit_words),
     label ? h('p', { class: 'muted' }, 'The snapshot labels this section ', h('code', {}, label), '. ',
       label.includes(GOVERNANCE_SNAPSHOT.mine_route)
         ? "That route returns only the signed-in person's own requests; the platform fills this section with every request on the domain, so the label does not describe these rows."
         : 'This page does not use that label as the source.') : null);
+}
+
+/** A snapshot at the 200-row limit may be missing older requests: said in the panel body, never folded. */
+function limitWarning(count) {
+  if (count < GOVERNANCE_SNAPSHOT.limit) return null;
+  return h('p', { class: 'error' }, GOVERNANCE_SNAPSHOT.limit_words,
+    ` This snapshot holds ${count}, the limit, so older requests may be missing.`);
 }
 
 /** The platform's own pending count, beside the rows it describes; a disagreement is said, not resolved. */
@@ -126,12 +135,12 @@ export function renderGovernancePanel(groups, rows, { order, project, link = UNK
   if (state === 'empty') {
     headline = 'No change or tool requests are in the Product Experience governance queue, as the platform snapshot records. '
       + 'Nothing is waiting on a human decision.';
-    body = [sourceNote(groups.endpoint, 0), pendingCheck(groups)];
+    body = [pendingCheck(groups)];
     action = { href: '#/guide/requests', label: 'How to file a tool request' };
   }
   if (state === 'ready') {
     headline = readyHeadline(groups);
-    body = [sourceNote(groups.endpoint, groups.all.length), pendingCheck(groups)];
+    body = [limitWarning(groups.all.length), pendingCheck(groups)];
     action = groups.waiting.length ? { href: '#/guide/requests', label: 'Follow up a submitted request' } : { href: '#/guide/requests', label: 'How to file a tool request' };
   }
   const disclosure = groups.endpoint?.platform?.disclosure;
@@ -152,6 +161,7 @@ export function renderGovernancePanel(groups, rows, { order, project, link = UNK
     reads: [snapshotTag(), ' ', platformTag(GOVERNANCE_SNAPSHOT.source.path, GOVERNANCE_SNAPSHOT.source.commit), ' ',
       platformTag(REQUEST_RULE.source.path), ' ', sourceFileTag()],
     details: [
+      state === 'empty' || state === 'ready' ? { title: SOURCE_NOTE_TITLE, body: sourceNote(groups.endpoint) } : null,
       groups.state === 'ok' ? { title: 'Change requests', count: groups.change.length, body: requestTable(groups.change, 'change requests', names) } : null,
       groups.state === 'ok' ? { title: 'Tool requests', count: groups.tool.length, body: requestTable(groups.tool, 'tool requests', names) } : null,
       groups.state === 'ok' && groups.unknown_kind.length ? { title: 'Requests with no stated kind', count: groups.unknown_kind.length, body: requestTable(groups.unknown_kind, 'requests without a kind', names) } : null,

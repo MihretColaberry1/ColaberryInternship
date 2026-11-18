@@ -26,7 +26,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT_FILE = process.env.OUT_FILE ?? path.join(ROOT, 'docs/evidence/review-corrections-check.json');
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8765/';
 const CHROME = process.env.CHROME ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const WIDTHS = [['narrow', 320, 800], ['phone', 390, 844], ['tablet', 820, 1180], ['desktop', 1440, 900]];
+// 1536 px is the width Aleem reviews the running page at (2026-11-17); appended so WIDTHS[1] and [3] keep their meaning.
+const WIDTHS = [['narrow', 320, 800], ['phone', 390, 844], ['tablet', 820, 1180], ['desktop', 1440, 900], ['wide', 1536, 900]];
 const TOLERANCE = 0.5; // px: sub-pixel rounding only
 
 const settled = (page) => page.waitForFunction(() => document.querySelectorAll('.panel').length === 6

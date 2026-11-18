@@ -184,3 +184,51 @@ test('Panel 3: the ten rungs sit in a closed disclosure titled in the owner\'s w
     assert.doesNotMatch(c.textContent, /The ten rungs, in the owner's words/, 'no heading left in the body');
   }
 });
+
+// Aleem's review of the running page (2026-11-17), point 2: the empty space moved to the second row, so
+// Panel 6's gap list and Panel 5's source note are folded into closed disclosures, as the rungs were.
+const panelChildren = (panel) => panel.children.filter((c) => !hasClass('panel-details')(c));
+const firstDisclosure = (panel) => findAll(findAll(panel, hasClass('panel-details'))[0], hasClass('disclosure'))[0];
+const summaryOf = (d) => findAll(d, (el) => el.tagName === 'SUMMARY')[0].textContent;
+
+test('Panel 6: the eight gaps sit in the first closed disclosure, with the headline and four glance counts still visible', async () => {
+  const { domain, project } = await realInputs();
+  const gaps = byId(renderPanels(domain, project)).gaps;
+  const holder = firstDisclosure(gaps);
+  assert.equal(summaryOf(holder), 'Things this console cannot show or claim (8)');
+  assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
+  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, 8, 'all eight gaps are listed');
+  assert.match(holder.textContent, /Your ticks are ahead of the platform verifier for product_experience\.STORY-000/);
+  for (const c of panelChildren(gaps)) assert.equal(findAll(c, hasClass('gap-list')).length, 0, 'no gap list outside the disclosures');
+  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, /^8 things this console cannot show or cannot claim/);
+  assert.deepEqual(findAll(findAll(gaps, hasClass('glance'))[0], (el) => el.tagName === 'DT').map((dt) => dt.textContent),
+    ['Endpoints with no usable response', 'Endpoints from the sync', 'Fields with no verified source', 'Ticks ahead of verifier']);
+});
+
+test('Panel 6: when the capability file cannot be read, that error stays visible above the folded gaps', async () => {
+  const { domain, project } = await realInputs();
+  const broken = { ...domain, source: { status: 'error', error: 'the server answered HTTP 404' } };
+  const gaps = byId(renderPanels(broken, project)).gaps;
+  const visible = panelChildren(gaps).map((c) => c.textContent).join(' ');
+  assert.match(visible, /The capability source file could not be read, so no capability gap can be counted\./);
+  const holder = firstDisclosure(gaps);
+  assert.match(summaryOf(holder), /^Things this console cannot show or claim \(\d+\)$/);
+  assert.equal(holder.getAttribute('open'), null);
+  assert.doesNotMatch(holder.textContent, /could not be read/, 'the error is not folded away');
+  // Original plain styling: a gap-list item as before the fold, never the red .error block (review, 2026-11-17).
+  const items = panelChildren(gaps).flatMap((c) => findAll(c, (el) => el.tagName === 'LI'));
+  assert.ok(items.some((li) => /could not be read/.test(li.textContent)), 'the sentence is a plain list item');
+  assert.equal(findAll(gaps, hasClass('error')).filter((el) => /could not be read/.test(el.textContent)).length, 0, 'no red error styling');
+});
+
+test('Panel 5: the source note sits in the first closed disclosure, "Where these rows come from"', async () => {
+  const { domain, project } = await realInputs();
+  const gov = byId(renderPanels(domain, project)).governance;
+  const holder = firstDisclosure(gov);
+  assert.equal(summaryOf(holder), 'Where these rows come from');
+  assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
+  assert.match(holder.textContent, /The platform includes at most the 200 newest requests/);
+  assert.match(holder.textContent, /The snapshot labels this section/);
+  const visible = panelChildren(gov).map((c) => c.textContent).join(' ');
+  assert.doesNotMatch(visible, /The platform includes at most the 200 newest requests|The snapshot labels this section/, 'the note is not also in the body');
+});

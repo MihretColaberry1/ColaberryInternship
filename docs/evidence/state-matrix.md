@@ -2,9 +2,9 @@
 
 **Source:** [state-matrix.html](state-matrix.html) renders the real panel code against nine
 scenarios ([state-fixtures.js](state-fixtures.js)). The table below was read from each rendered
-panel's `data-state` ([state-matrix.json](state-matrix.json), re-captured 3:28 PM CST on 2026-11-15
-after Panel 3 began reading the platform's authority record and Panel 5 the platform's synced governance
-queue), not typed by hand. `tests/state-matrix.test.mjs` fails if this table, a scenario's stated
+panel's `data-state` ([state-matrix.json](state-matrix.json), re-captured 6:49 PM CST on 2026-11-17
+after Panels 5 and 6 folded their source note and gap list into closed disclosures; every panel's state
+is unchanged from the capture of 2026-11-15), not typed by hand. `tests/state-matrix.test.mjs` fails if this table, a scenario's stated
 states, and the render ever disagree. The platform-synced files are those of 2026-11-14 (4:12 PM CST).
 Columns follow the brief's panel order.
 
