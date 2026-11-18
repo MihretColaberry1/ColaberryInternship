@@ -1,0 +1,234 @@
+// The six-panel console (STORY-000, current brief of 2026-11-03), rendered for real through the fake
+// DOM: panel order, the endpoint each panel names (criterion 1), the five states and how they differ
+// (criterion 2), one primary action per panel, collapsed details, and no trace of the nine tabs.
+// Run from the repository root: node --test tests/console.test.mjs
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
+import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE, loadAgentDomainData } from '../command-center/agent-domain-data.js';
+import { ENDPOINTS, PANEL_ENDPOINTS } from '../command-center/agent-domain-facts.js';
+import { loadProjectData } from '../command-center/data.js';
+import { buildOverviewModel } from '../command-center/model.js';
+import { PANEL_ORDER, renderConsole } from '../command-center/console.js';
+import { TEN_RUNGS_TITLE } from '../command-center/panel-ladder.js';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+// Repo files from disk; the snapshot always answers 404, so a local snapshot cannot change results.
+async function diskFetch(url) {
+  if (url === SNAPSHOT_FILE) return { ok: false, status: 404, json: async () => null };
+  try {
+    const text = await readFile(path.join(ROOT, url), 'utf8');
+    return { ok: true, status: 200, json: async () => JSON.parse(text) };
+  } catch (err) {
+    if (err.code === 'ENOENT') return { ok: false, status: 404, json: async () => null };
+    throw err;
+  }
+}
+
+// `sync: false` makes the platform-synced file answer 404, to render the page without it.
+async function realInputs({ sync = true } = {}) {
+  const fetchImpl = sync ? diskFetch
+    : async (url) => (url === PLATFORM_SYNC_FILE ? { ok: false, status: 404, json: async () => null } : diskFetch(url));
+  const domain = { status: 'loaded', ...(await loadAgentDomainData({ fetchImpl })) };
+  const data = await loadProjectData({ fetchImpl: diskFetch });
+  return { domain, project: { status: 'loaded', data, model: buildOverviewModel(data, new Date('2026-11-03T18:00:00Z')), error: null } };
+}
+
+function renderPanels(domain, project) {
+  const remove = installFakeDom();
+  try {
+    return findAll(renderConsole(domain, project), hasClass('panel'));
+  } finally { remove(); }
+}
+
+const byId = (panels) => Object.fromEntries(panels.map((p) => [p.getAttribute('data-panel'), p]));
+const GET = (key) => `GET ${ENDPOINTS[key]}`;
+const endpointsNamed = (p) => new Set(findAll(findAll(p, hasClass('panel-reads'))[0], hasClass('src-endpoint'))
+  .map((tag) => findAll(tag, hasClass('src-detail'))[0]?.textContent.replace(/^ · /, '')));
+// Display id to the brief's panel number (docs/stories/STORY-000.md).
+const BRIEF = { employee: 1, inventory: 2, ladder: 3, behaviour: 4, governance: 5, gaps: 6 };
+
+test('six panels render in the brief order, each numbered with its brief panel number', async () => {
+  const { domain, project } = await realInputs();
+  const panels = renderPanels(domain, project);
+  assert.deepEqual(panels.map((p) => p.getAttribute('data-panel')), PANEL_ORDER);
+  // Aleem's review of PR #1 (2026-11-08), required change 2: the brief's order, the same for every domain.
+  assert.deepEqual(PANEL_ORDER, ['employee', 'inventory', 'ladder', 'behaviour', 'governance', 'gaps']);
+  panels.forEach((p, i) => assert.equal(findAll(p, hasClass('panel-order'))[0].textContent, String(i + 1)));
+  // The number on screen is the brief's number for that panel, so a reviewer moving between domains reads the same thing.
+  panels.forEach((p) => assert.equal(findAll(p, hasClass('panel-order'))[0].textContent, String(BRIEF[p.getAttribute('data-panel')])));
+});
+
+test('criterion 1: each panel names, as whole tags, every endpoint the brief assigns it', async () => {
+  const { domain, project } = await realInputs();
+  const panels = byId(renderPanels(domain, project));
+  for (const [id, n] of Object.entries(BRIEF)) {
+    const named = endpointsNamed(panels[id]);
+    for (const k of PANEL_ENDPOINTS[n]) assert.ok(named.has(GET(k)), `${id} does not name ${GET(k)}: ${[...named].join(', ')}`);
+  }
+  for (const k of Object.keys(ENDPOINTS)) assert.ok(endpointsNamed(panels.gaps).has(GET(k)), `gaps does not name ${GET(k)}`);
+});
+
+test('today, from the platform sync: Panel 1 is ready, Panel 5 is empty (no requests), the other four are ready', async () => {
+  const { domain, project } = await realInputs();
+  const panels = byId(renderPanels(domain, project));
+  const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
+  assert.deepEqual(states, { employee: 'ready', governance: 'empty', inventory: 'ready', ladder: 'ready', behaviour: 'ready', gaps: 'ready' });
+  for (const id of ['employee', 'governance']) assert.equal(findAll(panels[id], hasClass('not-available')).length, 0, id);
+});
+
+test('with neither a snapshot nor the platform sync: Panels 1, 3 and 5 are "Not available", the other three are ready', async () => {
+  // Panel 3 reads the platform's authority record from the synced file (2026-11-14), so without the
+  // sync it says what is missing rather than calculating anything.
+  const { domain, project } = await realInputs({ sync: false });
+  const panels = byId(renderPanels(domain, project));
+  const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
+  assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'ready', ladder: 'not_available', behaviour: 'ready', gaps: 'ready' });
+  for (const id of ['employee', 'ladder', 'governance']) {
+    const block = findAll(panels[id], hasClass('not-available'));
+    assert.equal(block.length, 1, id);
+    for (const word of ['Missing', 'Waiting for', 'Will show']) assert.match(block[0].textContent, new RegExp(word), id);
+    assert.match(findAll(panels[id], hasClass('state-chip'))[0].textContent, /Not available/);
+  }
+});
+
+test('criterion 2: a loading panel says "Loading", is aria-busy, and carries no "Not available" block', async () => {
+  const panels = renderPanels({ status: 'loading' }, null);
+  assert.equal(panels.length, 6);
+  for (const p of panels) {
+    assert.equal(p.getAttribute('data-state'), 'loading', p.getAttribute('data-panel'));
+    assert.equal(p.getAttribute('aria-busy'), 'true');
+    assert.match(findAll(p, hasClass('state-chip'))[0].textContent, /Loading/);
+    assert.equal(findAll(p, hasClass('not-available')).length, 0);
+  }
+});
+
+test('a refused capture is an error with the HTTP status, not "Not available" and not loading', async () => {
+  const { domain, project } = await realInputs();
+  const refused = { state: 'refused', status: 403, fetched_at: '2026-11-03T18:00:00Z', message: null };
+  const panels = byId(renderPanels({ ...domain, snapshot: { ...domain.snapshot, status: 'captured', endpoints: { ...domain.snapshot.endpoints, mine: refused, requests: refused } } }, project));
+  assert.equal(panels.employee.getAttribute('data-state'), 'error');
+  assert.equal(findAll(panels.employee, hasClass('error-block'))[0].getAttribute('role'), 'alert');
+  assert.match(findAll(panels.employee, hasClass('error-block'))[0].textContent, /HTTP 403/);
+  // Panel 5 reads only the platform's synced whole-domain queue, so a refused personal capture of the
+  // -mine route does not touch it (2026-11-14).
+  assert.equal(panels.governance.getAttribute('data-state'), 'empty');
+});
+
+test('a missing source file puts the capability panels in an error state, said in words', async () => {
+  const panels = byId(renderPanels({ status: 'loaded', source: { status: 'error', error: 'HTTP 404' }, snapshot: { status: 'not_captured', endpoints: {
+    mine: { state: 'not_captured' }, domain: { state: 'not_captured' }, coverage: { state: 'not_captured' }, requests: { state: 'not_captured' } } } }, null));
+  for (const id of ['inventory', 'ladder', 'behaviour']) {
+    assert.equal(panels[id].getAttribute('data-state'), 'error', id);
+    assert.match(panels[id].textContent, /could not be read/);
+  }
+  assert.doesNotMatch(panels.gaps.textContent, /0 of 0/);
+});
+
+test('an empty governance queue says so, instead of an empty table', async () => {
+  const { domain, project } = await realInputs();
+  const panels = byId(renderPanels(domain, project));
+  assert.equal(panels.governance.getAttribute('data-state'), 'empty');
+  assert.match(panels.governance.textContent, /No change or tool requests are in the Product Experience governance queue/);
+});
+
+test('every panel has exactly one primary action, and every disclosure starts collapsed', async () => {
+  const { domain, project } = await realInputs();
+  for (const p of renderPanels(domain, project)) {
+    assert.equal(findAll(p, hasClass('btn-primary')).length, 1, p.getAttribute('data-panel'));
+    for (const d of findAll(p, hasClass('disclosure'))) assert.equal(d.getAttribute('open'), null);
+  }
+});
+
+test('content from the old tabs is carried into the panels, and the tabs themselves are gone', async () => {
+  const { domain, project } = await realInputs();
+  const remove = installFakeDom();
+  try {
+    const out = renderConsole(domain, project);
+    const panels = byId(findAll(out, hasClass('panel')));
+    const summaries = (id) => findAll(panels[id], (el) => el.tagName === 'SUMMARY').map((s) => s.textContent);
+    assert.ok(summaries('inventory').some((t) => t.startsWith('Stories: your ticks and the platform verifier')));
+    assert.ok(summaries('inventory').some((t) => t.startsWith('Release timeline')));
+    assert.ok(summaries('governance').some((t) => t.startsWith('Guardrails waiting on a human')));
+    assert.ok(summaries('gaps').some((t) => t.startsWith('Not in the project plan yet')));
+    assert.equal(findAll(out, hasClass('tabs')).length, 0);
+    assert.doesNotMatch(findAll(out, () => true).map((n) => n.textContent).join(''), /SAMPLE DATA|Sample mode/);
+  } finally { remove(); }
+});
+
+// Aleem's re-review of PR #1 (2026-11-13): the ten rungs are folded into a closed disclosure, so the
+// ladder panel ends near its row neighbours instead of leaving ~1,400 px of empty page under them.
+test('Panel 3: the ten rungs sit in a closed disclosure titled in the owner\'s words, not in the panel body', async () => {
+  const { domain, project } = await realInputs();
+  const ladder = byId(renderPanels(domain, project)).ladder;
+  const lists = findAll(ladder, hasClass('rung-list'));
+  assert.equal(lists.length, 1, 'one ten-rung list');
+  const disclosures = findAll(ladder, hasClass('disclosure'));
+  const holder = disclosures.find((d) => findAll(d, hasClass('rung-list')).length === 1);
+  assert.ok(holder, 'the ten-rung list is inside a disclosure');
+  assert.equal(holder.getAttribute('open'), null, 'and the disclosure starts closed');
+  const summary = findAll(holder, (el) => el.tagName === 'SUMMARY')[0];
+  assert.equal(summary.textContent, `${TEN_RUNGS_TITLE} (10)`);
+  assert.equal(TEN_RUNGS_TITLE, "The ten rungs, in the owner's words");
+  assert.equal(findAll(lists[0], (el) => el.tagName === 'LI').length, 10, 'all ten rungs are listed');
+  // Nothing outside the disclosures shows the rungs or repeats their heading.
+  const outside = findAll(ladder, hasClass('panel-details'))[0];
+  const rest = ladder.children.filter((c) => c !== outside);
+  for (const c of rest) {
+    assert.equal(findAll(c, hasClass('rung-list')).length, 0, 'no rung list outside the disclosures');
+    assert.doesNotMatch(c.textContent, /The ten rungs, in the owner's words/, 'no heading left in the body');
+  }
+});
+
+// Aleem's review of the running page (2026-11-17), point 2: the empty space moved to the second row, so
+// Panel 6's gap list and Panel 5's source note are folded into closed disclosures, as the rungs were.
+const panelChildren = (panel) => panel.children.filter((c) => !hasClass('panel-details')(c));
+const firstDisclosure = (panel) => findAll(findAll(panel, hasClass('panel-details'))[0], hasClass('disclosure'))[0];
+const summaryOf = (d) => findAll(d, (el) => el.tagName === 'SUMMARY')[0].textContent;
+
+test('Panel 6: the eight gaps sit in the first closed disclosure, with the headline and four glance counts still visible', async () => {
+  const { domain, project } = await realInputs();
+  const gaps = byId(renderPanels(domain, project)).gaps;
+  const holder = firstDisclosure(gaps);
+  assert.equal(summaryOf(holder), 'Things this console cannot show or claim (8)');
+  assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
+  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, 8, 'all eight gaps are listed');
+  assert.match(holder.textContent, /Your ticks are ahead of the platform verifier for product_experience\.STORY-000/);
+  for (const c of panelChildren(gaps)) assert.equal(findAll(c, hasClass('gap-list')).length, 0, 'no gap list outside the disclosures');
+  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, /^8 things this console cannot show or cannot claim/);
+  assert.deepEqual(findAll(findAll(gaps, hasClass('glance'))[0], (el) => el.tagName === 'DT').map((dt) => dt.textContent),
+    ['Endpoints with no usable response', 'Endpoints from the sync', 'Fields with no verified source', 'Ticks ahead of verifier']);
+});
+
+test('Panel 6: when the capability file cannot be read, that error stays visible above the folded gaps', async () => {
+  const { domain, project } = await realInputs();
+  const broken = { ...domain, source: { status: 'error', error: 'the server answered HTTP 404' } };
+  const gaps = byId(renderPanels(broken, project)).gaps;
+  const visible = panelChildren(gaps).map((c) => c.textContent).join(' ');
+  assert.match(visible, /The capability source file could not be read, so no capability gap can be counted\./);
+  const holder = firstDisclosure(gaps);
+  assert.match(summaryOf(holder), /^Things this console cannot show or claim \(\d+\)$/);
+  assert.equal(holder.getAttribute('open'), null);
+  assert.doesNotMatch(holder.textContent, /could not be read/, 'the error is not folded away');
+  // Original plain styling: a gap-list item as before the fold, never the red .error block (review, 2026-11-17).
+  const items = panelChildren(gaps).flatMap((c) => findAll(c, (el) => el.tagName === 'LI'));
+  assert.ok(items.some((li) => /could not be read/.test(li.textContent)), 'the sentence is a plain list item');
+  assert.equal(findAll(gaps, hasClass('error')).filter((el) => /could not be read/.test(el.textContent)).length, 0, 'no red error styling');
+});
+
+test('Panel 5: the source note sits in the first closed disclosure, "Where these rows come from"', async () => {
+  const { domain, project } = await realInputs();
+  const gov = byId(renderPanels(domain, project)).governance;
+  const holder = firstDisclosure(gov);
+  assert.equal(summaryOf(holder), 'Where these rows come from');
+  assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
+  assert.match(holder.textContent, /The platform includes at most the 200 newest requests/);
+  assert.match(holder.textContent, /The snapshot labels this section/);
+  const visible = panelChildren(gov).map((c) => c.textContent).join(' ');
+  assert.doesNotMatch(visible, /The platform includes at most the 200 newest requests|The snapshot labels this section/, 'the note is not also in the body');
+});

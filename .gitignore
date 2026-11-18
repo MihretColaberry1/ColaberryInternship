@@ -3,3 +3,6 @@
 tmp/
 node_modules/
 __pycache__/
+
+# Endpoint snapshots are captured with a personal sign-in and reviewed by hand before any is committed.
+command-center/snapshots/

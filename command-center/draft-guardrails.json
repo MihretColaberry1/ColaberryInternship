@@ -13,7 +13,7 @@
         "product_experience.CAP.color_contrast_regression_check"
       ],
       "sources": [
-        "Ali Muwwakkil, email to Mihret asking for this to be typed as SAFE (the email is not stored in this repository)",
+        "Platform engineering contact, email to Mihret asking for this to be typed as SAFE (the email is not stored in this repository)",
         "docs/definitions/design_token_drift_audit.R0.md, section 5: a token-set gap is escalated as a design decision, never auto-substituted",
         "docs/discovery/04-manager-interview.md, Q3: the agent reports differences but never proposes design-system changes"
       ],

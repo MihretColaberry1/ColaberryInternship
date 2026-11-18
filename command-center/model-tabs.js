@@ -105,31 +105,6 @@ export function rolesWithStories(plan) {
   });
 }
 
-// Scoped agents when the plan has them; otherwise story owners, which are NOT agents.
-export function agentRoster(plan, rows) {
-  const row = rowLookup(rows);
-  const agents = plan.agents ?? [];
-  if (agents.length > 0) {
-    return {
-      kind: 'agents',
-      items: agents.map((a) => ({
-        id: a.id ?? a.name, name: a.name ?? a.id, purpose: a.purpose ?? null,
-        triggerType: a.trigger_type ?? null, trigger: a.trigger ?? null,
-        inputs: a.inputs ?? [], outputs: a.outputs ?? [], autonomyLevel: a.autonomy_level ?? null,
-        approvalGates: a.approval_gates ?? [], escalationRules: a.escalation_rules ?? [],
-        skills: a.skills ?? [], owns: (a.owns ?? []).map(row),
-      })),
-    };
-  }
-  const groups = new Map();
-  for (const s of plan.stories) {
-    const owner = (s.owner_agent ?? '').trim() || 'Unassigned';
-    if (!groups.has(owner)) groups.set(owner, []);
-    groups.get(owner).push(row(s.id));
-  }
-  return { kind: 'owners', items: [...groups].map(([name, owns]) => ({ id: name, name, owns, skills: [] })) };
-}
-
 // Positions (in percent) for the release Gantt. Only dates the plan holds are drawn.
 export function timeline(plan, rows, today) {
   const releases = plan.releases.map((r) => ({
@@ -166,24 +141,4 @@ export function taskList(rows, today) {
     shiftDays: r.dueOn && r.dueBaselineOn ? dayDiff(r.dueBaselineOn, r.dueOn) : null,
     pastDue: Boolean(r.dueOn) && r.dueOn < today && r.state !== 'verified',
   }));
-}
-
-// The shapes this Command Center reads, from docs/DATA_CONTRACT.md, with live counts from the files.
-export function dataEntities(plan, progress) {
-  const count = (v) => (Array.isArray(v) ? v.length : 0);
-  return [
-    { name: 'Requirement', source: 'plan.json → requirements[]', count: count(plan.requirements),
-      fields: ['id', 'statement', 'kind', 'priority', 'cluster', 'fulfilled_by → Story'] },
-    { name: 'Release', source: 'plan.json → releases[]', count: count(plan.releases),
-      fields: ['key', 'name', 'goal', 'demo', 'starts_on', 'ends_on', 'is_demo_target', 'story_ids → Story'] },
-    { name: 'Story', source: 'plan.json → stories[]', count: count(plan.stories),
-      fields: ['id', 'release → Release', 'title', 'narrative', 'fulfills → Requirement', 'acceptance', 'due_on', 'due_baseline_on'] },
-    { name: 'Agent', source: 'plan.json → agents[]', count: count(plan.agents),
-      fields: ['id', 'name', 'purpose', 'trigger', 'autonomy_level', 'approval_gates', 'owns → Story'] },
-    { name: 'Story progress', source: 'progress.json → stories[]', count: count(progress.stories),
-      fields: ['id → Story', 'criteria[] (text, passed)', 'files_touched', 'tests_added', 'notes'] },
-    { name: 'Verification', source: 'progress.json → stories[].verification', count: progress.stories.filter((s) => s.verification).length,
-      fields: ['state', 'criteria_passed', 'criteria_total', 'commit_sha', 'points_awarded', 'outstanding'] },
-    { name: 'Manifest', source: 'manifest.json', count: 1, fields: ['generated_at', 'plan_sha256', 'files[]'] },
-  ];
 }
