@@ -5,7 +5,8 @@
 **Accountable manager:** Mohammed Abdul Aleem · **Website domain manager:** Sai Tejesh Kowtharapu
 (as recorded, see §2.3) · **DRI:** Ali Muwwakkil
 **Prepared by:** Mihret Netsereab · first draft 2026-11-05
-**Status:** **draft, ready for review, not signed.** This document is what the R0 criterion asks the
+**Status:** **draft; Aleem's half of the agreement (2026-11-13) recorded in [Sign-off](#sign-off);
+not passed, because Sai Tejesh Kowtharapu has not yet answered.** This document is what the R0 criterion asks the
 two managers to agree on: *"Mohammed Abdul Aleem and the Website domain's manager agree in writing
 which surfaces this domain audits"* [S1] `:79`, `:108`. Until **both** agreements are recorded in
 [Sign-off](#sign-off), the criterion stays unpassed and the capability stays `draft`. Neither
@@ -278,25 +279,26 @@ the same for every row:
   content and conversion (the layer question is §6).
 - **D:** Neither domain audits it for now. Recorded as an explicit exclusion, with the reason.
 
-No option is pre-selected.
+No option is pre-selected by this document. The Aleem column shows his written answers of 2026-11-13
+(Sign-off record); the Tejesh column is still blank.
 
 | # | Surface (§1 row) | What each option implies | Aleem | Tejesh |
 |---|---|---|---|---|
 | | ***The four core surfaces (§1.1)*** | | | |
-| J1 | Platform frontend (1) | A matches the domain's other capability records. B or C would move part of the platform's public pages to Website. Which pages are "public" vs "admin" isn't defined here | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
-| J2 | AI Flotation app (2) | It's a skeleton, so an audit may find little of substance either way | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
-| J3 | CPN app (3) | The only one of the three that is a full live site today | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
-| J4 | Refactored app, preview host (4) | Served only at the preview host. It has no DESIGN_SYSTEM.md, so under A or C the first finding is that absence (E3) | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
+| J1 | Platform frontend (1) | A matches the domain's other capability records. B or C would move part of the platform's public pages to Website. Which pages are "public" vs "admin" isn't defined here | **☒A** ☐B ☐C ☐D (2026-11-13) | ☐A ☐B ☐C ☐D |
+| J2 | AI Flotation app (2) | It's a skeleton, so an audit may find little of substance either way | ☐A ☐B **☒C** ☐D (2026-11-13) | ☐A ☐B ☐C ☐D |
+| J3 | CPN app (3) | The only one of the three that is a full live site today | ☐A ☐B **☒C** ☐D (2026-11-13) | ☐A ☐B ☐C ☐D |
+| J4 | Refactored app, preview host (4) | Served only at the preview host. It has no DESIGN_SYSTEM.md, so under A or C the first finding is that absence (E3) | ☐A ☐B **☒C** ☐D (2026-11-13) | ☐A ☐B ☐C ☐D |
 | | ***Related items needing an explicit scope decision (§1.2)*** | | | |
-| J5 | refactored.ai (5): external website, possibly the Refactored app's production deployment (unverified) | Not in this repo. Under A or B it can be judged only from the live site, and what serves it is Unknown. If it later proves to be the row 4 app's deployment, the answer to J4 may be meant to cover it too; the managers can say so here | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
-| J6 | Colaberry Enterprise design folder (6): supporting design-system source, not a website | It styles backend-rendered landing pages for several brands [S15], so it affects public pages without being one. B would put a design folder in Website's scope | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
-| J7 | Colaberry Training (7): additional external website, not one of the three public apps | No code here, and the sync skips it [S10] | ☐A ☐B ☐C ☐D | ☐A ☐B ☐C ☐D |
+| J5 | refactored.ai (5): external website, possibly the Refactored app's production deployment (unverified) | Not in this repo. Under A or B it can be judged only from the live site, and what serves it is Unknown. If it later proves to be the row 4 app's deployment, the answer to J4 may be meant to cover it too; the managers can say so here | ☐A ☐B ☐C **☒D** (2026-11-13) | ☐A ☐B ☐C ☐D |
+| J6 | Colaberry Enterprise design folder (6): supporting design-system source, not a website | It styles backend-rendered landing pages for several brands [S15], so it affects public pages without being one. B would put a design folder in Website's scope | **☒A** ☐B ☐C ☐D (2026-11-13) | ☐A ☐B ☐C ☐D |
+| J7 | Colaberry Training (7): additional external website, not one of the three public apps | No code here, and the sync skips it [S10] | ☐A ☐B ☐C **☒D** (2026-11-13) | ☐A ☐B ☐C ☐D |
 
 Two further joint questions:
 
 | # | Question | Options | Aleem | Tejesh |
 |---|---|---|---|---|
-| J8 | **Findings routing.** When this audit finds something on a surface the other domain owns, who receives it and who decides it? | (a) Reported to that surface's manager, who decides; (b) reported to both; (c) not reported, the surface is out of scope | ______ | ______ |
+| J8 | **Findings routing.** When this audit finds something on a surface the other domain owns, who receives it and who decides it? | (a) Reported to that surface's manager, who decides; (b) reported to both; (c) not reported, the surface is out of scope | **(a)**, and design-system findings also go to Aleem (2026-11-13) | ______ |
 | J9 | **Confirming roles.** Is Sai Tejesh Kowtharapu the Website Portfolio & Conversion manager for this agreement? | Yes / No: the manager is ______ | (n/a) | ______ |
 
 ---
@@ -368,8 +370,9 @@ reported as unknown, never as an implied wish to converge [S1] `:39`.
 
 ## Sign-off
 
-**Not signed. Neither manager has agreed to anything in this document.** Ali Muwwakkil's interview
-answers [S20] and this document's options are inputs, not a substitute.
+**Not passed. Aleem answered his half in writing on 2026-11-13 (recorded below); Sai Tejesh
+Kowtharapu has not answered yet.** The criterion needs both columns to name the same surface list.
+Ali Muwwakkil's interview answers [S20] and this document's options are inputs, not a substitute.
 
 ### How to review and agree to this without portal access
 
@@ -389,12 +392,12 @@ answers [S20] and this document's options are inputs, not a substitute.
 
 | # | Decision | Aleem's answer | Tejesh's answer |
 |---|---|---|---|
-| D1 | **Surfaces this domain audits (J1-J7). This is the criterion** | ______ | ______ |
-| D2 | Findings routing (J8) | ______ | ______ |
+| D1 | **Surfaces this domain audits (J1-J7). This is the criterion** | J1 A; J2 C; J3 C; J4 C; J5 D, excluded until it is known what serves it; J6 A; J7 D, no code in this repository | ______ |
+| D2 | Findings routing (J8) | (a); design-system findings also come to Aleem | ______ |
 | D3 | Website manager for this agreement (J9) | (n/a) | ______ |
-| D4 | Layer audited: tokens only, plus app CSS, or plus pages (OQ1) | ______ | ______ |
-| D5 | Source or rendered, and which pages, if pages are in scope (OQ2, OQ3) | ______ | ______ |
-| D6 | Treatment of `frontend/src/colaberry/` (OQ4) | ______ | (n/a unless J1 is B or C) |
+| D4 | Layer audited: tokens only, plus app CSS, or plus pages (OQ1) | (ii) tokens plus app-authored CSS; pages stay with Website | ______ |
+| D5 | Source or rendered, and which pages, if pages are in scope (OQ2, OQ3) | Not applicable: pages are out of this domain's layer | ______ |
+| D6 | Treatment of `frontend/src/colaberry/` (OQ4) | Compared with row 6 only, as reconciliation items (matches D8 of the drift audit) | (n/a unless J1 is B or C) |
 
 L1-L7 (§7) are **not** on this sign-off. They come later.
 
@@ -405,14 +408,39 @@ settles whether the story is complete when the criterion passes.
 
 | # | Question | Options | Answer | Answered by (Ali or Aleem) | Date (Central) |
 |---|---|---|---|---|---|
-| R1 | Is R0 complete on the written surface agreement alone, or does it also need Aleem's convergence record (L1)? | Reading 1: surface agreement alone, L1 later / Reading 2: both / Other: ______ | ______ | ______ | ______ |
+| R1 | Is R0 complete on the written surface agreement alone, or does it also need Aleem's convergence record (L1)? | Reading 1: surface agreement alone, L1 later / Reading 2: both / Other: ______ | **Reading 1:** R0 is complete on the written surface agreement; the convergence record (L1) comes later | Mohammed Abdul Aleem | 2026-11-13 |
 
 ### Sign-off record
 
 | Manager | Date (Central) | Channel | Decisions covered | Their words (quote, or a summary they confirmed) | Where the original is kept | Recorded by |
 |---|---|---|---|---|---|---|
-| Mohammed Abdul Aleem | | | | *No response recorded yet.* | | |
+| Mohammed Abdul Aleem | 5:04 AM CST on 2026-11-13 | Written comment by Aleem on PR #1 of this repository | J1-J8, D1, D2, D4, D5, D6 and R1 (his half) | Quoted in full below this table | <https://github.com/MihretColaberry1/ColaberryInternship/pull/1#issuecomment-6850999330> | Mihret Netsereab, 2026-11-17 (session CC-20261117-m9bq) |
 | Sai Tejesh Kowtharapu | | | | *No response recorded yet.* | | |
+
+Aleem's words, copied exactly from that comment:
+
+> **Decisions: cross-brand surface consistency audit R0 (`multi_brand_surface_consistency_audit.R0.md`)**
+> My half of the joint agreement. Sai Tejesh answers his column and confirms J9; the criterion passes when both columns are filled.
+>
+> - **J1, platform frontend:** A.
+> - **J2 AI Flotation, J3 CPN, J4 Refactored preview:** C. This domain audits the design-system layer; Website audits pages, content and conversion.
+> - **J5 refactored.ai:** D, excluded until it is known what serves it.
+> - **J6 Colaberry Enterprise design folder:** A. It is design-system source.
+> - **J7 Colaberry Training:** D. There is no code in this repository.
+> - **J8 findings routing:** (a). Findings go to the owning surface's manager, who decides. Design-system findings also come to me.
+> - **D4 layer:** (ii), tokens plus app-authored CSS. Pages stay with Website.
+> - **D5:** not applicable, since pages are out of this domain's layer.
+> - **D6, `frontend/src/colaberry/`:** compared with row 6 only, as reconciliation items. This matches D8 of the drift audit.
+> - **R1:** Reading 1. R0 is complete on the written surface agreement; the convergence record (L1) comes later.
+
+**Channel note:** the evidence rule above names an email reply or confirmed meeting notes. This is a
+written, dated comment from Aleem's own account, recorded as his half; whether the platform accepts it
+as evidence for the criterion remains **Unknown**, as stated above. The Signatures table is left blank:
+a PR comment is a written decision, not a signature.
+
+**Criterion state after this record:** still unpassed (`passed: false` in `.colaberry/progress.json`,
+which this PR does not change). Outstanding: Sai Tejesh Kowtharapu's column (J1-J8, D1, D2, D4, D5)
+and J9. OQ5 (comparison concepts) has not been asked of either manager; it is not on this sign-off.
 
 **Signatures**
 
