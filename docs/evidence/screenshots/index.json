@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-11-15T21:28:43.833Z",
-  "base_url": "http://127.0.0.1:8768/",
+  "captured_at": "2026-11-18T00:49:59.903Z",
+  "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
     "axe-core": "4.10.2"
@@ -13,7 +13,7 @@
       "theme": "light",
       "horizontal_overflow_px": 0,
       "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8768/command-center/snapshots/product_experience.endpoint-snapshots.json"
+        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
       ]
     },
     {
@@ -22,7 +22,7 @@
       "theme": "light",
       "horizontal_overflow_px": 0,
       "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8768/command-center/snapshots/product_experience.endpoint-snapshots.json"
+        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "theme": "light",
       "horizontal_overflow_px": 0,
       "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8768/command-center/snapshots/product_experience.endpoint-snapshots.json"
+        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
       ]
     },
     {
@@ -46,7 +46,7 @@
       "theme": "light",
       "horizontal_overflow_px": 0,
       "console_errors": [
-        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8768/command-center/snapshots/product_experience.endpoint-snapshots.json"
+        "Failed to load resource: the server responded with a status of 404 (File not found) http://127.0.0.1:8765/command-center/snapshots/product_experience.endpoint-snapshots.json"
       ]
     },
     {

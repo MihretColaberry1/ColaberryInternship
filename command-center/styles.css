@@ -236,7 +236,8 @@ tbody tr:hover td { background: var(--surface-alt); }
 .criteria li, .notes li { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .gap-list li { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .gap-list li:last-child { border-bottom: 0; }
-.gap-list p { margin: 4px 0 0; }
+/* A long record name (AgentDomainCapabilityConfirmation) ran 15 px past the text column at 320 px. */
+.gap-list p { margin: 4px 0 0; overflow-wrap: anywhere; }
 .tool-list { display: flex; flex-wrap: wrap; gap: 6px 14px; }
 
 /* ---- Authority rule and ladder ---- */

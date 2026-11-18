@@ -161,6 +161,20 @@ test('the 200-request limit is disclosed, and a full snapshot says older request
   assert.match(atLimit.text, /This snapshot holds 200, the limit, so older requests may be missing\./);
 });
 
+// The source note is folded (Aleem, 2026-11-17, point 2), but its warnings are not: a full snapshot and a
+// pending-count disagreement are both said in the panel body, outside every disclosure.
+const outsideDisclosures = (p) => p.children.filter((c) => !hasClass('panel-details')(c)).map((c) => c.textContent).join(' ');
+
+test('the full-snapshot warning and the pending-count disagreement stay visible, outside the folded note', async () => {
+  const full = Array.from({ length: GOVERNANCE_SNAPSHOT.limit }, (_, i) => row({ status: 'approved', title: `Request ${i}` }));
+  const atLimit = await panelWith({ requests: full, pending: 0 });
+  assert.match(outsideDisclosures(atLimit.p), /This snapshot holds 200, the limit, so older requests may be missing\./);
+  const under = await panelWith({ requests: QUEUE, pending: 1 });
+  assert.doesNotMatch(outsideDisclosures(under.p), /may be missing|at most the 200 newest/, 'below the limit, nothing about it in the body');
+  const differ = await panelWith({ requests: QUEUE, pending: 3 });
+  assert.match(outsideDisclosures(differ.p), /The platform records 3 pending, but 1 request in its queue is submitted\./);
+});
+
 test('proposer and decision-maker read "Not included in the platform snapshot" when the snapshot omits them', async () => {
   // Shaped exactly as the platform's sync job writes a row: no requested_by_identity, no approved_by_identity.
   const platformRow = (over) => ({ id: RECORD, kind: 'change', title: 'Raise a ceiling', status: 'approved',

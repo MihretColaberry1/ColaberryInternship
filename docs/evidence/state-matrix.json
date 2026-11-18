@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-11-15T21:28:43.833Z",
-  "base_url": "http://127.0.0.1:8768/",
+  "captured_at": "2026-11-18T00:49:59.903Z",
+  "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
     "axe-core": "4.10.2"
