@@ -5,7 +5,7 @@ Disposition of this domain's 0 inherited legacy agent record(s).
 **This domain inherits nothing.** Zero legacy agent records were assigned to it, verified against the sliced 246-row inventory rather than assumed from an absence of evidence. An empty legacy bucket is not an empty job: this domain still has 25 candidate capabilities, built from the application, the manager's role and proposed new work.
 
 ### Not covered by this plan
-The 21 legacy records whose `proposed_owner_domain` is `unresolved` belong to no domain and are therefore not in any project's plan. Five of them are live production rows. They need an owner decision, and naming that here is the point.
+The 21 legacy records whose `proposed_owner_domain` is `unresolved` belong to no domain and are therefore not in any project's plan. 13 of them are live, with 1,491,129 runs between them; the 8 proposed for retirement are disabled and have never run. They need an owner decision, and naming that here is the point.
 
 **Release:** autonomy:R0 · Legacy migration plan (weeks 0–0)
 **Owner:** 

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-14T22:12:18.142Z",
-  "plan_version": 2,
-  "plan_sha256": "c6a5b3b19f8498aec57cf2b8184b736ba4d53448242bc3198705bc3a9b6aeca1",
-  "correlation_id": "cb45cca6-33a2-4b89-b882-15fbc3af85c5",
+  "generated_at": "2026-11-23T21:28:57.571Z",
+  "plan_version": 3,
+  "plan_sha256": "f7a2087bd011827dbb7feac156b76730619b38aaee226f52e09fb615e2f5fd81",
+  "correlation_id": "79ea55e4-892c-4058-be91-f78c503c1863",
   "project_id": "4c05fd34-d826-5118-8161-d2a534ab9c2f",
   "truth_revision": null,
   "files": [
@@ -12,7 +12,7 @@
     },
     {
       "path": "docs/STORIES.md",
-      "sha256": "0c5d99d1033e20f7fbe7cebbda52ce96f5a9f607174c55e2da28ee6db839f6c8"
+      "sha256": "d5ea3deb5ccc9980191dbabab2be03e332a7c56b662ef10e2e52034c5241ca3a"
     },
     {
       "path": "docs/TRACEABILITY.md",
@@ -20,11 +20,19 @@
     },
     {
       "path": "docs/DATA_CONTRACT.md",
-      "sha256": "d56e89edcfe36725945d961cf3479b646507d1fa855bba0dcdfff3f8f8a658b0"
+      "sha256": "f40e4c188037375d1a26fa99184eb5a550e81a492723e28e98f37d33deb02b72"
     },
     {
       "path": "CLAUDE.md",
       "sha256": "f2869f6f8ea36d6a11022b41b1e246b1c58e5fe4ec755b10d2ab7803c28b62f0"
+    },
+    {
+      "path": "docs/agent/README.md",
+      "sha256": "d505a1cb65080cccaeb1309179099c72bafbb60f86b4ad28d71e5293c4d79826"
+    },
+    {
+      "path": "docs/agent/capability.md",
+      "sha256": "21c003d5fa56a4da809ffc5deacbc557aa692ae7518e59feae278010d1836263"
     },
     {
       "path": "docs/stories/product_experience.CAP.brand_design_system_sync_review.md",
@@ -49,6 +57,18 @@
     {
       "path": "docs/stories/product_experience.CAP.design_token_drift_audit.md",
       "sha256": "1c4957b43917a036a3ee8fee79ed42e0a2f1e7afbbfd6bc47b87a9950b79bee0"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN.md",
+      "sha256": "5717b56a0c4453c7e652c06e4f0ff193faafaad4bb6f386312b0df603397284d"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.design_token_drift_audit.L0-CHOOSE.md",
+      "sha256": "18eb34706108d8f94cded934c201a8a34dde1921a2b9090a9ceee29d9a0fe993"
+    },
+    {
+      "path": "docs/stories/product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET.md",
+      "sha256": "2cb80f84487ef7985a73491a38121c0b5ee4defc281b551eb79fd27f0a00c93e"
     },
     {
       "path": "docs/stories/product_experience.CAP.design_token_drift_audit.L1-BY-HAND.md",
@@ -143,8 +163,12 @@
       "sha256": "858554c460b2c413842086a30206dff8f9f4d210a54222298e7b43d6170f8420"
     },
     {
+      "path": "docs/stories/product_experience.GATE.R0.1.md",
+      "sha256": "8368e3999750fd3cb47f2f3c0d89de87eebc579b7a3efd89dd5c2e61d7302cb8"
+    },
+    {
       "path": "docs/stories/product_experience.LEGACY-MIGRATION-PLAN.md",
-      "sha256": "665be535739ff1645925e496e3bfa74d0b204aad6f98608d4adccd6bc73a7213"
+      "sha256": "3a88aec4a6f148271878b5805c4192a635191c0c947a31d6cf77de94485d45be"
     },
     {
       "path": "docs/stories/product_experience.RESEARCH-1-SYSTEM-CLASSES.md",
@@ -172,11 +196,11 @@
     },
     {
       "path": ".colaberry/plan.json",
-      "sha256": "1a5d43493d0a3799e082655fe2e9621963ebcf096803bd51d295e67bf7c1d7e6"
+      "sha256": "fdc6c88d5d9de5d38a00583ebddad2417e5924c8bf3e536efc2c89da5f746169"
     },
     {
       "path": ".colaberry/progress.json",
-      "sha256": "8104b58453195860f7aa52f7ece02699103de51ba47bf6a0d262b9bbfb199b0e"
+      "sha256": "712add17c807499025dbe5f06b420f1af96cd16a7aa1fcfd8ff1db67a9050fe2"
     },
     {
       "path": ".colaberry/profile.json",
@@ -184,11 +208,15 @@
     },
     {
       "path": ".colaberry/agent-domain.json",
-      "sha256": "ce6d8dfc854bd9ec12b60cfa87a475704e02b45a97e35f3fcb8308a986badb33"
+      "sha256": "7a0738460b88bfa675d4ec5391218baf1909694201f417d9160bbfa3f8a0ad59"
     },
     {
       "path": "docs/stories/STORY-000.md",
       "sha256": "57d451352c1f7a8e0426755c56a5be78835b6d573081cad74f43013cfbccae3e"
+    },
+    {
+      "path": ".nojekyll",
+      "sha256": "d217e70c3bf6e6d9e36bf665911518f42d770a37127ccdef341cdd48fd3ece4b"
     }
   ]
 }
