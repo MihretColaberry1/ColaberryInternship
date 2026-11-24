@@ -1,0 +1,27 @@
+{
+  "pack_id": "fixture.v1",
+  "title": "FIXTURE rules pack for tests only",
+  "approval": { "state": "unapproved", "approved_by": null, "approved_on": null },
+  "supplied_by": "test fixture",
+  "source_commit": "__COMMIT__",
+  "standard": { "state": "pending_confirmation", "candidates": ["WCAG 2.1 AA", "WCAG 2.2 AA"], "decided_by": null },
+  "token_file": "frontend/src/styles/tokens.css",
+  "token_file_sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 2, "quote": "tokens.css is the token file" }],
+  "rules": [
+    { "id": "R1", "check": "hex_in_inline_style", "title": "No hex in inline styles", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 3, "quote": "never inline styles with hex values" }] },
+    { "id": "R2", "check": "hardcoded_hex", "title": "No hard-coded hex", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 4, "quote": "Never hardcode hex values." }] },
+    { "id": "R3", "check": "form_control_label", "title": "Form controls have a label", "cited_wcag": "WCAG 1.3.1", "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 5, "quote": "must have an associated label" }] },
+    { "id": "R4", "check": "img_alt", "title": "Images have alt", "cited_wcag": "WCAG 1.1.1", "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 6, "quote": "images need alt" }] },
+    { "id": "R5", "check": "click_on_non_button", "title": "Clickable actions use buttons", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 7, "quote": "not span or div with onClick" }] },
+    { "id": "R6", "check": "icon_button_name", "title": "Icon buttons are named", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 8, "quote": "icon buttons need aria-label" }] },
+    { "id": "R7", "check": "alert_announcement", "title": "Alerts are announced", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 9, "quote": "alert messages are announced" }] },
+    { "id": "R8", "check": "spinner_live_region", "title": "Spinners are in a live region", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 10, "quote": "spinners sit in a live region" }] },
+    { "id": "R9", "check": "heading_order", "title": "Heading order", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 11, "quote": "No skipped levels" }] },
+    { "id": "R10", "check": "modal_dialog_role", "title": "Modals have role dialog", "cited_wcag": null, "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 12, "quote": "modals need role dialog" }] }
+  ],
+  "not_checked": [
+    { "title": "Colour contrast", "reason": "Needs the rendered page; the standard is pending confirmation.", "sources": [{ "path": "rules-src/FIXTURE-RULES.md", "line": 13, "quote": "contrast needs the rendered page" }] },
+    { "title": "Touch-target size", "reason": "Pending confirmation of the standard.", "sources": null }
+  ],
+  "open_decisions": ["Fixture decision: none of these rules is approved."]
+}

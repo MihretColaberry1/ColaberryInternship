@@ -1,4 +1,4 @@
-// Tests for the logic behind the eight tabs after Overview, and the Knowledge base question panel.
+// Tests for the project-plan logic the six panels carry over from the old tabs (README, "Content inventory").
 // Run from the repository root: node --test tests/command-center-tabs.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,10 +9,8 @@ import path from 'node:path';
 import { loadNotes, loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
 import {
-  agentRoster, dataEntities, dayDiff, guardrailStatus, rolesWithStories, taskList, timeline, traceability,
+  dayDiff, guardrailStatus, rolesWithStories, taskList, timeline, traceability,
 } from '../command-center/model-tabs.js';
-import { CANNOT_ANSWER, answerQuestion } from '../command-center/qa.js';
-import { makeSampleData } from '../command-center/sample.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NOW = new Date('2026-10-28T12:00:00Z');
@@ -34,10 +32,6 @@ async function realContext() {
   return { data, model: buildOverviewModel(data, NOW) };
 }
 
-function sampleContext() {
-  const data = makeSampleData(NOW);
-  return { data, model: buildOverviewModel(data, NOW) };
-}
 
 // ---- Real data: empty plan sections stay empty ----
 
@@ -50,14 +44,6 @@ test('real plan: no guardrails, measures, roles, systems or requirements are inv
   assert.deepEqual(data.plan.derived.systems, []);
 });
 
-test('real plan: with no scoped agents, the roster shows story owners, not agents', async () => {
-  const { data, model } = await realContext();
-  const roster = agentRoster(data.plan, model.rows);
-  assert.equal(roster.kind, 'owners');
-  assert.deepEqual(roster.items.map((i) => i.name), ['Unassigned']);
-  assert.equal(roster.items[0].owns.length, data.plan.stories.length);
-  assert.deepEqual(roster.items[0].skills, []);
-});
 
 test('real notes file loads as an empty notebook', async () => {
   const { data } = await realContext();
@@ -80,11 +66,22 @@ test('a broken notes file is reported, not silently ignored', async () => {
 
 // ---- Unknown is never shown as confirmed ----
 
+// A tiny plan, written inline for these tests only (the Sample mode generator was removed on 2026-11-03).
+const PLAN = {
+  requirements: [
+    { id: 'R-1', statement: 'Show a weekly report.', kind: 'FUNC', priority: 'must', fulfilled_by: ['S-1'] },
+    { id: 'R-2', statement: 'Never send a report without review.', kind: 'SAFE', priority: 'must', fulfilled_by: ['S-1', 'S-3'] },
+    { id: 'R-3', statement: 'A must-have nothing covers yet.', kind: 'FUNC', priority: 'must', fulfilled_by: [] },
+  ],
+  derived: { guardrails: [{ id: 'R-2', statement: 'Never send a report without review.' }] },
+};
+const ROWS = [{ id: 'S-1', title: 'One', state: 'verified' }, { id: 'S-3', title: 'Three', state: null }];
+
 test('a guardrail is "kept" only when every covering story is verified', () => {
-  const { data, model } = sampleContext();
-  const [g] = guardrailStatus(data.plan, model.rows);
-  assert.equal(g.id, 'SAMPLE-REQ-2');
-  assert.equal(g.status, 'not-kept'); // SAMPLE-3 has no verification
+  const [g] = guardrailStatus(PLAN, ROWS);
+  assert.equal(g.id, 'R-2');
+  assert.equal(g.status, 'not-kept'); // S-3 has no verification
+  assert.equal(guardrailStatus(PLAN, ROWS.map((r) => ({ ...r, state: 'verified' })))[0].status, 'kept');
 });
 
 test('a guardrail with no story is reported as unenforced', () => {
@@ -93,12 +90,12 @@ test('a guardrail with no story is reported as unenforced', () => {
 });
 
 test('traceability flags a "must" with no story as a gap and never as built', () => {
-  const { data, model } = sampleContext();
-  const t = traceability(data.plan, model.rows);
-  const gap = t.find((r) => r.id === 'SAMPLE-REQ-4');
+  const t = traceability(PLAN, ROWS);
+  const gap = t.find((r) => r.id === 'R-3');
   assert.equal(gap.gap, true);
   assert.equal(gap.built, false);
-  assert.equal(t.find((r) => r.id === 'SAMPLE-REQ-1').built, true);
+  assert.equal(t.find((r) => r.id === 'R-1').built, true);
+  assert.equal(t.find((r) => r.id === 'R-2').built, false);
 });
 
 // ---- Project management ----
@@ -119,54 +116,32 @@ test('task list shows how far a due date moved and flags past-due unverified wor
 
 test('timeline places releases and markers only from dates the plan holds', async () => {
   const { data, model } = await realContext();
-  const tl = timeline(data.plan, model.rows, '2026-10-28');
-  assert.equal(tl.start, '2026-09-20');
-  assert.equal(tl.end, '2026-10-28');
+  const today = '2026-10-28';
+  const tl = timeline(data.plan, model.rows, today);
+  // The expected range comes from the dates the plan file holds, gathered here directly from the plan
+  // (releases, demo day, every story's due dates) plus today. The platform re-syncs the plan and moves
+  // these dates (2026-11-23), so a hard-coded day would break on its next sync rather than on a bug.
+  const planDates = [
+    ...data.plan.releases.flatMap((r) => [r.starts_on, r.ends_on]),
+    data.plan.schedule?.demo_day,
+    ...data.plan.stories.flatMap((s) => [s.due_on, s.due_baseline_on]),
+    today,
+  ].filter(Boolean).sort();
+  assert.ok(planDates.length > 1, 'the plan holds dates to place');
+  assert.equal(tl.start, planDates[0]);
+  assert.equal(tl.end, planDates[planDates.length - 1]);
+  for (const r of tl.releases.filter((x) => x.start && x.end)) {
+    assert.ok(r.start >= tl.start && r.end <= tl.end, `${r.key} sits inside the timeline`);
+    assert.ok(r.left >= 0 && r.left + r.width <= 100.0001, `${r.key} is drawn inside the track`);
+  }
   assert.equal(tl.releases.length, data.plan.releases.length);
   assert.deepEqual(tl.markers.map((m) => m.label), ['Demo day', 'Today']);
   assert.equal(timeline({ releases: [], schedule: null }, [], null), null);
   assert.equal(dayDiff('2026-09-20', '2026-09-27'), 7);
 });
 
-// ---- Data model ----
 
-test('data model counts come from the files', async () => {
-  const { data } = await realContext();
-  const byName = Object.fromEntries(dataEntities(data.plan, data.progress).map((e) => [e.name, e.count]));
-  assert.equal(byName.Story, data.plan.stories.length);
-  assert.equal(byName['Story progress'], data.progress.stories.length);
-  assert.equal(byName.Requirement, 0);
-});
 
-// ---- Knowledge base question panel ----
 
-test('questions are answered from the files and name their source tab', async () => {
-  const ctx = await realContext();
-  const verified = answerQuestion('How many stories are verified?', ctx);
-  assert.equal(verified.answer, `${ctx.data.progress.totals.stories_verified} of ${ctx.data.progress.totals.stories_total} stories verified.`);
-  assert.equal(verified.source.tab, 'Overview');
-  assert.match(answerQuestion('Any guardrails?', ctx).answer, /no guardrails yet/);
-  assert.equal(answerQuestion('Any guardrails?', ctx).source.tab, 'Guardrails');
-});
 
-test('a question about one story answers from that story', async () => {
-  const ctx = await realContext();
-  const a = answerQuestion('What is the state of product_experience.LEGACY-MIGRATION-PLAN?', ctx);
-  assert.match(a.answer, /LEGACY-MIGRATION-PLAN is verified/);
-  assert.equal(a.source.tab, 'Project management');
-});
 
-test('a question the data cannot answer says so instead of guessing', async () => {
-  const ctx = await realContext();
-  assert.deepEqual(answerQuestion('What is the weather in Dallas?', ctx), { answer: CANNOT_ANSWER, source: null });
-  assert.equal(answerQuestion('   ', ctx).source, null);
-});
-
-test('sample data fills every tab and stays marked as sample', () => {
-  const { data, model } = sampleContext();
-  assert.equal(model.isSample, true);
-  assert.ok(data.plan.derived.measures.length && data.plan.derived.guardrails.length);
-  assert.ok(data.plan.derived.systems.length && data.plan.derived.roles.length && data.plan.agents.length);
-  assert.ok(data.plan.requirements.every((r) => r.statement.startsWith('Sample')));
-  assert.equal(rolesWithStories(data.plan)[0].stories.length, 3);
-});

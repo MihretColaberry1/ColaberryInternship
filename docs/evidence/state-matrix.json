@@ -1,0 +1,83 @@
+{
+  "captured_at": "2026-11-24T03:46:56.415Z",
+  "base_url": "http://127.0.0.1:8765/",
+  "tools": {
+    "playwright-core": "1.48.2",
+    "axe-core": "4.10.2"
+  },
+  "chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "matrix": {
+    "loading": {
+      "employee": "loading",
+      "inventory": "loading",
+      "ladder": "loading",
+      "behaviour": "loading",
+      "governance": "loading",
+      "gaps": "loading"
+    },
+    "today": {
+      "employee": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "empty",
+      "gaps": "ready"
+    },
+    "nothing-captured": {
+      "employee": "not_available",
+      "inventory": "not_available",
+      "ladder": "not_available",
+      "behaviour": "not_available",
+      "governance": "not_available",
+      "gaps": "ready"
+    },
+    "captured-empty": {
+      "employee": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "empty",
+      "gaps": "ready"
+    },
+    "captured-data": {
+      "employee": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "ready",
+      "gaps": "ready"
+    },
+    "refused": {
+      "employee": "error",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "empty",
+      "gaps": "ready"
+    },
+    "sync-invalid": {
+      "employee": "error",
+      "inventory": "error",
+      "ladder": "error",
+      "behaviour": "error",
+      "governance": "error",
+      "gaps": "ready"
+    },
+    "source-missing": {
+      "employee": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "empty",
+      "gaps": "ready"
+    },
+    "source-empty": {
+      "employee": "ready",
+      "inventory": "empty",
+      "ladder": "empty",
+      "behaviour": "empty",
+      "governance": "empty",
+      "gaps": "ready"
+    }
+  }
+}

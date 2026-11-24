@@ -8,7 +8,6 @@ import path from 'node:path';
 
 import { loadJson, loadProjectData, checkShapes, DataLoadError } from '../command-center/data.js';
 import { buildOverviewModel, describeFreshness, joinStories, summarizeSchedule } from '../command-center/model.js';
-import { makeSampleData } from '../command-center/sample.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const HOUR = 60 * 60 * 1000;
@@ -80,8 +79,49 @@ test('a request that never answers times out, retries once, then fails', async (
   assert.equal(calls, 2);
 });
 
+// The headers arrive in time but the body does not: the timer aborts while response.json() is
+// still reading. That is a timeout, not invalid JSON, so it is reported as one and retried
+// (Aleem's review of the running page, PR #1, 2026-11-17, point 3).
+const bodyNeverArrives = (signal) => ({
+  ok: true,
+  status: 200,
+  json: () => new Promise((resolve, reject) => {
+    signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
+  }),
+});
+
+test('a body that stops arriving times out and is retried, and the retry can succeed', async () => {
+  let calls = 0;
+  const fetchImpl = async (url, { signal }) => {
+    calls += 1;
+    return calls === 1 ? bodyNeverArrives(signal) : jsonResponse({ ok: true });
+  };
+  assert.deepEqual(await loadJson('slow-body.json', { fetchImpl, timeoutMs: 20, attempts: 2 }), { ok: true });
+  assert.equal(calls, 2);
+});
+
+test('a body that never arrives is reported as a timeout, not invalid JSON, after the capped retries', async () => {
+  let calls = 0;
+  const fetchImpl = async (url, { signal }) => { calls += 1; return bodyNeverArrives(signal); };
+  await assert.rejects(loadJson('slow-body.json', { fetchImpl, timeoutMs: 20, attempts: 2 }), (err) => {
+    assert.ok(err instanceof DataLoadError);
+    assert.match(err.message, /no answer within/);
+    assert.doesNotMatch(err.message, /not valid JSON/);
+    return true;
+  });
+  assert.equal(calls, 2);
+});
+
+test('genuinely invalid JSON is still not retried', async () => {
+  let calls = 0;
+  const fetchImpl = async () => { calls += 1; return { ok: true, status: 200, json: async () => { throw new SyntaxError('bad'); } }; };
+  await assert.rejects(loadJson('p.json', { fetchImpl, attempts: 2 }), /not valid JSON/);
+  assert.equal(calls, 1);
+});
+
 test('a file missing a required field is rejected before anything renders', () => {
-  const good = makeSampleData(new Date());
+  const good = { plan: { stories: [], releases: [] }, progress: { stories: [] }, manifest: { generated_at: '2026-11-03T12:00:00Z' } };
+  assert.doesNotThrow(() => checkShapes(good));
   assert.throws(() => checkShapes({ ...good, plan: { releases: [] } }), /"stories" to be a list/);
   assert.throws(() => checkShapes({ ...good, manifest: {} }), /"generated_at" to be a timestamp/);
 });
@@ -143,12 +183,4 @@ test('schedule dates before today are marked as past', () => {
   assert.deepEqual(s.milestones.map((m) => m.isPast), [true, false, false]);
 });
 
-// ---- Sample mode ----
 
-test('sample data is flagged as sample and has the same shape as real data', () => {
-  const sample = makeSampleData(new Date());
-  assert.doesNotThrow(() => checkShapes(sample));
-  const model = buildOverviewModel(sample, new Date());
-  assert.equal(model.isSample, true);
-  assert.match(model.project.name, /Sample/);
-});
