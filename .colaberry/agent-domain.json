@@ -974,8 +974,8 @@
       "stories": 40,
       "checked": 40,
       "verified": 6,
-      "awaiting_criteria": 34,
-      "outstanding_criteria": 53
+      "awaiting_criteria": 33,
+      "outstanding_criteria": 48
     },
     "stories": [
       {
@@ -987,13 +987,12 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.brand_design_system_sync_review and changes a file. Commit your work with a `Story: product_experience.CAP.brand_design_system_sync_review` trailer (or product_experience.CAP.brand_design_system_sync_review in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "The manager confirms the note format answers the question he actually has before merging."
         ],
-        "commit_sha": null
+        "commit_sha": "8bb4a177ba14ef696e1b791dc44683950674da9e"
       },
       {
         "story_id": "product_experience.CAP.bundle_and_render_performance_review",
@@ -1082,8 +1081,8 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
         "title": "Design-token drift audit across every styled surface · 0.3 · waiting on the platform",
-        "status": "not_started",
-        "verification_state": "not_started",
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 3,
@@ -1101,8 +1100,8 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-CHOOSE",
         "title": "Design-token drift audit across every styled surface · 0.1 · pick one from the list",
-        "status": "not_started",
-        "verification_state": "not_started",
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 3,
@@ -1120,8 +1119,8 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET",
         "title": "Design-token drift audit across every styled surface · 0.2 · write the scope sheet",
-        "status": "not_started",
-        "verification_state": "not_started",
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 3,
@@ -1321,13 +1320,12 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.multi_brand_surface_consistency_audit and changes a file. Commit your work with a `Story: product_experience.CAP.multi_brand_surface_consistency_audit` trailer (or product_experience.CAP.multi_brand_surface_consistency_audit in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
         ],
-        "commit_sha": null
+        "commit_sha": "fa6a3d07d111c3b798c09d37712a23970f849192"
       },
       {
         "story_id": "product_experience.CAP.page_health_smoke_sweep",
@@ -1525,19 +1523,18 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.wcag_aa_accessibility_audit and changes a file. Commit your work with a `Story: product_experience.CAP.wcag_aa_accessibility_audit` trailer (or product_experience.CAP.wcag_aa_accessibility_audit in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "A written, manager-approved standard per surface class; no audit has run."
         ],
-        "commit_sha": null
+        "commit_sha": "47b1ddd9170e3c83b2a9850f11b3fcddc432661b"
       },
       {
         "story_id": "product_experience.GATE.R0.1",
         "title": "R0 gate · 1 of 1 · a capability the agent does, watched",
-        "status": "not_started",
-        "verification_state": "not_started",
+        "status": "in_progress",
+        "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
         "criteria_total": 3,
@@ -1574,7 +1571,7 @@
         "criteria_total": 3,
         "reasons": [],
         "outstanding": [],
-        "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899"
+        "commit_sha": "4e49a3aff925a829fa1e447ea17828b09e73ea61"
       },
       {
         "story_id": "product_experience.RESEARCH-2-AGENT-ANATOMY",
@@ -1628,23 +1625,17 @@
         "story_id": "product_experience.STORY-000",
         "title": "STORY-000 · Build your Command Center",
         "status": "in_progress",
-        "verification_state": "in_progress",
+        "verification_state": "submitted",
         "verified": false,
-        "criteria_passed": 0,
+        "criteria_passed": 5,
         "criteria_total": 6,
         "reasons": [
-          "None of the 6 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.STORY-000 and changes a file. Commit your work with a `Story: product_experience.STORY-000` trailer (or product_experience.STORY-000 in the subject line) and push."
+          "5 of 6 acceptance criteria are marked as passing. Outstanding: Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
         ],
         "outstanding": [
-          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.",
-          "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
-          "Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.",
-          "Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.",
-          "Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.",
-          "Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced."
+          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
         ],
-        "commit_sha": null
+        "commit_sha": "a56004f4e6486cbdc5cd8246bc991b5faec1d8bf"
       }
     ]
   },
