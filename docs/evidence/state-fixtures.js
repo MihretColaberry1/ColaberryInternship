@@ -1,12 +1,12 @@
 // FIXTURES for the state matrix only. These are made-up endpoint responses and a made-up platform-sync
 // governance queue, used to put every panel into each of its states for review. They are never loaded by
 // the console (index.html) and never describe this domain's real data. What IS real in a fixture row is
-// said in its `what`: the pinned capability file, the project plan and, for Panel 3, the platform's real
-// synced authority record.
+// said in its `what`: the project plan and the platform's real synced file (capability records, authority).
 //
 // Since 2026-11-14 Panels 3 and 5 read only the platform sync (.colaberry/agent-domain.json): Panel 3 its
-// authority record, Panel 5 its whole-domain governance queue. A personal endpoint capture drives Panel 1
-// only. So each fixture row says which source drives which panel, and `expect` records the state each
+// authority record, Panel 5 its whole-domain governance queue. Since 2026-11-23 Panels 2-4 read its
+// capability records (capabilities[]) too; the pinned file supplies only required tools, blockers and the
+// list of names to withhold. A personal endpoint capture drives Panel 1 only. So each fixture row says which source drives which panel, and `expect` records the state each
 // panel must reach; tests/state-matrix.test.mjs checks both the render and state-matrix.md against it.
 import { SNAPSHOT_SCHEMA, PLATFORM_SYNC_SCHEMA, readSnapshot, readPlatformSync } from '../../command-center/agent-domain-data.js';
 import { DOMAIN_KEY, ENDPOINTS } from '../../command-center/agent-domain-facts.js';
@@ -126,8 +126,8 @@ export const SCENARIOS = [
   { id: 'today', title: 'Today (real sources)', what: 'LIVE DATA, no fixtures: exactly what the console loads on this branch: the pinned source file, the project plan and the platform\'s synced copy (.colaberry/agent-domain.json), which drives Panel 1, Panel 3\'s authority and Panel 5\'s governance queue; no endpoint snapshot is captured. This is what the published console shows.',
     expect: { employee: 'ready', inventory: 'ready', ladder: 'ready', behaviour: 'ready', governance: 'empty', gaps: 'ready' },
     domain: (source, real) => ({ status: 'loaded', ...real }) },
-  { id: 'nothing-captured', title: 'Real sources, nothing captured or synced', what: 'The real pinned source file and project plan, with neither an endpoint snapshot nor the platform sync. No fixture data; the endpoint answers and the synced file are simply absent, so Panels 1, 3 and 5 say "Not available".',
-    expect: { employee: 'not_available', inventory: 'ready', ladder: 'not_available', behaviour: 'ready', governance: 'not_available', gaps: 'ready' },
+  { id: 'nothing-captured', title: 'Real sources, nothing captured or synced', what: 'The real pinned source file and project plan, with neither an endpoint snapshot nor the platform sync. No fixture data; the endpoint answers and the synced file are simply absent, so Panels 1 to 5 say "Not available". The pinned research file is not used in place of the synced capability records.',
+    expect: { employee: 'not_available', inventory: 'not_available', ladder: 'not_available', behaviour: 'not_available', governance: 'not_available', gaps: 'ready' },
     domain: (source) => ({ status: 'loaded', source, snapshot: notCaptured() }) },
   { id: 'captured-empty', title: 'Captured: no agent; test-data queue empty', what: `FIXTURE: a personal capture where both endpoints answered 200 and the domain has no agent (Panel 1), and a TEST DATA queue, shaped like the platform-synced file, with no requests (Panel 5). ${REAL_P3}`,
     expect: { employee: 'ready', inventory: 'ready', ladder: 'ready', behaviour: 'ready', governance: 'empty', gaps: 'ready' },
@@ -142,15 +142,17 @@ export const SCENARIOS = [
   { id: 'refused', title: 'Captured: refused (HTTP 403); test-data queue empty', what: `FIXTURE: the personal capture ran but the platform refused both endpoints, so Panel 1 is an error. Panel 5 reads only the platform-synced queue, so a refused capture does not change it; here that queue is TEST DATA, and empty. ${REAL_P3}`,
     expect: { employee: 'error', inventory: 'ready', ladder: 'ready', behaviour: 'ready', governance: 'empty', gaps: 'ready' },
     domain: (source, real) => fixtureDomain(source, real, [entry('mine', 403, { error: 'Not permitted' }), entry('requests', 403, { error: 'Not permitted' })], fixtureQueue([], 0)) },
-  { id: 'sync-invalid', title: 'Platform-synced file unreadable', what: 'FIXTURE: .colaberry/agent-domain.json is present but is not a "colaberry.agent-domain/v1" file for this domain, and nothing is captured. Panels 3 and 5, which read only that file, say it could not be used.',
-    expect: { employee: 'error', inventory: 'ready', ladder: 'error', behaviour: 'ready', governance: 'error', gaps: 'ready' },
+  { id: 'sync-invalid', title: 'Platform-synced file unreadable', what: 'FIXTURE: .colaberry/agent-domain.json is present but is not a "colaberry.agent-domain/v1" file for this domain, and nothing is captured. Panels 2 to 5, which read only that file, say it could not be used.',
+    expect: { employee: 'error', inventory: 'error', ladder: 'error', behaviour: 'error', governance: 'error', gaps: 'ready' },
     domain: (source) => ({ status: 'loaded', source, snapshot: { ...notCaptured(),
-      sync: { status: 'invalid', last_changed: null, error: INVALID, verdict_reasons: {}, governance: null,
+      sync: { status: 'invalid', last_changed: null, error: INVALID, verdict_reasons: {}, governance: null, paths: {},
+        capabilities: { status: 'invalid', error: INVALID, rows: [], size: 0 },
         authority: { status: 'invalid', error: INVALID, byId: {}, rule: null, size: 0 } } } }) },
-  { id: 'source-missing', title: 'Source file missing', what: 'FIXTURE: the pinned capability file could not be read; nothing captured or synced.',
-    expect: { employee: 'not_available', inventory: 'error', ladder: 'error', behaviour: 'error', governance: 'not_available', gaps: 'ready' },
-    domain: () => ({ status: 'loaded', source: { status: 'error', error: 'HTTP 404 for the capability file' }, snapshot: notCaptured() }) },
-  { id: 'source-empty', title: 'Source file empty', what: 'FIXTURE: the capability file holds no capabilities; nothing captured or synced.',
-    expect: { employee: 'not_available', inventory: 'empty', ladder: 'not_available', behaviour: 'empty', governance: 'not_available', gaps: 'ready' },
-    domain: (source) => ({ status: 'loaded', source: { ...source, matrix: { capabilities: [] } }, snapshot: notCaptured() }) },
+  { id: 'source-missing', title: 'Pinned source file missing', what: "FIXTURE: the pinned capability file could not be read; the real platform sync is present and nothing is captured. Panels 2 to 4 still read the platform's synced capability records. Only the pinned file's required tools, blockers and list of names to withhold are missing, so the tools say \"Not available\" and behaviour text that could name a person is withheld.",
+    expect: { employee: 'ready', inventory: 'ready', ladder: 'ready', behaviour: 'ready', governance: 'empty', gaps: 'ready' },
+    domain: (source, real) => ({ status: 'loaded', source: { status: 'error', error: 'HTTP 404 for the capability file' }, snapshot: real.snapshot }) },
+  { id: 'source-empty', title: 'Synced capability section empty', what: "FIXTURE: the platform's synced file holds an empty capabilities[] list; otherwise it is the real synced file, and nothing is captured.",
+    expect: { employee: 'ready', inventory: 'empty', ladder: 'empty', behaviour: 'empty', governance: 'empty', gaps: 'ready' },
+    domain: (source, real) => ({ status: 'loaded', source, snapshot: { ...real.snapshot,
+      sync: { ...real.snapshot.sync, capabilities: { status: 'ok', error: null, rows: [], size: 0 } } } }) },
 ];

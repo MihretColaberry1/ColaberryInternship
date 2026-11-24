@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-18T00:49:59.903Z",
+  "captured_at": "2026-11-24T03:46:56.415Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -66,7 +66,7 @@
     {
       "n": 8,
       "tag": "summary",
-      "text": "Stories: your ticks and the platform verifier (36)",
+      "text": "Stories: your ticks and the platform verifier (40)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
@@ -234,7 +234,7 @@
     {
       "n": 29,
       "tag": "summary",
-      "text": "Endpoints with no usable response (2)",
+      "text": "Endpoints with no usable response (1)",
       "panel": "gaps",
       "outline_px": 3,
       "outline_style": "solid"
@@ -242,7 +242,7 @@
     {
       "n": 30,
       "tag": "summary",
-      "text": "Endpoints read from the platform sync (2)",
+      "text": "Endpoints read from the platform sync (3)",
       "panel": "gaps",
       "outline_px": 3,
       "outline_style": "solid"
@@ -330,7 +330,7 @@
     {
       "n": 41,
       "tag": "summary",
-      "text": "Stories: your ticks and the platform verifier (36)",
+      "text": "Stories: your ticks and the platform verifier (40)",
       "panel": "inventory",
       "outline_px": 3,
       "outline_style": "solid"
@@ -498,7 +498,7 @@
     {
       "n": 62,
       "tag": "summary",
-      "text": "Endpoints with no usable response (2)",
+      "text": "Endpoints with no usable response (1)",
       "panel": "gaps",
       "outline_px": 3,
       "outline_style": "solid"
@@ -506,7 +506,7 @@
     {
       "n": 63,
       "tag": "summary",
-      "text": "Endpoints read from the platform sync (2)",
+      "text": "Endpoints read from the platform sync (3)",
       "panel": "gaps",
       "outline_px": 3,
       "outline_style": "solid"

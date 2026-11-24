@@ -49,6 +49,21 @@ async function realInputs({ sync = true } = {}) {
   return { domain, project: { status: 'loaded', data, model: buildOverviewModel(data, new Date('2026-11-10T18:00:00Z')), error: null } };
 }
 
+/**
+ * FIXTURE: STORY-000's verifier record as it stood before the platform sync of 2026-11-24 (0 of 6
+ * confirmed while 5 of 6 are ticked), so the "ticks ahead of the verifier" wording stays tested after
+ * the real record caught up (5 of 6). Only that one record changes; everything else is the real data.
+ */
+function verifierBehind({ domain, project }) {
+  const data = structuredClone(project.data);
+  const story = data.progress.stories.find((s) => /(^|\.)STORY-000$/.test(s.id));
+  story.verification = { ...story.verification, state: 'in_progress', criteria_passed: 0 };
+  return { domain, project: { ...project, data, model: buildOverviewModel(data, new Date('2026-11-10T18:00:00Z')) } };
+}
+
+/** Panel 6's fixed gaps today; one more is listed for each story ticked ahead of the verifier. */
+const FIXED_GAPS = 7;
+
 /** Each panel's whole text, and its glance as label -> value text. */
 function render(domain, project) {
   const remove = installFakeDom();
@@ -189,9 +204,24 @@ test('Panel 2 keeps the plan\'s stories and STORY-000\'s six criteria apart, and
   assert.equal(progress.totals.stories_total, plan.stories.length, 'the platform totals count the stories the plan holds');
   assert.equal(progress.totals.stories_verified, verified, 'the platform totals count the stories it verified');
   assert.equal(inventory.glance['Verified by the platform'], `${verified} of ${plan.stories.length} plan stories`);
-  assert.equal(inventory.glance['Ticks ahead of verifier'], 'STORY-000: 5 of 6 ticked locally; platform verifier 0 of 6');
+  // Whether any story is ahead is also read from the data: since the platform sync of 2026-11-24 the
+  // verifier records STORY-000 at 5 of 6, the same as its ticks, so none is ahead.
+  const ahead = ticksAheadOfVerifier(project.model.rows);
+  if (ahead.length === 0) {
+    assert.equal(inventory.glance['Ticks ahead of verifier'], 'None: no story has more ticks than the platform verifier records');
+    assert.doesNotMatch(inventory.text, /Your ticks are ahead of the platform verifier/);
+  } else {
+    assert.match(inventory.glance['Ticks ahead of verifier'], /ticked locally; platform verifier/);
+  }
   assert.match(inventory.text, /Your ticks \(progress\.json\)/);
   assert.match(inventory.text, /Platform verifier/);
+  assert.doesNotMatch(inventory.text, /Criteria \(platform · your ticks\)/, 'no merged column');
+});
+
+test('Panel 2 says when your ticks are ahead of the verifier, with both numbers (FIXTURE: verifier at 0 of 6)', async () => {
+  const { domain, project } = verifierBehind(await realInputs());
+  const { inventory } = render(domain, project);
+  assert.equal(inventory.glance['Ticks ahead of verifier'], 'STORY-000: 5 of 6 ticked locally; platform verifier 0 of 6');
   assert.match(inventory.text, /Not equivalent Your ticks are ahead of the platform verifier for STORY-000: 5 of 6 criteria ticked in progress\.json; the platform verifier records 0 of 6\. These are two different records\./);
   assert.doesNotMatch(inventory.text, /Criteria \(platform · your ticks\)/, 'no merged column');
 });
@@ -204,12 +234,21 @@ test('Panel 2 leaves the verifier\'s per-rung records out', async () => {
 
 // ---- D3: Panel 6 ----
 
-test('Panel 6 names your ticks ahead of the verifier, with both numbers and the verifier\'s own reason', async () => {
-  const { domain, project } = await realInputs();
+test('Panel 6 names your ticks ahead of the verifier, with both numbers and the verifier\'s own reason (FIXTURE: verifier at 0 of 6)', async () => {
+  const { domain, project } = verifierBehind(await realInputs());
   const { gaps } = render(domain, project);
   assert.match(gaps.text, /Your ticks are ahead of the platform verifier for product_experience\.STORY-000: 5 of 6 criteria ticked in progress\.json, but the platform verifier records 0 of 6\./);
   assert.match(gaps.text, /The verifier's reason, as of its last sync: /);
   assert.equal(gaps.glance['Ticks ahead of verifier'], '1 story');
+  assert.match(gaps.text, new RegExp(`^6What is not available.*${FIXED_GAPS + 1} things this console cannot show or cannot claim`));
+});
+
+test('Panel 6 counts ticks ahead of the verifier from the real data, and lists none when none is ahead', async () => {
+  const { domain, project } = await realInputs();
+  const { gaps } = render(domain, project);
+  const ahead = ticksAheadOfVerifier(project.model.rows);
+  assert.equal(gaps.glance['Ticks ahead of verifier'], ahead.length === 1 ? '1 story' : `${ahead.length} stories`);
+  if (ahead.length === 0) assert.doesNotMatch(gaps.text, /Your ticks are ahead of the platform verifier/);
 });
 
 test('Panel 6 names the two platform exposure gaps, and no longer says the authority sections are undisplayed', async () => {
@@ -217,9 +256,13 @@ test('Panel 6 names the two platform exposure gaps, and no longer says the autho
   const { gaps } = render(domain, project);
   assert.match(gaps.text, /Human confirmation of each capability is a separate platform record \(AgentDomainCapabilityConfirmation/);
   assert.match(gaps.text, /never infers it from another field, approved_autonomy included/);
-  assert.match(gaps.text, /no route serves them yet, so they are read from the pinned capability file/);
+  // The second exposure gap was the per-rung behaviours until AF12.5 put them in the synced file; it is
+  // now the /coverage rows, which the synced file names but does not carry.
+  assert.doesNotMatch(gaps.text, /no route serves them yet/);
+  assert.match(gaps.text, /names GET \/api\/admin\/agent-domains-mine\/product_experience\/coverage but carries none of its rows/);
   assert.doesNotMatch(gaps.text, /data-integration limitation|does not display them yet/);
-  assert.match(gaps.text, /^6What is not available.*8 things this console cannot show or cannot claim/);
+  const count = FIXED_GAPS + ticksAheadOfVerifier(project.model.rows).length;
+  assert.match(gaps.text, new RegExp(`^6What is not available.*${count} things this console cannot show or cannot claim`));
 });
 
 // ---- D4: what these panels and their pages show ----

@@ -196,8 +196,8 @@ panels are unchanged.
 |---|---|---|
 | `GET /api/admin/agent-domains-mine` | A capture with the reviewed v4 snippet, under Mihret's own sign-in (Ali Muwwakkil approved the method on 2026-11-02, with two conditions) | 1: "Not available" |
 | `GET /api/admin/agent-domain-change-requests-mine` | The same capture | 5: "Not available" |
-| `GET /api/admin/agent-domains/product_experience/coverage` | Not in Ali's approval. The v4 capture does not read it | 2: "/coverage check: Not captured yet" |
-| `GET /api/admin/agent-domains/product_experience` | Not in Ali's approval. Its response does not carry the capability records anyway | Values come from the pinned source file, and each panel says so |
+| `GET /api/admin/agent-domains-mine/product_experience/coverage` | Not in Ali's approval, and not in the platform's synced file either (it names the route but carries none of its rows) | 2: "/coverage check: Not in the synced file" |
+| `GET /api/admin/agent-domains-mine/product_experience` | Not in Ali's approval. Since 2026-11-23 its records come from the platform's synced copy (`capabilities[]` in `.colaberry/agent-domain.json`). The brief's `GET /api/admin/agent-domains/product_experience` needs the `program` section, which this domain's builder role does not hold | Panels 2 to 4 read the synced copy and say so; only required tools and blockers come from the pinned source file, tagged "Source file" |
 | The agent's seven fields (enabled, autonomy level, tools granted, when set, how set) | The v4 capture keeps only whether an agent is linked. Adding them (a v5 capture) needs Ali's approval | 1: "Not captured: not in the captured response" once captured; "Tools granted: Not captured" on Panels 1 and 5 |
 | Request titles and dates | Same: v4 keeps only kind and status | 5: "not captured" in those columns |
 | Who proposed or decided a request | Ali's answer on whether staff names or roles may be public. Until then every name except Mihret's is withheld | 5: "withheld: identifies a person" |

@@ -8,7 +8,7 @@ import { AUTHORITY_WORDS, BEHAVIOUR_EXPOSURE, ENDPOINTS, REGISTRY_ENTRY, REQUEST
 import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE } from './agent-domain-data.js';
 import { publicBlockerText } from './agent-domain-redact.js';
 import { authorityView, platformLadderRow, toolRuleStatus } from './agent-domain-model.js';
-import { draftBadge, platformTag, sourceFileTag, unavailableTag } from './agent-domain-ui.js';
+import { capabilityTag, draftBadge, platformTag, sourceFileTag, unavailableTag } from './agent-domain-ui.js';
 import { backToConsole } from './console-ui.js';
 import { authorityReadLine, authorityTag, ladderGrid, startingWords, toolRuleVerdict } from './panel-ladder.js';
 import { behaviourTable } from './panel-behaviour.js';
@@ -38,10 +38,10 @@ const reasonList = (reasons) => (reasons.length
  * console's verdict wording. This replaced the computed "if approved up to the ceiling" box: the page
  * no longer calculates authority (the platform owner's decision, approved by Mihret on 2026-11-14).
  */
-export function ruleExplanation(status) {
+export function ruleExplanation(status, sync = null) {
   if (!status.known) return null;
   return h('div', { class: 'tool-rule', role: 'note' },
-    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, TOOL_RULE.reason), ', as the platform states it ', authorityTag()),
+    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, TOOL_RULE.reason), ', as the platform states it ', authorityTag(sync)),
     h('p', {}, status.rule),
     h('p', {}, h('strong', {}, toolRuleVerdict(status))),
     status.note ? h('p', { class: 'muted' }, "The platform's note: ", status.note) : null);
@@ -51,8 +51,9 @@ export function ruleExplanation(status) {
 function authorityFacts(r, check, authority) {
   const a = authorityView(r);
   const coverage = ['/coverage endpoint', check?.state === 'differs'
-    ? h('ul', {}, check.diffs.map((d) => h('li', {}, `${d.field}: endpoint says ${d.endpoint}, source file says ${d.source_file}`)))
-    : (check?.state ?? 'not captured yet').replace('_', ' ')];
+    ? h('ul', {}, check.diffs.map((d) => h('li', {}, `${d.field}: endpoint says ${d.endpoint}, the synced record says ${d.source_file}`)))
+    : check?.state === 'not_in_sync' ? "Not available: the platform's synced file names this endpoint but carries none of its rows"
+      : (check?.state ?? 'not captured yet').replace('_', ' ')];
   const confirmation = ['Human confirmation', [AUTHORITY_WORDS.confirmation_unavailable, ' ', unavailableTag()]];
   if (!a.recorded) {
     const why = authority?.status === 'ok' ? `The platform's authority record has no row for ${r.id}.`
@@ -73,33 +74,43 @@ function authorityFacts(r, check, authority) {
   ]);
 }
 
-export function capabilityDetail(r, check, { names = [], authority = null, sync = null } = {}) {
+/**
+ * The two fields the platform's snapshot does not carry, from the pinned source file and tagged so
+ * (decision 1, 2026-11-23). null means the pinned file did not load: said in words, never "none".
+ */
+function researchField(values, render, none) {
+  if (values == null) return ['Not available: the pinned source file did not load ', unavailableTag()];
+  return [values.length ? render(values) : none, ' ', sourceFileTag()];
+}
+
+export function capabilityDetail(r, check, { names = [], authority = null, sync = null, paths = ENDPOINTS } = {}) {
   // The rule's verdict is about the whole domain: counted over every row the platform recorded.
   const domainRows = authority?.status === 'ok' ? Object.values(authority.byId).map((p) => ({ platform: p })) : [];
   const status = toolRuleStatus(domainRows, authority);
-  return [backToConsole('ladder'), h('h2', {}, r.name, ' ', draftBadge(r.validation)), h('p', {}, sourceFileTag(), ' ', h('code', {}, r.id)),
+  return [backToConsole('ladder'), h('h2', {}, r.name, ' ', draftBadge(r.validation)), h('p', {}, capabilityTag(paths), ' ', h('code', {}, r.id)),
     facts([
       ['Classification', r.classification], ['Implementation state', r.implementation_state],
       ['Starting rung', r.starting],
       ['Human decision', r.human_decision ? '★ Yes: a human makes this decision at every level, forever.' : 'No'],
-      ['Blocked by', r.blocked_by.length ? h('ul', {}, blockerTexts(r.blocked_by, names).map(blockerItem)) : 'Nothing recorded'],
-      [r.granted_tools === null ? 'Tools it will need (grants not captured)' : 'Tools it will need', r.required_tools.length ? r.required_tools.map((t) => h('code', {}, `${t} `)) : 'None listed'],
+      ['Blocked by', researchField(r.blocked_by, (b) => h('ul', {}, blockerTexts(b, names).map(blockerItem)), 'Nothing recorded')],
+      [r.granted_tools === null ? 'Tools it will need (grants not captured)' : 'Tools it will need',
+        researchField(r.required_tools, (t) => t.map((x) => h('code', {}, `${x} `)), 'None listed')],
     ]),
     // One source tag for the section: it opens the read line below the heading, not the heading as well.
     h('h3', {}, 'Authority'),
     r.platform ? authorityReadLine(sync) : null,
     authorityFacts(r, check, authority),
-    ruleExplanation(status),
+    ruleExplanation(status, sync),
     h('h3', {}, 'Ladder'), ladderGrid([platformLadderRow(r)]),
-    h('h3', {}, 'Behaviour per rung ', sourceFileTag()),
+    h('h3', {}, 'Behaviour per rung ', capabilityTag(paths)),
     h('p', { class: 'muted source-note' }, BEHAVIOUR_EXPOSURE.statement),
     behaviourTable(r.behaviours, false, { names })];
 }
 
-export function rungDetail(g, { names = [] } = {}) {
+export function rungDetail(g, { names = [], paths = ENDPOINTS } = {}) {
   return [backToConsole('behaviour'), h('h2', {}, g.stage), h('p', {}, platformTag('autonomyLadder.ts'), ' ', g.meaning),
     g.unreachable_by_fact ? h('p', { class: 'error' }, 'Unreachable by fact: coordinated handoff between agents does not exist in the platform today.') : null,
-    h('h3', {}, 'Behaviours written for this rung ', sourceFileTag()), behaviourTable(g.behaviours, true, { names })];
+    h('h3', {}, 'Behaviours written for this rung ', capabilityTag(paths)), behaviourTable(g.behaviours, true, { names })];
 }
 
 // ---- Operator guides: where each primary action leads ----

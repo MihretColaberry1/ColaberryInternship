@@ -12,9 +12,13 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildSite } from '../scripts/build-pages-site.mjs';
 import { BINARY, PUBLISHED, SANITIZED, MUST_NOT_PUBLISH } from '../scripts/pages-site/allowlist.mjs';
 import { verifySite, listFiles, privacyProblems } from '../scripts/pages-site/verify-site.mjs';
-import { NAME_PLACEHOLDER, CAPABILITY_FILE } from '../scripts/pages-site/sanitize-data.mjs';
+import { NAME_PLACEHOLDER, CAPABILITY_FILE, KEEP, PUBLIC_WORDING_TRANSFORM, publicWording } from '../scripts/pages-site/sanitize-data.mjs';
 import { jsCommentRanges, cssCommentRanges, withoutComments, publishSource } from '../scripts/pages-site/comment-names.mjs';
-import { PROJECT_OWNER_NAMES, replacePublicNames } from '../scripts/pages-site/public-wording.mjs';
+import { PUBLIC_WORDING, replacePublicNames } from '../scripts/pages-site/public-wording.mjs';
+import { readCapabilities, readSourcePaths } from '../command-center/agent-domain-data.js';
+import {
+  MANAGER_ACCESS_TEXT, accountableNames, isManagerAccessText, withholdNames,
+} from '../command-center/agent-domain-redact.js';
 import { installFakeDom } from './fake-dom.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -54,6 +58,58 @@ test('Panel 5 keeps its source label, pending count and disclosure in the public
   assert.equal(pub.sources?.governance, orig.sources.governance);
   assert.equal(pub.governance?.pending, orig.governance.pending);
   assert.equal(pub.governance?.disclosure, orig.governance.disclosure);
+});
+
+// Criterion 1 (PR #1 at e9844af): Panels 2 to 4 read the platform's capability records. Without these
+// fields the public copy would render them "Not available" while the build still passed.
+test('Panels 2 to 4 keep the platform\'s capability records and their two routes in the public copy', async () => {
+  const pub = JSON.parse(await readFile(path.join(SITE, '.colaberry/agent-domain.json'), 'utf8'));
+  const orig = JSON.parse(await readFile(path.join(ROOT, '.colaberry/agent-domain.json'), 'utf8'));
+  const fromPub = readCapabilities(pub);
+  const fromOrig = readCapabilities(orig);
+  assert.equal(fromPub.status, fromOrig.status);
+  assert.equal(fromPub.size, fromOrig.size);
+  // The synced capability text names the accountable manager (acceptance criteria such as "<name> signs
+  // off ..."); the public copy withholds it with the page's own withholdNames(), as Panel 4 does on screen.
+  const names = accountableNames(JSON.parse(await readFile(path.join(ROOT, CAPABILITY_FILE), 'utf8')));
+  assert.ok(names.length > 0);
+  const say = (x) => withholdNames(x, names);
+  const expected = fromOrig.rows.map((r) => ({ ...r, name: say(r.name), release_behaviour: r.release_behaviour.map((b) => ({
+    ...b, behaviour: say(b.behaviour), acceptance_criteria: say(b.acceptance_criteria) })) }));
+  assert.deepEqual(fromPub.rows, publicWording(expected), 'the same rows the page reads, with names withheld');
+  for (const n of names) assert.doesNotMatch(JSON.stringify(pub.capabilities), new RegExp(`\\b${n}\\b`), 'no manager name in the copy');
+  assert.deepEqual(readSourcePaths(pub), readSourcePaths(orig));
+  // Only the routes the page reads are kept; the others are dropped, as rule 1 requires.
+  assert.deepEqual(Object.keys(pub.sources ?? {}).sort(), ['capabilities', 'capability_ladder', 'governance']
+    .filter((k) => k in (orig.sources ?? {})));
+  // Only the fields readCapabilities() checks, nothing else from each record.
+  const allowed = new Set(KEEP['.colaberry/agent-domain.json'].filter((p) => p.startsWith('.capabilities[].'))
+    .map((p) => p.split('.')[2].replace('[]', '')));
+  for (const c of pub.capabilities ?? []) for (const k of Object.keys(c)) assert.ok(allowed.has(k), `capabilities[].${k} is not read`);
+});
+
+test('the public data copies carry no listed name: plan narratives get the published wording', async () => {
+  const named = new RegExp(`\\b(?:${PUBLIC_WORDING.map(([n]) => n.replace(/\s+/g, '\\s+')).join('|')})\\b`);
+  for (const f of SANITIZED) {
+    const text = await readFile(path.join(SITE, f), 'utf8');
+    assert.doesNotMatch(text, named, `${f} shows a name`);
+    assert.ok(JSON.parse(text)._public_copy.transforms.includes(PUBLIC_WORDING_TRANSFORM), `${f} says the wording was applied`);
+  }
+  // Every original narrative that names the platform owner is published with the role instead.
+  const plan = JSON.parse(await readFile(path.join(ROOT, '.colaberry/plan.json'), 'utf8'));
+  const pubPlan = JSON.parse(await readFile(path.join(SITE, '.colaberry/plan.json'), 'utf8'));
+  const byId = new Map(pubPlan.stories.map((s) => [s.id, s]));
+  for (const s of plan.stories.filter((x) => /\bAli\b/.test(x.narrative ?? ''))) {
+    assert.match(byId.get(s.id).narrative, /the platform owner/, s.id);
+  }
+});
+
+test('the published wording changes string values only, never keys, numbers or the GitHub account', () => {
+  const input = { Ali: 'Ali owes you a screen', n: 3, ok: true, none: null,
+    list: ['as Ali Muwwakkil said', { url: 'https://github.com/MihretColaberry1/ColaberryInternship', who: 'Mihret' }] };
+  assert.deepEqual(publicWording(input), { Ali: 'the platform owner owes you a screen', n: 3, ok: true, none: null,
+    list: ['as the platform owner said', { url: 'https://github.com/MihretColaberry1/ColaberryInternship', who: 'the project owner' }] });
+  assert.equal(input.Ali, 'Ali owes you a screen', 'the input is not changed');
 });
 
 test('no excluded file is in the output', async () => {
@@ -166,7 +222,9 @@ async function renderAll(codeRoot, dataRoot) {
   const data = await loadProjectData({ fetchImpl });
   const project = { status: 'loaded', data, model: buildOverviewModel(data, new Date('2026-11-13T18:00:00Z')), error: null };
   const remove = installFakeDom();
-  const text = (n) => [].concat(n).filter(Boolean).map((x) => (typeof x === 'string' ? x : x.textContent)).join(' ');
+  // Flattened all the way down (2026-11-24): a story page returns nested arrays, and a one-level flatten
+  // read their inner nodes as empty, so the story narratives were never compared.
+  const text = (n) => [n].flat(Infinity).filter(Boolean).map((x) => (typeof x === 'string' ? x : x.textContent)).join(' ');
   const pages = new Map();
   try {
     pages.set('console', text(renderConsole(domain, project)));
@@ -179,28 +237,45 @@ async function renderAll(codeRoot, dataRoot) {
 }
 
 /**
- * Every reachable page, compared word for word. A page may differ in one way only: the project owner's
- * name replaced by its published wording (public-wording.mjs, Mihret's decision of 2026-11-13). Any
- * other difference is unintended and fails, and so does a page that still shows the name.
+ * Every reachable page, compared line by line. A published line may differ from the repository's in
+ * three ways only, each of them the published copy withholding more than the page does on its own:
+ *   1. names: a listed name replaced by its published wording (public-wording.mjs). The project owner's
+ *      name since Mihret's decision of 2026-11-13; since 2026-11-24 also a staff name the page's own
+ *      redaction does not withhold (the platform plan narratives name the platform owner).
+ *   2. account records: a narrative line describing the accountable manager's account access becomes
+ *      the page's neutral sentence (sanitize-data.mjs, decision D4, in place since 2026-11-13).
+ *   3. capitals: "the accountable manager" capitalised where the sanitizer's withholdNames() sees a
+ *      sentence start before the page strips the line's markup.
+ * Until 2026-11-24 this test flattened each page one level only, so story pages' narratives were never
+ * compared and rules 2 and 3 went unseen. Any other difference is unintended and fails, and so does a
+ * published page that still shows a listed name. A line rewritten by rule 2 must not itself be
+ * account-access text (the admin_users table name elsewhere, as in a capability's own text, is allowed,
+ * as the privacy scan allows it).
  */
-test('every reachable page reads the same from the published copy, apart from the published wording of the owner\'s name', async (t) => {
+test('every reachable page reads the same from the published copy, apart from names and account records withheld', async (t) => {
   const original = await renderAll(ROOT, ROOT);
   const published = await renderAll(SITE, SITE);
   assert.ok(original.size >= 71, `expected at least 71 pages, got ${original.size}`);
   assert.deepEqual([...published.keys()], [...original.keys()]);
-  const owner = new RegExp(`\\b(?:${PROJECT_OWNER_NAMES.map(([n]) => n).join('|')})\\b`);
-  const identical = []; const intentional = []; const unintended = [];
+  const named = new RegExp(`\\b(?:${PUBLIC_WORDING.map(([n]) => n.replace(/\s+/g, '\\s+')).join('|')})\\b`);
+  const manager = (s) => s.replace(/\b[Tt]he accountable manager\b/g, 'the accountable manager');
+  const lineOk = (was, now) => replacePublicNames(was) === now
+    || (isManagerAccessText(was) && now.includes(MANAGER_ACCESS_TEXT) && !isManagerAccessText(now))
+    || manager(replacePublicNames(was)) === manager(now);
+  const identical = []; const names = []; const withheld = []; const unintended = [];
   for (const [page, words] of original) {
     const now = published.get(page);
+    const was = words.split('\n'); const is = now.split('\n');
     if (now === words) identical.push(page);
-    else if (owner.test(words) && now === replacePublicNames(words)) intentional.push(page);
+    else if (now === replacePublicNames(words)) names.push(page);
+    else if (was.length === is.length && was.every((l, i) => lineOk(l, is[i]))) withheld.push(page);
     else unintended.push(page);
-    assert.doesNotMatch(now, owner, `${page} still shows the owner's name`);
+    assert.doesNotMatch(now, named, `${page} still shows a name the published copy must not show`);
   }
-  t.diagnostic(`pages compared: ${original.size}; identical: ${identical.length}; intentional wording change: ${intentional.length} (${intentional.join(', ')}); unintended: ${unintended.length}`);
+  t.diagnostic(`pages compared: ${original.size}; identical: ${identical.length}; names only: ${names.length} (${names.join(', ')}); names and account records withheld: ${withheld.length}; unintended: ${unintended.length}`);
   assert.deepEqual(unintended, [], 'pages that differ in any other way');
-  // Exactly the pages that showed the name changed, and nothing else did.
-  assert.deepEqual(intentional, [...original].filter(([, w]) => owner.test(w)).map(([p]) => p));
+  // Every page that showed a name changed.
+  for (const [p, w] of original) if (named.test(w)) assert.ok(!identical.includes(p), `${p} showed a name and did not change`);
   // The comparison is meaningful only if the sanitized copy really differs underneath.
   assert.notEqual(await sha(path.join(SITE, '.colaberry/plan.json')), await sha(path.join(ROOT, '.colaberry/plan.json')));
 });

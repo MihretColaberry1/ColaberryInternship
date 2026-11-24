@@ -3,9 +3,9 @@
 // (outcomes, roles, systems, data tables) are listed here as named gaps, not as empty pages.
 import { h } from './dom.js';
 import { table } from './ui.js';
-import { AGENT_LINK_SOURCE, BEHAVIOUR_EXPOSURE, ENDPOINTS, R8_UNREACHABLE, REGISTRY_ENTRY } from './agent-domain-facts.js';
+import { AGENT_LINK_SOURCE, COVERAGE_NOT_IN_SYNC, ENDPOINTS, R8_UNREACHABLE, REGISTRY_ENTRY } from './agent-domain-facts.js';
 import { toolGrantWords } from './agent-domain-model.js';
-import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
+import { capabilityTag, endpointTags, lastChangedWords, platformTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
 import { consolePanel, loadingBlock } from './console-ui.js';
 import { planGaps } from './project-sections.js';
 import { withholdNames } from './agent-domain-redact.js';
@@ -31,21 +31,24 @@ export function aheadItems(rows, reasons = {}, names = []) {
 }
 
 /**
- * Two platform exposure gaps, not agent failures (the platform owner's confirmation, 2026-11-14): the
- * records exist on the platform, but nothing serves them to this repository yet. Named, never filled in.
+ * Two platform exposure gaps, not agent failures: records the platform holds that do not reach this
+ * repository. Named, never filled in. (The per-rung behaviours were the second until AF12.5 put them in the
+ * synced file; the /coverage rows, which the synced file names but does not carry, took their place.)
  */
-export function exposureItems() {
+export function exposureItems(paths = ENDPOINTS) {
   return [
     [unavailableTag(), 'Human confirmation of each capability is a separate platform record (AgentDomainCapabilityConfirmation: who '
       + 'confirmed, with evidence, and no verdict or autonomy column). The platform does not expose it yet, so this console shows '
       + 'confirmation as not available and never infers it from another field, approved_autonomy included.'],
-    [sourceFileTag(), `${BEHAVIOUR_EXPOSURE.statement} The behaviours shown are the pinned file's, with its commit.`],
+    [platformTag(COVERAGE_NOT_IN_SYNC.source.path, COVERAGE_NOT_IN_SYNC.source.commit),
+      `The platform's synced file names GET ${paths.coverage ?? ENDPOINTS.coverage} but carries none of its rows, so the /coverage check `
+      + 'in the capability inventory is left blank and nothing is assumed in its place.'],
   ];
 }
 
 export const GAP_LIST_TITLE = 'Things this console cannot show or claim';
 
-const ENDPOINT_WORDS = { not_captured: 'Not captured yet: left blank.', loading: 'Loading…' };
+const ENDPOINT_WORDS = { not_captured: 'Not captured yet: left blank.', not_in_sync: "Not in the platform's synced file, and not captured: left blank.", loading: 'Loading…' };
 
 /**
  * The agent gap, from the live endpoint (gaps.agent). The registry's agent_id: null is named as a stale
@@ -71,18 +74,18 @@ export function agentGapItem(agent) {
  * The gaps, in a fixed order: the first six are capability and agent gaps (renderGapsPanel keeps items
  * 0 and 3 onward when the source file is missing), then the two decision D3 items.
  */
-export function gapItems(gaps, { rows = [], reasons = {}, names = [] } = {}) {
+export function gapItems(gaps, { rows = [], reasons = {}, names = [], paths = ENDPOINTS } = {}) {
   return [
     [platformTag(R8_UNREACHABLE.source.path), R8_UNREACHABLE.statement],
-    [sourceFileTag(), `${gaps.drafts.count} of ${gaps.drafts.total} capabilities are draft. A draft capability has not been agreed by anyone.`],
-    [sourceFileTag(), gaps.no_behaviour.length
+    [capabilityTag(paths), `${gaps.drafts.count} of ${gaps.drafts.total} capabilities are draft. A draft capability has not been agreed by anyone.`],
+    [capabilityTag(paths), gaps.no_behaviour.length
       ? `${gaps.no_behaviour.length} capabilities have an empty release_behaviour[]: no next rung is defined, and defining it is the first piece of work on each.`
       : `None of the ${gaps.drafts.total} capabilities has an empty release_behaviour[]. Every one has at least one rung written, all of it draft.`],
     agentGapItem(gaps.agent),
     // Decision D4: neutral words; no name, no account records.
     [platformTag(REGISTRY_ENTRY.source.path), REGISTRY_ENTRY.blocker],
     ...aheadItems(rows, reasons, names),
-    ...exposureItems(),
+    ...exposureItems(paths),
   ].filter(Boolean);
 }
 
@@ -97,16 +100,19 @@ function planGapTable(project) {
   ], planGaps(project.data));
 }
 
-export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, names = [], sync = null } = {}) {
+export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, names = [], sync = null, paths = ENDPOINTS } = {}) {
   const state = sourceState === 'loading' ? 'loading' : 'ready';
-  const extra = { rows: project?.model?.rows ?? [], reasons: sync?.verdict_reasons ?? {}, names };
+  const extra = { rows: project?.model?.rows ?? [], reasons: sync?.verdict_reasons ?? {}, names, paths };
   const ahead = ticksAheadOfVerifier(extra.rows);
-  // With no source file, capability counts would read "0 of 0": say the file is missing instead. That
-  // sentence stays in the panel body; only the gap list itself is folded.
-  const fileError = sourceState === 'error'
-    ? [sourceFileTag(), 'The capability source file could not be read, so no capability gap can be counted.'] : null;
+  // Without the platform's capability records, capability counts would read "0 of 0": say they are missing
+  // instead. That sentence stays in the panel body; only the gap list itself is folded.
+  const noRecords = sourceState === 'error' || sourceState === 'not_available';
+  const fileError = noRecords
+    ? [capabilityTag(paths), sourceState === 'error'
+      ? "The platform's capability records in its synced file could not be used, so no capability gap can be counted."
+      : "The platform's synced file holds no capability records, so no capability gap can be counted."] : null;
   const items = sourceState === 'ready' ? gapItems(gaps, extra)
-    : sourceState === 'error' ? [fileError, ...gapItems(gaps, extra).filter((_, i) => i === 0 || i >= 3)] : [];
+    : noRecords ? [fileError, ...gapItems(gaps, extra).filter((_, i) => i === 0 || i >= 3)] : [];
   const folded = fileError ? items.slice(1) : items;
   const endpointsDown = gaps?.endpoints_not_ready ?? [];
   const synced = gaps?.endpoints_synced ?? [];
@@ -129,17 +135,17 @@ export function renderGapsPanel(gaps, { order, sourceState = 'ready', project, n
     body: state === 'loading' ? loadingBlock()
       : fileError ? h('ul', { class: 'gap-list' }, h('li', {}, fileError[0], h('p', {}, fileError[1]))) : null,
     action: state === 'ready' ? { href: '#/guide/refresh', label: 'Refresh the data from the portal' } : null,
-    reads: [endpointTags(6), platformTag('autonomyLadder.ts'), ' ', sourceFileTag()],
+    reads: [endpointTags(6, paths), platformTag('autonomyLadder.ts'), ' ', capabilityTag(paths)],
     details: state === 'ready' ? [
       { title: GAP_LIST_TITLE, count: folded.length,
         body: h('ul', { class: 'gap-list' }, folded.map(([tag, text]) => h('li', {}, tag, h('p', {}, text)))) },
       { title: 'Endpoints with no usable response', count: endpointsDown.length, body: endpointsDown.length
-        ? h('ul', { class: 'gap-list' }, endpointsDown.map((e) => h('li', {}, sourceTag('endpoint', `GET ${ENDPOINTS[e.key]}`),
+        ? h('ul', { class: 'gap-list' }, endpointsDown.map((e) => h('li', {}, sourceTag('endpoint', `GET ${paths[e.key] ?? ENDPOINTS[e.key]}`),
           h('p', {}, ENDPOINT_WORDS[e.state] ?? `Not read (${e.state}${e.status ? `, HTTP ${e.status}` : ''}): left blank.`))))
         : h('p', {}, 'Every endpoint returned a response in the captured snapshot.') },
       synced.length ? { title: 'Endpoints read from the platform sync', count: synced.length, body: [
         h('p', { class: 'muted' }, 'The platform writes these into this repository. "Last changed" is when it last rewrote them, not when anything was checked.'),
-        h('ul', { class: 'gap-list' }, synced.map((e) => h('li', {}, valueTag(ENDPOINTS[e.key], { origin: 'platform_sync' }),
+        h('ul', { class: 'gap-list' }, synced.map((e) => h('li', {}, valueTag(paths[e.key] ?? ENDPOINTS[e.key], { origin: 'platform_sync' }),
           h('p', {}, `Read from this repository, ${lastChangedWords(e.last_changed)}.`))))] } : null,
       { title: 'Fields left blank because no verified source exists', count: gaps.unavailable.length, body: table([
         { label: 'Panel', cell: (f) => f.panel }, { label: 'Field', cell: (f) => h('code', {}, f.field) },

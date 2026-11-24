@@ -1,8 +1,11 @@
 // Loads what the Agent domain tab reads. Three inputs, each kept with its own provenance:
-//   - the SOURCE FILE copied from the platform repo (command-center/sources/), with its provenance
-//   - the ENDPOINT SNAPSHOT you captured with your own session, if one is present locally
 //   - the PLATFORM SYNC: .colaberry/agent-domain.json, which the platform writes into this repo from
-//     the same endpoints, dated by .colaberry/manifest.json's generated_at ("last changed")
+//     its endpoints, dated by .colaberry/manifest.json's generated_at ("last changed"). Panels 2-4's
+//     capability records and behaviours come from here (capabilities[], since AF12.5).
+//   - the SOURCE FILE copied from the platform repo (command-center/sources/), with its provenance. It
+//     now supplies only what the snapshot does not carry: each capability's required_tools and
+//     blocked_by, and the accountable manager's name, used solely as a list of names to withhold.
+//   - the ENDPOINT SNAPSHOT you captured with your own session, if one is present locally
 // No DOM access, so the same code runs in the browser and under `node --test`.
 import { DATA_FILES, DataLoadError, loadJson } from './data.js';
 import { DOMAIN_KEY, ENDPOINTS } from './agent-domain-facts.js';
@@ -111,6 +114,15 @@ export function readPlatformSync(json, lastChanged) {
     const key = Object.keys(ENDPOINTS).find((k) => ENDPOINTS[k] === s.endpoint);
     endpoints[key] = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null, body: s.body };
   }
+  // Panels 2-4: the platform's copy of the per-domain endpoint (capabilities[]), when it is usable. The
+  // /coverage rows are not in the snapshot at all, so that endpoint is said to be "not in the sync".
+  const capabilities = readCapabilities(json);
+  const paths = readSourcePaths(json);
+  if (capabilities.status === 'ok') {
+    endpoints.domain = { state: 'ok', origin: 'platform_sync', status: null, fetched_at: null, last_changed: lastChanged ?? null,
+      body: { capabilities_returned: capabilities.size } };
+  }
+  endpoints.coverage = { state: 'not_in_sync', status: null };
   // Panel 5: what the platform says about its own governance queue, kept beside the redacted rows:
   // the label it gives the section, its pending count, and its disclosure line. Never a person.
   // (The label names GET .../agent-domain-change-requests-mine, but the platform's sync job fills the
@@ -123,15 +135,75 @@ export function readPlatformSync(json, lastChanged) {
   return { status: 'synced', last_changed: lastChanged ?? null, error: null, endpoints,
     // The whole-domain queue, kept apart from the endpoints so a personal capture can never replace it.
     governance: endpoints.requests,
-    verdict_reasons: verdictReasons(json.verification), authority: readAuthority(json) };
+    verdict_reasons: verdictReasons(json.verification), authority: readAuthority(json), capabilities, paths };
 }
 
 const NOT_SYNCED_AUTHORITY = Object.freeze({ status: 'not_synced', error: null, byId: {}, rule: null, size: 0 });
+const NOT_SYNCED_CAPABILITIES = Object.freeze({ status: 'not_synced', error: null, rows: [], size: 0 });
 const textOrNull = (v) => (v == null ? null : typeof v === 'string' ? withholdRecordIds(v) : undefined);
 
 /**
+ * The endpoint paths the snapshot itself names for the capability records and the /coverage rows
+ * (`sources.capabilities`, `sources.capability_ladder`, each "GET <path>"). Criterion 1: a panel names the
+ * endpoint its data came from, so the label is read from the file rather than written into this page.
+ * A label that is missing or not a GET path is left out, and the page falls back to ENDPOINTS.
+ */
+export function readSourcePaths(json) {
+  const path = (v) => (typeof v === 'string' && /^GET \/api\/\S+$/.test(v) ? v.slice(4) : null);
+  const out = {};
+  const domain = path(json?.sources?.capabilities);
+  const coverage = path(json?.sources?.capability_ladder);
+  if (domain) out.domain = domain;
+  if (coverage) out.coverage = coverage;
+  return out;
+}
+
+const isText = (v) => typeof v === 'string';
+const BEHAVIOUR_KEYS = ['autonomy', 'behaviour', 'acceptance_criteria'];
+
+/**
+ * The platform's capability records (`capabilities[]` in the synced file, its copy of
+ * GET .../agent-domains-mine/<key>), kept in the order the file holds them: research order, which Panel 2
+ * must not re-sort. Every row and every release_behaviour[] entry is checked; one malformed row makes the
+ * whole section `invalid`, so the page reports the problem instead of showing some rows and guessing the
+ * rest. A missing section is `missing` (Not available), never an error and never a fallback to the pinned
+ * file. Record ids in text are withheld here; names are withheld where the text is shown.
+ */
+export function readCapabilities(json) {
+  if (!Array.isArray(json?.capabilities)) {
+    return { status: 'missing', error: `${PLATFORM_SYNC_FILE} has no capabilities[] section`, rows: [], size: 0 };
+  }
+  const invalid = (i) => ({ status: 'invalid', error: `${PLATFORM_SYNC_FILE} capabilities[${i}] is not a well-formed capability record`, rows: [], size: 0 });
+  const seen = new Set();
+  const rows = [];
+  for (const [i, c] of json.capabilities.entries()) {
+    const ok = c && typeof c === 'object' && isText(c.capability_id) && c.capability_id.length > 0 && !seen.has(c.capability_id)
+      && ['name', 'classification', 'implementation_state', 'requirement_validation_state'].every((k) => isText(c[k]))
+      && isAutonomyStage(c.starting_autonomy) && isAutonomyStage(c.max_permitted_autonomy)
+      && typeof c.human_decision === 'boolean' && Array.isArray(c.release_behaviour)
+      && c.release_behaviour.every((b) => b && typeof b === 'object' && BEHAVIOUR_KEYS.every((k) => isText(b[k])) && isAutonomyStage(b.autonomy));
+    if (!ok) return invalid(i);
+    seen.add(c.capability_id);
+    rows.push({
+      capability_id: c.capability_id,
+      name: withholdRecordIds(c.name),
+      classification: c.classification,
+      implementation_state: c.implementation_state,
+      requirement_validation_state: c.requirement_validation_state,
+      starting_autonomy: c.starting_autonomy,
+      max_permitted_autonomy: c.max_permitted_autonomy,
+      human_decision: c.human_decision,
+      release_behaviour: c.release_behaviour.map((b) => ({
+        autonomy: b.autonomy, behaviour: withholdRecordIds(b.behaviour), acceptance_criteria: withholdRecordIds(b.acceptance_criteria),
+      })),
+    });
+  }
+  return { status: 'ok', error: null, rows, size: rows.length };
+}
+
+/**
  * The platform's own authority record for each capability (`authority[]`) and its tool-grant rule
- * (`authority_rule`), from the synced copy of GET /api/admin/agent-domains/product_experience. Read as
+ * (`authority_rule`), from the synced copy of GET /api/admin/agent-domains-mine/product_experience. Read as
  * the platform wrote it and never recalculated (the platform owner's decision). Every row is checked;
  * one malformed row makes the whole section `invalid`, so the page reports the problem instead of
  * showing some rows and guessing the rest. `approved_autonomy` is deliberately not read: it is not a
@@ -205,11 +277,16 @@ async function loadPlatformSync(options) {
 export function combineEndpoints(snapshot, sync) {
   const out = { ...snapshot.endpoints };
   for (const [key, e] of Object.entries(sync?.endpoints ?? {})) {
-    if (out[key]?.state !== 'ok') out[key] = e;
+    // A synced copy fills any endpoint the capture did not answer. "Not in the sync" (no copy at all) only
+    // replaces "not captured": a capture that was refused or failed says more, so it is kept.
+    if (e.state === 'ok' ? out[key]?.state !== 'ok' : (out[key]?.state ?? 'not_captured') === 'not_captured') out[key] = e;
   }
   return { ...snapshot, endpoints: out, sync: { status: sync?.status ?? 'not_synced', last_changed: sync?.last_changed ?? null, error: sync?.error ?? null,
     verdict_reasons: sync?.verdict_reasons ?? {},
     governance: sync?.governance ?? null,
+    paths: sync?.paths ?? {},
+    capabilities: sync?.capabilities
+      ?? (sync?.status === 'invalid' ? { ...NOT_SYNCED_CAPABILITIES, status: 'invalid', error: sync.error } : NOT_SYNCED_CAPABILITIES),
     authority: sync?.authority
       ?? (sync?.status === 'invalid' ? { ...NOT_SYNCED_AUTHORITY, status: 'invalid', error: sync.error } : NOT_SYNCED_AUTHORITY) } };
 }

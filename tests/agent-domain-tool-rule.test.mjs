@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
-import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, readAuthority } from '../command-center/agent-domain-data.js';
+import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, readAuthority, readCapabilities } from '../command-center/agent-domain-data.js';
 import { AUTHORITY_WORDS, BEHAVIOUR_EXPOSURE } from '../command-center/agent-domain-facts.js';
 import { authorityView, capabilityRows, toolRuleStatus } from '../command-center/agent-domain-model.js';
 import { renderRoute } from '../command-center/console.js';
@@ -21,13 +21,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = async (f) => JSON.parse(await readFile(path.join(ROOT, f), 'utf8'));
 const notCaptured = { state: 'not_captured' };
 
+/** The platform's synced capability records (capabilities[]), the source of Panels 2-4 since AF12.5. */
+const syncedCapabilities = async () => readCapabilities(await readJson(PLATFORM_SYNC_FILE));
+
 /** A loaded domain whose platform sync carries `authority` (a readAuthority() result). */
 async function domainOf(authority) {
   return {
     status: 'loaded',
     source: { status: 'ok', matrix: await readJson(CAPABILITY_FILE), record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } },
     snapshot: { status: 'not_captured', endpoints: { mine: notCaptured, domain: notCaptured, coverage: notCaptured, requests: notCaptured },
-      sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority } },
+      sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority, capabilities: await syncedCapabilities() } },
   };
 }
 
@@ -97,7 +100,7 @@ test("the rule binds: two capabilities the platform holds at R2 with no_tool_gra
 test('the platform data disagrees with itself: both are shown, and the page does not choose', async () => {
   const authority = await platform({ rows: (r, i) => (i === 0 ? { ...r, reasons: ['no_tool_grants'] } : r) });
   assert.equal(authority.rule.binds_nothing, true);
-  const status = toolRuleStatus(capabilityRows(await readJson(CAPABILITY_FILE), { authority }), authority);
+  const status = toolRuleStatus(capabilityRows((await syncedCapabilities()).rows, { authority }), authority);
   assert.equal(status.consistent, false);
   const text = ladderOf(await domainOf(authority)).textContent;
   assert.match(text, /The platform's data disagrees with itself: authority_rule\.binds_nothing is true, but 1 of 25 capabilities carry the reason no_tool_grants\./);
@@ -122,7 +125,7 @@ test('no authority section: Panel 3 says "Not available" and calculates nothing 
     assert.match(ladder.textContent, /MissingThe platform's authority record \(authority\[\] and authority_rule\)/);
     assert.match(ladder.textContent, /Nothing is calculated in its place\./);
     assert.doesNotMatch(ladder.textContent, /autonomy:R0 for all/);
-    const id = domain.source.matrix.capabilities[0].capability_id;
+    const id = domain.snapshot.sync.capabilities.rows[0].capability_id;
     const page = capabilityPage(domain, id);
     assert.match(page, /Current rungNot in the platform snapshot/);
     assert.match(page, /The platform's authority record is not in this repository/);
@@ -142,7 +145,7 @@ test('a capability the platform has no row for is said so, and counted, never de
   const gone = json.authority[0].capability_id;
   const authority = await platform({ rows: (r) => (r.capability_id === gone ? null : r) });
   const domain = await domainOf(authority);
-  const view = authorityView(capabilityRows(domain.source.matrix, { authority }).find((r) => r.id === gone));
+  const view = authorityView(capabilityRows(domain.snapshot.sync.capabilities.rows, { authority }).find((r) => r.id === gone));
   assert.equal(view.recorded, false);
   assert.equal(view.current, null);
   const text = ladderOf(domain).textContent;
@@ -153,7 +156,7 @@ test('a capability the platform has no row for is said so, and counted, never de
 test('detail page: the console\'s words, the platform\'s rule in place of the old hypothetical, and honest sources', async () => {
   const json = await readJson(PLATFORM_SYNC_FILE);
   const domain = await domainOf(await platform());
-  const high = domain.source.matrix.capabilities.find((c) => c.max_permitted_autonomy === 'autonomy:R5');
+  const high = domain.snapshot.sync.capabilities.rows.find((c) => c.max_permitted_autonomy === 'autonomy:R5');
   const page = capabilityPage(domain, high.capability_id);
   assert.ok(page.includes('Current rung (platform)autonomy:R0'));
   assert.ok(page.includes(`Starting rung?${AUTHORITY_WORDS.starting}`));
@@ -166,7 +169,9 @@ test('detail page: the console\'s words, the platform\'s rule in place of the ol
   assert.ok(page.includes(BEHAVIOUR_EXPOSURE.statement));
   assert.match(page, /Tools it will need \(grants not captured\)/);
   // The Authority section is tagged once, at the start of its read line, not on the heading as well.
-  assert.match(page, /AuthorityPlatform sync · \.colaberry\/agent-domain\.json · GET \/api\/admin\/agent-domains\/product_experience The platform's own authority record/);
+  assert.match(page, /AuthorityPlatform sync · \.colaberry\/agent-domain\.json · GET \/api\/admin\/agent-domains-mine\/product_experience The platform's own authority record/);
+  // Decision 1 (2026-11-23): blockers and required tools are the pinned file's, and say so.
+  assert.match(page, /Blocked by[^]*Source file · capabilities\/product_experience\.json[^]*Tools it will need \(grants not captured\)repo_read[^]*Source file · capabilities\/product_experience\.json/);
   assert.doesNotMatch(page, /Authority Platform sync/);
   // The research file's stale blocker is shown verbatim, with the label beside it.
   assert.match(page, /no_ai_employee_provisioned[^]*May be out of date[^]*seed value[^]*not evidence either way/);

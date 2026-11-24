@@ -2,15 +2,20 @@
 
 **Source:** [state-matrix.html](state-matrix.html) renders the real panel code against nine
 scenarios ([state-fixtures.js](state-fixtures.js)). The table below was read from each rendered
-panel's `data-state` ([state-matrix.json](state-matrix.json), re-captured 6:49 PM CST on 2026-11-17
-after Panels 5 and 6 folded their source note and gap list into closed disclosures; every panel's state
-is unchanged from the capture of 2026-11-15), not typed by hand. `tests/state-matrix.test.mjs` fails if this table, a scenario's stated
-states, and the render ever disagree. The platform-synced files are those of 2026-11-14 (4:12 PM CST).
-Columns follow the brief's panel order.
+panel's `data-state` ([state-matrix.json](state-matrix.json), re-captured 9:46 PM CST on 2026-11-23,
+screenshots 9:43 to 9:44 PM CST), not typed by hand. `tests/state-matrix.test.mjs` fails if this table, a
+scenario's stated states, and the render ever disagree. Columns follow the brief's panel order. The
+platform-synced files are those of 2026-11-23 (3:29 PM CST).
 
-**Which sources drive which panel (since 2026-11-14):** a personal endpoint capture drives Panel 1 only.
-Panel 3's authority and Panel 5's governance queue come only from the platform's synced file
-(`.colaberry/agent-domain.json`); a capture never replaces them.
+**Changed on 2026-11-23:** Panels 2 to 4 now read the platform's synced capability records, so four rows
+changed: "Real sources, nothing captured or synced", "Platform-synced file unreadable", "Pinned source file
+missing" (was "Source file missing") and "Synced capability section empty" (was "Source file empty"). The
+re-captured JSON matches this table for all nine scenarios.
+
+**Which sources drive which panel (since 2026-11-23):** a personal endpoint capture drives Panel 1 only.
+Panels 2 to 4's capability records, Panel 3's authority and Panel 5's governance queue come only from the
+platform's synced file (`.colaberry/agent-domain.json`); a capture never replaces them. The pinned research
+file supplies only each capability's required tools and blockers, and the list of names this page withholds.
 
 **Live data versus fixtures:**
 - **Today** is LIVE DATA, no fixtures. It renders exactly what the console loads on this branch: the
@@ -39,13 +44,13 @@ Panel 3's authority and Panel 5's governance queue come only from the platform's
 |---|---|---|---|---|---|---|---|
 | Loading | Loading | Loading | Loading | Loading | Loading | Loading | [state-loading.png](screenshots/state-loading.png) |
 | **Today (real sources)** | **Ready** (platform sync) | **Ready** | **Ready** (platform authority) | **Ready** | **Empty** (no requests filed) | **Ready** | [state-today.png](screenshots/state-today.png) |
-| Real sources, nothing captured or synced | Not available | Ready | Not available (no authority record) | Ready | Not available | Ready | [state-nothing-captured.png](screenshots/state-nothing-captured.png) |
+| Real sources, nothing captured or synced | Not available | Not available (no synced capability records) | Not available (no synced capability records) | Not available (no synced capability records) | Not available | Ready | [state-nothing-captured.png](screenshots/state-nothing-captured.png) |
 | Captured: no agent; test-data queue empty | Ready ("No agent is linked … in the captured response") | Ready | Ready (real authority) | Ready | Empty (test-data queue) | Ready | [state-captured-empty.png](screenshots/state-captured-empty.png) |
 | Captured: agent linked; test-data queue: requests filed | Ready | Ready | Ready (real authority) | Ready | Ready (test data: 1 submitted, 1 declined, 1 withdrawn; every row "Grants: Nothing") | Ready | [state-captured-data.png](screenshots/state-captured-data.png); Panel 5's request tables open: [state-captured-data-requests-open.png](screenshots/state-captured-data-requests-open.png), scrolled to the "Grants" column: [state-captured-data-grants-column.png](screenshots/state-captured-data-grants-column.png) |
 | Captured: refused (HTTP 403); test-data queue empty | Error | Ready | Ready (real authority) | Ready | Empty (test-data queue; a refused capture does not change Panel 5) | Ready | [state-refused.png](screenshots/state-refused.png) |
-| Platform-synced file unreadable | Error | Ready | Error | Ready | Error | Ready | [state-sync-invalid.png](screenshots/state-sync-invalid.png) |
-| Source file missing | Not available | Error | Error | Error | Not available | Ready | [state-source-missing.png](screenshots/state-source-missing.png) |
-| Source file empty | Not available | Empty | Not available (no authority record) | Empty | Not available | Ready | [state-source-empty.png](screenshots/state-source-empty.png) |
+| Platform-synced file unreadable | Error | Error | Error | Error | Error | Ready | [state-sync-invalid.png](screenshots/state-sync-invalid.png) |
+| Pinned source file missing | Ready (platform sync) | Ready (synced records) | Ready (synced records) | Ready (behaviour text withheld: no name list) | Empty (no requests filed) | Ready | [state-source-missing.png](screenshots/state-source-missing.png) |
+| Synced capability section empty | Ready (platform sync) | Empty | Empty | Empty | Empty (no requests filed) | Ready | [state-source-empty.png](screenshots/state-source-empty.png) |
 
 The table as rendered: [state-matrix-table.png](screenshots/state-matrix-table.png).
 
@@ -71,8 +76,8 @@ Colours come from the Colaberry design-system tokens; each state is said in word
 
 | Panel | State | Why |
 |---|---|---|
-| 2 Inventory, 4 Behaviour | Not available (cannot reach) | Their records come from a file committed in this repository, so they are either readable (Ready or Empty) or broken (Error). The one part waiting on an endpoint, the `/coverage` check, says "Not captured yet" inside the Ready panel |
-| 3 Ladder | Empty (no scenario shows it) | Panel 3 needs both the capability file and the platform's authority record. With an empty capability file and the synced file present it is Empty (checked on 2026-11-14); the "Source file empty" scenario has no synced file, so it shows Not available |
-| 6 Not available | Empty, Not available, Error (cannot reach) | It reports on the other sources. If the capability file is missing, it says so as its first item rather than going blank |
+| 2 Inventory, 4 Behaviour | (none: every state is reached) | Since 2026-11-23 their records come from the platform's synced file, so they reach Not available (no synced file, or no capabilities[] in it) as well as Ready, Empty and Error. The `/coverage` check inside a Ready Panel 2 says "Not in the synced file", because the snapshot names that endpoint but carries none of its rows |
+| 3 Ladder | (none: every state is reached) | The "Synced capability section empty" row now shows Empty |
+| 6 Not available | Empty, Not available, Error (cannot reach) | It reports on the other sources. If the platform's capability records are missing or broken, it says so as its first item rather than going blank |
 | 1 Employee | Empty (cannot reach) | A captured response either lists this domain (Ready, with "No agent is linked to this domain in the captured response" when the endpoint returns `agent_id: null`) or does not ("This domain is not in your list", also Ready) |
 | 5 Governance | Error from a capture (cannot reach) | Panel 5 reads only the platform's synced file, so a refused capture leaves it unchanged; it is an Error only when that file cannot be used |

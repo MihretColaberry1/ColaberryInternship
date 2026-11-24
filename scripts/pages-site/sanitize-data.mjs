@@ -1,13 +1,19 @@
 // Public copies of the five data files the Command Center reads, for the GitHub Pages demo only.
 //
-// Two rules, and nothing else:
+// Three rules, and nothing else:
 //   1. Keep only the fields the page reads (KEEP below). A field it never reads is dropped, not changed.
 //   2. Where a kept field holds a person's name, a staff record id or account records, rewrite it with
 //      the page's OWN display functions (command-center/agent-domain-redact.js, unchanged), so the file
 //      holds exactly what the screen already shows. Nothing is invented; the two placeholders used are
 //      named in each file's `_public_copy` block, with the sha256 of the original.
-// The originals in the repository are never written. tests/pages-site.test.mjs renders all 71 pages from
-// the originals and from these copies and fails unless the visible text is identical.
+//   3. Every kept text value then gets the published wording (public-wording.mjs), the same list the
+//      build already applies to code comments and copied JSON: a staff name or the project owner's name
+//      becomes its role ("the platform owner", "the project owner"). Added 2026-11-24: the platform's
+//      plan sync of 2026-11-23 put "Ali" in two story narratives, which rule 2 does not cover because the
+//      page's own redaction withholds only the accountable manager's name.
+// The originals in the repository are never written. tests/pages-site.test.mjs renders every reachable page
+// from the originals and from these copies and fails unless the visible text is identical line by line,
+// apart from exactly what rules 2 and 3 withhold (names, and the account-records lines of rule 2).
 //
 // Failure modes handled: a missing or unparsable input file, or no manager name to withhold, throws
 // (the build stops; nothing is half-written because the caller writes only after every file is ready).
@@ -20,6 +26,7 @@ import {
   PRESENT, MANAGER_ACCESS_TEXT, accountableNames, isManagerAccessText, publicBlockerText,
   withholdNames, withholdRecordIds,
 } from '../../command-center/agent-domain-redact.js';
+import { replacePublicNames } from './public-wording.mjs';
 
 export const CAPABILITY_FILE = 'command-center/sources/product_experience.capabilities.json';
 
@@ -53,7 +60,15 @@ export const KEEP = Object.freeze({
     // Panel 5 (since 2026-11-14) also reads the queue's source label, pending count and disclosure line.
     '.governance.disclosure', '.governance.pending', '.sources.governance',
     '.not_recorded[].field', '.not_recorded[].reason', '.schema', '.verification.stories[].reasons[]',
-    '.verification.stories[].story_id'],
+    '.verification.stories[].story_id',
+    // Panels 2 to 4 (Criterion 1, PR #1 at e9844af) read the platform's capability records and the two
+    // routes it names for them: readCapabilities() and readSourcePaths() in agent-domain-data.js. Exactly
+    // the fields those readers check; sources.agent, .candidates and .owed_by_product are not read.
+    '.capabilities[].capability_id', '.capabilities[].classification', '.capabilities[].human_decision',
+    '.capabilities[].implementation_state', '.capabilities[].max_permitted_autonomy', '.capabilities[].name',
+    '.capabilities[].release_behaviour[].acceptance_criteria', '.capabilities[].release_behaviour[].autonomy',
+    '.capabilities[].release_behaviour[].behaviour', '.capabilities[].requirement_validation_state',
+    '.capabilities[].starting_autonomy', '.sources.capabilities', '.sources.capability_ladder'],
   [CAPABILITY_FILE]: ['.accountable_human', '.capabilities[].blocked_by[]', '.capabilities[].capability_id',
     '.capabilities[].classification', '.capabilities[].human_decision', '.capabilities[].implementation_state',
     '.capabilities[].max_autonomy_rationale', '.capabilities[].max_permitted_autonomy', '.capabilities[].name',
@@ -100,11 +115,24 @@ const TRANSFORMS = Object.freeze({
   '.colaberry/progress.json': ['names -> "the accountable manager"', 'record ids -> "[record ID withheld]"'],
   '.colaberry/manifest.json': [],
   '.colaberry/agent-domain.json': ['agent.agent_id -> "[present]" (the page shows only whether an agent is linked)',
-    'names -> "the accountable manager"'],
+    'names -> "the accountable manager"', 'record ids in capabilities[] text -> "[record ID withheld]"'],
   [CAPABILITY_FILE]: [`accountable_human -> "${NAME_PLACEHOLDER}" (the page uses it only as the name to withhold)`,
     'names -> "the accountable manager"', 'record ids -> "[record ID withheld]"',
     'blocked_by[] -> the text the page shows for each blocker'],
 });
+
+/** Rule 3, added to every file's transforms list. */
+export const PUBLIC_WORDING_TRANSFORM = 'other staff names and the project owner\'s name -> the published wording (public-wording.mjs)';
+
+/** Rule 3: every string value in a kept copy gets the published wording. Keys are never changed. */
+export function publicWording(value) {
+  if (typeof value === 'string') return replacePublicNames(value);
+  if (Array.isArray(value)) return value.map(publicWording);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, publicWording(v)]));
+  }
+  return value;
+}
 
 function applyRules(file, data, rules) {
   const { say, narrative, blocker } = rules;
@@ -119,6 +147,12 @@ function applyRules(file, data, rules) {
   } else if (file === '.colaberry/agent-domain.json') {
     if (data.agent) data.agent.agent_id = data.agent.agent_id == null || data.agent.agent_id === '' ? null : PRESENT;
     for (const s of data.verification?.stories ?? []) s.reasons = each(s.reasons, say);
+    for (const c of Array.isArray(data.capabilities) ? data.capabilities : []) {
+      c.name = say(c.name);
+      for (const b of Array.isArray(c.release_behaviour) ? c.release_behaviour : []) {
+        b.behaviour = say(b.behaviour); b.acceptance_criteria = say(b.acceptance_criteria);
+      }
+    }
   } else if (file === CAPABILITY_FILE) {
     data.accountable_human = NAME_PLACEHOLDER;
     for (const c of data.capabilities ?? []) {
@@ -152,12 +186,12 @@ export async function sanitizeData(root) {
   const out = {};
   for (const file of Object.keys(KEEP)) {
     const { bytes, json } = await readRaw(root, file);
-    const kept = applyRules(file, pick(json, keepTree(KEEP[file])), rules);
+    const kept = publicWording(applyRules(file, pick(json, keepTree(KEEP[file])), rules));
     const provenance = {
       derived_from: file,
       source_sha256: createHash('sha256').update(bytes).digest('hex'),
       kept: 'only the fields the Command Center reads',
-      transforms: TRANSFORMS[file],
+      transforms: [...TRANSFORMS[file], PUBLIC_WORDING_TRANSFORM],
       note: 'A public copy for the GitHub Pages demo, not platform output. The original is unchanged in the repository.',
     };
     out[file] = `${JSON.stringify({ _public_copy: provenance, ...kept }, null, 2)}\n`;

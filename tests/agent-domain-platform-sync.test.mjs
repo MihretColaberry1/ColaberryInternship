@@ -66,13 +66,15 @@ function rendered(fn) {
 
 // ---- What the file becomes ----
 
-test('the real file becomes ok endpoint states for mine and requests, dated by the manifest', async () => {
+test('the real file becomes ok endpoint states for mine, requests and the domain, dated by the manifest; /coverage is not in it', async () => {
   const [json, manifest] = await Promise.all([read(PLATFORM_SYNC_FILE), read('.colaberry/manifest.json')]);
   const s = readPlatformSync(json, manifest.generated_at);
   assert.equal(s.status, 'synced');
   assert.equal(s.last_changed, manifest.generated_at);
-  assert.deepEqual(Object.keys(s.endpoints).sort(), ['mine', 'requests']);
-  for (const e of Object.values(s.endpoints)) {
+  assert.deepEqual(Object.keys(s.endpoints).sort(), ['coverage', 'domain', 'mine', 'requests']);
+  assert.equal(s.endpoints.coverage.state, 'not_in_sync', 'the snapshot names /coverage but carries none of its rows');
+  assert.equal(s.endpoints.domain.body.capabilities_returned, json.capabilities.length);
+  for (const e of [s.endpoints.mine, s.endpoints.requests, s.endpoints.domain]) {
     assert.equal(e.state, 'ok');
     assert.equal(e.origin, 'platform_sync');
     assert.equal(e.last_changed, manifest.generated_at);
@@ -162,13 +164,22 @@ test('your own capture wins wherever it answered; the sync fills only what it di
   assert.equal(out.endpoints.mine, captured);
   assert.equal(out.endpoints.requests.origin, 'platform_sync');
   assert.equal(out.endpoints.domain.state, 'not_captured');
-  // verdict_reasons (decision D2) defaults to empty, and authority to "not synced", when the sync carries none.
-  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, governance: null,
+  // verdict_reasons (decision D2) defaults to empty, and authority and capabilities to "not synced", when the sync carries none.
+  assert.deepEqual(out.sync, { status: 'synced', last_changed: 'L', error: null, verdict_reasons: {}, governance: null, paths: {},
+    capabilities: { status: 'not_synced', error: null, rows: [], size: 0 },
     authority: { status: 'not_synced', error: null, byId: {}, rule: null, size: 0 } });
-  // A broken synced file makes the authority section invalid too, with the same error, never "not synced".
+  // A broken synced file makes the authority and capability sections invalid too, with the same error, never "not synced".
   const broken = combineEndpoints({ status: 'not_captured', endpoints: {} }, { status: 'invalid', error: 'E', endpoints: {} });
   assert.equal(broken.sync.authority.status, 'invalid');
   assert.equal(broken.sync.authority.error, 'E');
+  assert.deepEqual([broken.sync.capabilities.status, broken.sync.capabilities.error], ['invalid', 'E']);
+  // "Not in the sync" replaces only "not captured": a refused capture of /coverage says more and is kept.
+  const cov = combineEndpoints({ status: 'captured', endpoints: { coverage: { state: 'refused', status: 403 } } },
+    { status: 'synced', endpoints: { coverage: { state: 'not_in_sync' } } });
+  assert.equal(cov.endpoints.coverage.state, 'refused');
+  const cov2 = combineEndpoints({ status: 'not_captured', endpoints: { coverage: { state: 'not_captured' } } },
+    { status: 'synced', endpoints: { coverage: { state: 'not_in_sync' } } });
+  assert.equal(cov2.endpoints.coverage.state, 'not_in_sync');
 });
 
 // ---- The platform's authority record (step 2, 2026-11-14): read as written, checked, never recalculated ----
@@ -274,11 +285,12 @@ test('Panel 5 on real data: empty, said in words, read from the synced copy, and
   assert.match(withTool, /Nothing: a request is not a grant/);
 });
 
-test('Panel 6 on real data: 2 of 4 endpoints have no usable response, 2 of 4 read from the sync, with the time', async () => {
+test('Panel 6 on real data: 1 of 4 endpoints has no usable response (/coverage), 3 of 4 read from the sync, with the time', async () => {
   const domain = await realDomain();
   const p = rendered(() => renderPanels(consoleInputs(domain), null).gaps);
-  assert.match(p.textContent, /Endpoints with no usable response\s*2 of 4/);
-  assert.match(p.textContent, new RegExp(`Endpoints from the sync\\s*2 of 4, last changed ${LAST_CHANGED_CENTRAL}`));
+  assert.match(p.textContent, /Endpoints with no usable response\s*1 of 4/);
+  assert.match(p.textContent, new RegExp(`Endpoints from the sync\\s*3 of 4, last changed ${LAST_CHANGED_CENTRAL}`));
+  assert.match(p.textContent, /Not in the platform's synced file, and not captured: left blank\./);
   assert.match(p.textContent, /An agent is linked to this domain\./);
 });
 

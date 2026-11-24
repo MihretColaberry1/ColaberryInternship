@@ -15,6 +15,7 @@ import { loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
 import { PANEL_ORDER, renderConsole } from '../command-center/console.js';
 import { TEN_RUNGS_TITLE } from '../command-center/panel-ladder.js';
+import { ticksAheadOfVerifier } from '../command-center/verification-model.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -82,14 +83,14 @@ test('today, from the platform sync: Panel 1 is ready, Panel 5 is empty (no requ
   for (const id of ['employee', 'governance']) assert.equal(findAll(panels[id], hasClass('not-available')).length, 0, id);
 });
 
-test('with neither a snapshot nor the platform sync: Panels 1, 3 and 5 are "Not available", the other three are ready', async () => {
-  // Panel 3 reads the platform's authority record from the synced file (2026-11-14), so without the
-  // sync it says what is missing rather than calculating anything.
+test('with neither a snapshot nor the platform sync: Panels 1 to 5 are "Not available", and Panel 6 is ready', async () => {
+  // Panels 2-4 read the platform's capability records and Panel 3 its authority record, both from the
+  // synced file, so without it they say what is missing. The pinned research file is not used in its place.
   const { domain, project } = await realInputs({ sync: false });
   const panels = byId(renderPanels(domain, project));
   const states = Object.fromEntries(Object.entries(panels).map(([id, p]) => [id, p.getAttribute('data-state')]));
-  assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'ready', ladder: 'not_available', behaviour: 'ready', gaps: 'ready' });
-  for (const id of ['employee', 'ladder', 'governance']) {
+  assert.deepEqual(states, { employee: 'not_available', governance: 'not_available', inventory: 'not_available', ladder: 'not_available', behaviour: 'not_available', gaps: 'ready' });
+  for (const id of ['employee', 'inventory', 'ladder', 'behaviour', 'governance']) {
     const block = findAll(panels[id], hasClass('not-available'));
     assert.equal(block.length, 1, id);
     for (const word of ['Missing', 'Waiting for', 'Will show']) assert.match(block[0].textContent, new RegExp(word), id);
@@ -120,12 +121,14 @@ test('a refused capture is an error with the HTTP status, not "Not available" an
   assert.equal(panels.governance.getAttribute('data-state'), 'empty');
 });
 
-test('a missing source file puts the capability panels in an error state, said in words', async () => {
-  const panels = byId(renderPanels({ status: 'loaded', source: { status: 'error', error: 'HTTP 404' }, snapshot: { status: 'not_captured', endpoints: {
-    mine: { state: 'not_captured' }, domain: { state: 'not_captured' }, coverage: { state: 'not_captured' }, requests: { state: 'not_captured' } } } }, null));
+test('a malformed capability section puts the capability panels in an error state, said in words', async () => {
+  const { domain } = await realInputs();
+  const broken = { ...domain, snapshot: { ...domain.snapshot, sync: { ...domain.snapshot.sync,
+    capabilities: { status: 'invalid', error: '.colaberry/agent-domain.json capabilities[3] is not a well-formed capability record', rows: [], size: 0 } } } };
+  const panels = byId(renderPanels(broken, null));
   for (const id of ['inventory', 'ladder', 'behaviour']) {
     assert.equal(panels[id].getAttribute('data-state'), 'error', id);
-    assert.match(panels[id].textContent, /could not be read/);
+    assert.match(panels[id].textContent, /The platform's capability records could not be used\..*capabilities\[3\] is not a well-formed capability record/, id);
   }
   assert.doesNotMatch(panels.gaps.textContent, /0 of 0/);
 });
@@ -191,34 +194,40 @@ const panelChildren = (panel) => panel.children.filter((c) => !hasClass('panel-d
 const firstDisclosure = (panel) => findAll(findAll(panel, hasClass('panel-details'))[0], hasClass('disclosure'))[0];
 const summaryOf = (d) => findAll(d, (el) => el.tagName === 'SUMMARY')[0].textContent;
 
-test('Panel 6: the eight gaps sit in the first closed disclosure, with the headline and four glance counts still visible', async () => {
+// The count is read from the data, not written in: seven fixed gaps, plus one for each story ticked
+// ahead of the platform verifier. It was eight until the platform sync of 2026-11-24 recorded STORY-000
+// at 5 of 6, matching its ticks; tests/panels-1-2-6.test.mjs keeps the "ahead" wording under a fixture.
+test('Panel 6: every gap sits in the first closed disclosure, with the headline and four glance counts still visible', async () => {
   const { domain, project } = await realInputs();
   const gaps = byId(renderPanels(domain, project)).gaps;
   const holder = firstDisclosure(gaps);
-  assert.equal(summaryOf(holder), 'Things this console cannot show or claim (8)');
+  const ahead = ticksAheadOfVerifier(project.model.rows);
+  const count = 7 + ahead.length;
+  assert.equal(summaryOf(holder), `Things this console cannot show or claim (${count})`);
   assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
-  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, 8, 'all eight gaps are listed');
-  assert.match(holder.textContent, /Your ticks are ahead of the platform verifier for product_experience\.STORY-000/);
+  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, count, 'every gap is listed');
+  for (const a of ahead) assert.ok(holder.textContent.includes(`Your ticks are ahead of the platform verifier for ${a.id}`), a.id);
   for (const c of panelChildren(gaps)) assert.equal(findAll(c, hasClass('gap-list')).length, 0, 'no gap list outside the disclosures');
-  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, /^8 things this console cannot show or cannot claim/);
+  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, new RegExp(`^${count} things this console cannot show or cannot claim`));
   assert.deepEqual(findAll(findAll(gaps, hasClass('glance'))[0], (el) => el.tagName === 'DT').map((dt) => dt.textContent),
     ['Endpoints with no usable response', 'Endpoints from the sync', 'Fields with no verified source', 'Ticks ahead of verifier']);
 });
 
-test('Panel 6: when the capability file cannot be read, that error stays visible above the folded gaps', async () => {
+test('Panel 6: when the capability records cannot be used, that error stays visible above the folded gaps', async () => {
   const { domain, project } = await realInputs();
-  const broken = { ...domain, source: { status: 'error', error: 'the server answered HTTP 404' } };
+  const broken = { ...domain, snapshot: { ...domain.snapshot, sync: { ...domain.snapshot.sync,
+    capabilities: { status: 'invalid', error: 'E', rows: [], size: 0 } } } };
   const gaps = byId(renderPanels(broken, project)).gaps;
   const visible = panelChildren(gaps).map((c) => c.textContent).join(' ');
-  assert.match(visible, /The capability source file could not be read, so no capability gap can be counted\./);
+  assert.match(visible, /The platform's capability records in its synced file could not be used, so no capability gap can be counted\./);
   const holder = firstDisclosure(gaps);
   assert.match(summaryOf(holder), /^Things this console cannot show or claim \(\d+\)$/);
   assert.equal(holder.getAttribute('open'), null);
-  assert.doesNotMatch(holder.textContent, /could not be read/, 'the error is not folded away');
+  assert.doesNotMatch(holder.textContent, /could not be used/, 'the error is not folded away');
   // Original plain styling: a gap-list item as before the fold, never the red .error block (review, 2026-11-17).
   const items = panelChildren(gaps).flatMap((c) => findAll(c, (el) => el.tagName === 'LI'));
-  assert.ok(items.some((li) => /could not be read/.test(li.textContent)), 'the sentence is a plain list item');
-  assert.equal(findAll(gaps, hasClass('error')).filter((el) => /could not be read/.test(el.textContent)).length, 0, 'no red error styling');
+  assert.ok(items.some((li) => /could not be used/.test(li.textContent)), 'the sentence is a plain list item');
+  assert.equal(findAll(gaps, hasClass('error')).filter((el) => /could not be used/.test(el.textContent)).length, 0, 'no red error styling');
 });
 
 test('Panel 5: the source note sits in the first closed disclosure, "Where these rows come from"', async () => {

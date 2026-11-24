@@ -1,6 +1,6 @@
 # Product Experience & UI/UX — Stories
 
-36 stories across 1 releases, walking-skeleton first:
+40 stories across 1 releases, walking-skeleton first:
 the earliest release proves the thinnest end-to-end path including the trust
 spine, and later releases stack features on top of something already working.
 
@@ -24,6 +24,9 @@ system rather than a part of it.
 - **[product_experience.CAP.component_duplication_detection](stories/product_experience.CAP.component_duplication_detection.md)** — Component duplication and divergence detection
 - **[product_experience.CAP.dataviz_quality_audit](stories/product_experience.CAP.dataviz_quality_audit.md)** — Data-visualisation quality audit on product surfaces
 - **[product_experience.CAP.design_token_drift_audit](stories/product_experience.CAP.design_token_drift_audit.md)** — Design-token drift audit across every styled surface
+- **[product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN](stories/product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN.md)** — Design-token drift audit across every styled surface · 0.3 · waiting on the platform
+- **[product_experience.CAP.design_token_drift_audit.L0-CHOOSE](stories/product_experience.CAP.design_token_drift_audit.L0-CHOOSE.md)** — Design-token drift audit across every styled surface · 0.1 · pick one from the list
+- **[product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET](stories/product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET.md)** — Design-token drift audit across every styled surface · 0.2 · write the scope sheet
 - **[product_experience.CAP.design_token_drift_audit.L1-BY-HAND](stories/product_experience.CAP.design_token_drift_audit.L1-BY-HAND.md)** — Design-token drift audit across every styled surface · 1 · do it by hand
 - **[product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP](stories/product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP.md)** — Design-token drift audit across every styled surface · 2 · do it in the app
 - **[product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST](stories/product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST.md)** — Design-token drift audit across every styled surface · 3 · request the tool
@@ -47,6 +50,7 @@ system rather than a part of it.
 - **[product_experience.CAP.ux_quality_exception_register](stories/product_experience.CAP.ux_quality_exception_register.md)** — UX quality standard and exception register
 - **[product_experience.CAP.visual_change_approval_gate](stories/product_experience.CAP.visual_change_approval_gate.md)** — Visual and brand change approval gate
 - **[product_experience.CAP.wcag_aa_accessibility_audit](stories/product_experience.CAP.wcag_aa_accessibility_audit.md)** — WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals
+- **[product_experience.GATE.R0.1](stories/product_experience.GATE.R0.1.md)** — R0 gate · 1 of 1 · a capability the agent does, watched
 - **[product_experience.LEGACY-MIGRATION-PLAN](stories/product_experience.LEGACY-MIGRATION-PLAN.md)** — Legacy migration plan
 - **[product_experience.RESEARCH-1-SYSTEM-CLASSES](stories/product_experience.RESEARCH-1-SYSTEM-CLASSES.md)** — Compare the five system classes, and place this domain among them
 - **[product_experience.RESEARCH-2-AGENT-ANATOMY](stories/product_experience.RESEARCH-2-AGENT-ANATOMY.md)** — Map the nine anatomy elements onto this domain's agent

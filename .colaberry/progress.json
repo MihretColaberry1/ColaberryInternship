@@ -2,13 +2,13 @@
   "schema_version": 2,
   "project": "Product Experience & UI/UX",
   "totals": {
-    "stories_total": 36,
+    "stories_total": 40,
     "stories_verified": 6,
-    "stories_submitted": 0,
-    "stories_in_progress": 30,
+    "stories_submitted": 1,
+    "stories_in_progress": 33,
     "stories_not_started": 0,
-    "criteria_total": 59,
-    "criteria_passed": 18,
+    "criteria_total": 71,
+    "criteria_passed": 23,
     "points_awarded": 150
   },
   "stories": [
@@ -22,18 +22,24 @@
           "passed": false
         }
       ],
-      "files_touched": [],
-      "tests_added": [],
-      "notes": null,
+      "files_touched": [
+        "docs/definitions/brand_design_system_sync_review.R0.md",
+        "tests/brand-sync-review-r0.test.mjs",
+        "docs/sessions/CC-20261114-m8db.md"
+      ],
+      "tests_added": [
+        "tests/brand-sync-review-r0.test.mjs"
+      ],
+      "notes": "R0 note definition drafted (revision 2, 2026-11-14) and unsigned. The criterion stays false: Mohammed Abdul Aleem's written confirmation of the note format (D2) and his answer to OQ1 are outstanding. The test checks the document's structure and that it claims no approval; it does not test the platform and does not pass the criterion. The story is marked CANDIDATE on the platform; picking it (OQ10) needs Aleem's agreement.",
       "updated_at": null,
       "verification": {
         "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
+        "commit_sha": "8bb4a177ba14ef696e1b791dc44683950674da9e",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/8bb4a177ba14ef696e1b791dc44683950674da9e",
+        "commit_at": "2026-11-14T22:05:50Z",
         "points_awarded": null,
         "outstanding": [
           "The manager confirms the note format answers the question he actually has before merging."
@@ -179,6 +185,120 @@
         "points_awarded": null,
         "outstanding": [
           "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "A change request exists against this domain naming the screen or the ruling needed, and the route it would live at.",
+          "passed": false
+        },
+        {
+          "text": "The request does NOT argue that the capability should exist, because the product already does most of it.",
+          "passed": false
+        },
+        {
+          "text": "A second candidate was started while this one waits, so the builder is not idle on a decision that is not theirs.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "A change request exists against this domain naming the screen or the ruling needed, and the route it would live at.",
+          "The request does NOT argue that the capability should exist, because the product already does most of it.",
+          "A second candidate was started while this one waits, so the builder is not idle on a decision that is not theirs."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L0-CHOOSE",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "One candidate was chosen from a list of four, and the record names which of the four sources it came from.",
+          "passed": false
+        },
+        {
+          "text": "The choice is written down with one paragraph saying why this one before the other three.",
+          "passed": false
+        },
+        {
+          "text": "The candidate was run past the product front door and the answer is recorded as one of in_app, partly, api_only or not_built, with the feature it matched when it matched one.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "One candidate was chosen from a list of four, and the record names which of the four sources it came from.",
+          "The choice is written down with one paragraph saying why this one before the other three.",
+          "The candidate was run past the product front door and the answer is recorded as one of in_app, partly, api_only or not_built, with the feature it matched when it matched one."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "The scope sheet names the person who will act on the output, by name rather than by role.",
+          "passed": false
+        },
+        {
+          "text": "It states one threshold that decides whether the capability worked.",
+          "passed": false
+        },
+        {
+          "text": "It names what the system already records that would produce that number, or says plainly that nothing does and that the measurement is part of the build.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "The scope sheet names the person who will act on the output, by name rather than by role.",
+          "It states one threshold that decides whether the capability worked.",
+          "It names what the system already records that would produce that number, or says plainly that nothing does and that the measurement is part of the build."
         ]
       }
     },
@@ -511,9 +631,9 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
+        "commit_sha": "fa6a3d07d111c3b798c09d37712a23970f849192",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/fa6a3d07d111c3b798c09d37712a23970f849192",
+        "commit_at": "2026-11-06T04:58:49Z",
         "points_awarded": null,
         "outstanding": [
           "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
@@ -847,12 +967,50 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "verified_at": null,
+        "commit_sha": "47b1ddd9170e3c83b2a9850f11b3fcddc432661b",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/47b1ddd9170e3c83b2a9850f11b3fcddc432661b",
+        "commit_at": "2026-11-07T04:44:20Z",
+        "points_awarded": null,
+        "outstanding": [
+          "A written, manager-approved standard per surface class; no audit has run."
+        ]
+      }
+    },
+    {
+      "id": "product_experience.GATE.R0.1",
+      "release": "autonomy:R0",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "A capability in this domain has reached the watched stage: the agent produced the outcome and a named human approved the run before it took effect.",
+          "passed": false
+        },
+        {
+          "text": "Its output was compared against the by-hand run recorded earlier in the same path, and the differences are written down.",
+          "passed": false
+        },
+        {
+          "text": "It is not a capability already counted toward another R0 gate story.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
         "commit_sha": null,
         "commit_url": null,
         "commit_at": null,
         "points_awarded": null,
         "outstanding": [
-          "A written, manager-approved standard per surface class; no audit has run."
+          "A capability in this domain has reached the watched stage: the agent produced the outcome and a named human approved the run before it took effect.",
+          "Its output was compared against the by-hand run recorded earlier in the same path, and the differences are written down.",
+          "It is not a capability already counted toward another R0 gate story."
         ]
       }
     },
@@ -923,7 +1081,7 @@
         "verified_at": "2026-10-22T05:42:09.470Z",
         "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899",
         "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/13b9a1b1440d323eed5fbcd7e1f5afb492416899",
-        "commit_at": "2026-10-22T05:40:05Z",
+        "commit_at": "2026-10-25T01:00:44Z",
         "points_awarded": 25,
         "outstanding": []
       }
@@ -1135,21 +1293,16 @@
       "notes": "Criteria 2-6 confirmed against the code and tests at commit a56004f (node --test tests/*.test.mjs, 155 of 155). Criterion 1 left false: Panels 1, 2 and 6 read the platform's synced copy of their endpoints (.colaberry/agent-domain.json), but Panels 3 to 5 (capability inventory, autonomy ladder, per-rung behaviour) show values from the pinned research file, because GET /api/admin/agent-domains/product_experience and /coverage are not in the synced file and have not been captured. Each panel names its endpoint, but those three did not read it. Mohammed Abdul Aleem reviews the page; ticking these lines is not his sign-off.",
       "updated_at": null,
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "submitted",
+        "criteria_passed": 5,
         "criteria_total": 6,
         "verified_at": null,
-        "commit_sha": null,
-        "commit_url": null,
-        "commit_at": null,
+        "commit_sha": "a56004f4e6486cbdc5cd8246bc991b5faec1d8bf",
+        "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/a56004f4e6486cbdc5cd8246bc991b5faec1d8bf",
+        "commit_at": "2026-11-04T05:14:43Z",
         "points_awarded": null,
         "outstanding": [
-          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.",
-          "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
-          "Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.",
-          "Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.",
-          "Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.",
-          "Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced."
+          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
         ]
       }
     }

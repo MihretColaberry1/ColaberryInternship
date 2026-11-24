@@ -72,31 +72,41 @@ export function toolGrantWords(link) {
 }
 
 /**
- * One row per capability, in the order the pinned research file records them. Names, starting rung,
- * behaviours, tools and blockers come from that file (`source_file`). Authority comes only from the
- * platform's own record for the same capability_id (`platform`, from `authority[]` in the synced
- * file): effective_autonomy, reasons, ceiling and ceiling reason, exactly as the platform wrote them.
- * `platform` is null when the snapshot has no row for the capability or no authority section at all;
- * the page then says so and never substitutes a default or a calculation.
+ * One row per capability, in the order `records` holds them: the platform's synced capabilities[]
+ * (research order, never re-sorted). Names, classification, states, starting rung, ceiling and behaviours
+ * come from those records. Authority comes only from the platform's own record for the same capability_id
+ * (`platform`, from `authority[]`): effective_autonomy, reasons, ceiling and ceiling reason, exactly as the
+ * platform wrote them, and `ceiling_reason` is that record's. The two arrays are in different orders
+ * (authority[] is sorted by id), so they are joined on capability_id, never by position.
+ *
+ * `required_tools` and `blocked_by` are not in the snapshot. They are joined, also by capability_id, from
+ * `research` (the pinned source file) and tagged "Source file" wherever they are shown. Without that file
+ * they are null, meaning "not available", never [] (which would read as "none").
  */
-export function capabilityRows(matrix, { grantedTools = null, authority = null } = {}) {
+export function capabilityRows(records, { grantedTools = null, authority = null, research = null } = {}) {
   const byId = authority?.status === 'ok' ? authority.byId : {};
-  return (matrix?.capabilities ?? []).map((c) => ({
-    id: c.capability_id,
-    name: c.name,
-    classification: c.classification,
-    implementation_state: c.implementation_state,
-    validation: c.requirement_validation_state,
-    starting: c.starting_autonomy,
-    ceiling: c.max_permitted_autonomy,
-    ceiling_reason: c.max_autonomy_rationale ?? null,
-    human_decision: c.human_decision === true,
-    behaviours: Array.isArray(c.release_behaviour) ? c.release_behaviour : [],
-    required_tools: Array.isArray(c.required_tools) ? c.required_tools : [],
-    blocked_by: Array.isArray(c.blocked_by) ? c.blocked_by : [],
-    granted_tools: grantedTools,
-    platform: Object.hasOwn(byId, c.capability_id) ? byId[c.capability_id] : null,
-  }));
+  const pinned = new Map((Array.isArray(research?.capabilities) ? research.capabilities : []).map((c) => [c.capability_id, c]));
+  const hasResearch = Array.isArray(research?.capabilities);
+  return (Array.isArray(records) ? records : []).map((c) => {
+    const platform = Object.hasOwn(byId, c.capability_id) ? byId[c.capability_id] : null;
+    const file = pinned.get(c.capability_id);
+    return {
+      id: c.capability_id,
+      name: c.name,
+      classification: c.classification,
+      implementation_state: c.implementation_state,
+      validation: c.requirement_validation_state,
+      starting: c.starting_autonomy,
+      ceiling: c.max_permitted_autonomy,
+      ceiling_reason: platform?.ceiling_reason ?? null,
+      human_decision: c.human_decision === true,
+      behaviours: Array.isArray(c.release_behaviour) ? c.release_behaviour : [],
+      required_tools: hasResearch ? (Array.isArray(file?.required_tools) ? file.required_tools : null) : null,
+      blocked_by: hasResearch ? (Array.isArray(file?.blocked_by) ? file.blocked_by : null) : null,
+      granted_tools: grantedTools,
+      platform,
+    };
+  });
 }
 
 /**

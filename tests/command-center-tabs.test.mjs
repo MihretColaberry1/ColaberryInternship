@@ -116,9 +116,24 @@ test('task list shows how far a due date moved and flags past-due unverified wor
 
 test('timeline places releases and markers only from dates the plan holds', async () => {
   const { data, model } = await realContext();
-  const tl = timeline(data.plan, model.rows, '2026-10-28');
-  assert.equal(tl.start, '2026-09-20');
-  assert.equal(tl.end, '2026-10-28');
+  const today = '2026-10-28';
+  const tl = timeline(data.plan, model.rows, today);
+  // The expected range comes from the dates the plan file holds, gathered here directly from the plan
+  // (releases, demo day, every story's due dates) plus today. The platform re-syncs the plan and moves
+  // these dates (2026-11-23), so a hard-coded day would break on its next sync rather than on a bug.
+  const planDates = [
+    ...data.plan.releases.flatMap((r) => [r.starts_on, r.ends_on]),
+    data.plan.schedule?.demo_day,
+    ...data.plan.stories.flatMap((s) => [s.due_on, s.due_baseline_on]),
+    today,
+  ].filter(Boolean).sort();
+  assert.ok(planDates.length > 1, 'the plan holds dates to place');
+  assert.equal(tl.start, planDates[0]);
+  assert.equal(tl.end, planDates[planDates.length - 1]);
+  for (const r of tl.releases.filter((x) => x.start && x.end)) {
+    assert.ok(r.start >= tl.start && r.end <= tl.end, `${r.key} sits inside the timeline`);
+    assert.ok(r.left >= 0 && r.left + r.width <= 100.0001, `${r.key} is drawn inside the track`);
+  }
   assert.equal(tl.releases.length, data.plan.releases.length);
   assert.deepEqual(tl.markers.map((m) => m.label), ['Demo day', 'Today']);
   assert.equal(timeline({ releases: [], schedule: null }, [], null), null);

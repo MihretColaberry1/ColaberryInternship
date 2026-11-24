@@ -3,8 +3,11 @@
   "domain_key": "product_experience",
   "sources": {
     "agent": "GET /api/admin/agent-domains-mine",
-    "capabilities": "GET /api/admin/agent-domains/product_experience",
-    "governance": "GET /api/admin/agent-domain-change-requests-mine"
+    "capabilities": "GET /api/admin/agent-domains-mine/product_experience",
+    "capability_ladder": "GET /api/admin/agent-domains-mine/product_experience/coverage",
+    "governance": "GET /api/admin/agent-domain-change-requests-mine",
+    "candidates": "GET /api/admin/agent-domain-candidates-mine",
+    "owed_by_product": "GET /api/admin/agent-domain-candidates-mine"
   },
   "autonomy_models": {
     "agent_level": "observe | suggest | act_audited | communicate -- a property of the employee",
@@ -24,6 +27,643 @@
     "tools_granted": [],
     "tools_granted_count": 0
   },
+  "capabilities": [
+    {
+      "capability_id": "product_experience.design_token_drift_audit",
+      "name": "Design-token drift audit across every styled surface",
+      "classification": "existing_application",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": false,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Writes the audit definition: what counts as a violation, which surfaces are in scope, which raw-colour cases are legitimate, and who decides a token-set gap.",
+          "acceptance_criteria": "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the scanner against fixtures with known violation counts in an isolated sandbox.",
+          "acceptance_criteria": "A fixture seeded with N violations reports exactly N; removing one makes the count drop by one; a fixture with zero reports zero and does not report clean on an empty directory."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Answers 'is this colour tokenized?' and 'which token should this be?' from the approved token set.",
+          "acceptance_criteria": "Every answer cites tokens.css by line; no answer invents a token name that does not exist in the file."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Runs the full audit each cycle in shadow mode and compares its inventory against the human-reviewed reference inventory.",
+          "acceptance_criteria": "Agreement with the reference inventory on in-scope files, with every disagreement itemised; unclassified occurrences reported as unclassified rather than silently dropped."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.brand_design_system_sync_review",
+      "name": "Review the vendored design-system drift pull request",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines what a brand impact note must contain and what makes one insufficient for a merge decision.",
+          "acceptance_criteria": "The manager confirms the note format answers the question he actually has before merging."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Answers which surfaces consume a named token, from the approved token-to-surface map.",
+          "acceptance_criteria": "Every answer cites a file and line; an unmapped token is reported as unmapped, not guessed."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "On each sync pull request, produces the full impact note and posts it as a comment.",
+          "acceptance_criteria": "Note posted within one cycle of the pull request opening, covering every changed token, with contrast recomputed for affected pairs and no merge attempted."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.multi_brand_surface_consistency_audit",
+      "name": "Cross-brand consistency audit across the platform and the three public apps",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Draws the ownership boundary against the Website domain and records which brands must converge.",
+          "acceptance_criteria": "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Produces the comparison table and divergence report across the agreed surfaces.",
+          "acceptance_criteria": "Every divergence classified intended, unexplained or unknown, with no divergence left unclassified."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.wcag_aa_accessibility_audit",
+      "name": "WCAG 2.1 AA accessibility audit with severity-ranked remediation proposals",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Records which surfaces carry an AA obligation, which carry a lower bar, and what evidence counts as a pass.",
+          "acceptance_criteria": "A written, manager-approved standard per surface class; no audit has run."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the checks against fixture components with known, seeded violations.",
+          "acceptance_criteria": "Each of the twelve checks detects its seeded violation and reports clean on a clean fixture; a mutation that removes a label is caught by name."
+        },
+        {
+          "autonomy": "autonomy:R3",
+          "behaviour": "On request, audits one named component or page in the sandbox and returns ranked findings.",
+          "acceptance_criteria": "Findings use the skill's severity definitions and cite line numbers; no finding is asserted without a located source line."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Audits the agreed surface set each cycle in shadow mode against a human-reviewed reference audit.",
+          "acceptance_criteria": "Critical and Major findings agree with the reference audit, with every disagreement itemised and no finding invented."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.color_contrast_regression_check",
+      "name": "Rendered colour-contrast regression check",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": false,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines thresholds, the viewport set, and how decorative and image-backed text are handled.",
+          "acceptance_criteria": "Written definition approved; the three historical failures are recorded as named regression cases."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs against fixtures reproducing the 1.06:1, 1.03:1 and 1.00:1 failures.",
+          "acceptance_criteria": "All three fixtures fail by name with the ratio reported; a compliant fixture passes; an empty render reports unknown rather than clean."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Sweeps the agreed surfaces each cycle in shadow mode against human-confirmed results.",
+          "acceptance_criteria": "No false clean on any seeded regression case; unresolved backgrounds reported as unresolved."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.keyboard_and_semantic_interaction_audit",
+      "name": "Keyboard and semantic-interaction audit",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines which patterns count as violations and which are approved exceptions.",
+          "acceptance_criteria": "Manager-approved pattern list, including the backdrop-dismissal exception."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the AST scan against fixtures with seeded non-semantic handlers.",
+          "acceptance_criteria": "Multi-line JSX handlers are detected, proving the AST scan beats the regex lower bound; a clean fixture reports zero."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Audits the agreed surfaces each cycle in shadow mode against a human-reviewed reference list.",
+          "acceptance_criteria": "No seeded violation missed; runtime-created controls reported as out of static scope rather than as absent."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.image_alt_and_media_accessibility_audit",
+      "name": "Image, media and icon alternative-text audit",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines what a good alternative is here and who decides decorative versus meaningful.",
+          "acceptance_criteria": "Written, manager-approved rule covering decorative images and icon-only controls."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Produces the gap inventory and drafts candidate alt text for human editing.",
+          "acceptance_criteria": "Every gap located by file and line; every draft marked as a draft; no alt text committed by the agent."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.unrouted_page_detection",
+      "name": "Unrouted and orphaned page detection",
+      "classification": "existing_application",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": false,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines reachability, the roots, and the parked-page register's format and owner.",
+          "acceptance_criteria": "Manager-approved definition, and a parked register seeded with at least the SignupV2 case already documented in App.tsx."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the graph walk against fixtures with known orphans and known lazy and index imports.",
+          "acceptance_criteria": "A lazily-imported page is reported reachable; an index-barrel import resolves; a seeded orphan is found; a page imported only by its own test is reported never-imported."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Reports the orphan inventory each cycle in shadow mode against the human-maintained register.",
+          "acceptance_criteria": "No parked page reported as dead; every new orphan surfaced within one cycle of becoming unreachable; template-string routes reported as unresolved."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.route_surface_inventory",
+      "name": "Route and surface inventory with review-coverage map",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": false,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines what counts as one surface, how parameterised routes are counted, and what counts as review coverage.",
+          "acceptance_criteria": "Written, manager-approved counting rule; no inventory published under an undefined rule."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Answers 'what is at this path' and 'has this surface been reviewed' from the approved inventory.",
+          "acceptance_criteria": "Every answer cites the route tree file and line; an unresolved route is reported as unresolved."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Regenerates the inventory and coverage map each cycle in shadow mode against a human-checked list.",
+          "acceptance_criteria": "New routes appear within one cycle of merge; removed routes disappear; composed and parameterised paths expand per the approved rule."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.page_health_smoke_sweep",
+      "name": "Page-health smoke sweep on direct load and client-side navigation",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": false,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines the route list, the thresholds, the exemptions and what a sweep failure obliges.",
+          "acceptance_criteria": "Manager-approved route list and threshold set, including exemptions for legitimately short pages."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the sweep against fixtures with a seeded empty page, a seeded overflow and a seeded broken image.",
+          "acceptance_criteria": "Each seeded defect is caught in both navigation modes; an empty route list fails loudly instead of reporting clean."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Runs the full sweep on the sandbox deployment and reports the table.",
+          "acceptance_criteria": "Both navigation modes run for every route; unreachable routes reported unknown; no route silently skipped."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Runs each cycle in shadow mode against the last human-accepted sweep.",
+          "acceptance_criteria": "Regressions named against the accepted baseline, with no false clean on a seeded defect."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.public_copy_claims_compliance_audit",
+      "name": "Public copy and claims compliance audit",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Records which rules bind which surfaces, who owns each rule, and what the agent may never draft.",
+          "acceptance_criteria": "Written rule ownership, with legal sign-off recorded for any regulatory rule."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the scanner against fixtures and proves the four documented failure modes plus the empty-directory trap.",
+          "acceptance_criteria": "A new violation fails; more in an old file fails; fewer turns the ratchet; an unclassifiable occurrence fails; an empty scan scope fails on the file-count floor rather than reporting clean. Measured baseline on 2026-10-09: 287 recorded occurrences across the baseline files."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Answers whether a proposed phrase is permitted, and which claim key backs a figure, from the approved rules and registry.",
+          "acceptance_criteria": "Every answer cites the rule or claim by id; the 34 registry entries measured 2026-10-09 are the only claim authority, and an unregistered claim is reported as unregistered."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Runs the full audit each cycle and reports new violations and registry bypasses.",
+          "acceptance_criteria": "No new violation reaches a merged branch undetected; no copy change made by the agent."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.evidence_labeling_and_sample_data_audit",
+      "name": "Evidence-class and sample-data labelling audit",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines which surfaces owe an evidence class and what makes sample mode adequately distinct.",
+          "acceptance_criteria": "Manager-approved definition covering public and admin surfaces separately."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Audits the agreed surfaces and reports unlabelled figures and indistinguishable sample modes.",
+          "acceptance_criteria": "Every in-scope figure classified; a seeded bare-literal metric is caught; a sample mode differing only by a badge string is reported as a failure."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.responsive_and_touch_target_regression_check",
+      "name": "Responsive layout and touch-target regression check",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R5",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Fixes the breakpoint set, the touch minimum per surface class, and the legitimate-horizontal-scroll exceptions.",
+          "acceptance_criteria": "Manager-approved breakpoint and minimum set, with table and dense-admin exceptions named."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs against fixtures with a seeded overflow and a seeded undersized control.",
+          "acceptance_criteria": "Both are caught at the breakpoints where they occur and not reported at breakpoints where they do not; a control passing only via a Bootstrap class is reported as such."
+        },
+        {
+          "autonomy": "autonomy:R5",
+          "behaviour": "Sweeps the agreed surfaces at every breakpoint each cycle in shadow mode against the accepted baseline.",
+          "acceptance_criteria": "Regressions named per surface per breakpoint; no single-viewport result reported as overall conformance."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.motion_and_reduced_motion_compliance_review",
+      "name": "Motion and reduced-motion compliance review",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Decides whether the global reduced-motion reset is the single authority and what duration limits bind this product.",
+          "acceptance_criteria": "Written decision on the reset's scope; per-file obligations stated."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Produces the motion inventory and the reduced-motion coverage report, verified in a rendered sandbox.",
+          "acceptance_criteria": "Every animated property classified; reduced-motion verified by rendering with the preference set, not by the media query's presence; JavaScript-driven motion reported as out of static scope."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.bundle_and_render_performance_review",
+      "name": "Bundle size and render performance review",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Proposes a performance budget per surface class and defines what a regression is.",
+          "acceptance_criteria": "A manager-approved budget exists; until then every measurement is reported as unjudged."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the build and the analyser in an isolated sandbox and establishes a first baseline.",
+          "acceptance_criteria": "The build completes using the real production path; chunk sizes map to routes; the baseline is recorded with its commit."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Reports size and render findings against the baseline and proposes specific, reviewable changes.",
+          "acceptance_criteria": "Every proposal names the chunk or component and the expected effect; no proposal uses an exhaustive-deps disable."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.screenshot_visual_review_packet",
+      "name": "Assemble the screenshot-based design review packet",
+      "classification": "existing_application",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines the packet's structure, the surface list, the cadence and the synthetic-content labelling rule.",
+          "acceptance_criteria": "Manager-approved structure and cadence; the width cap and summary requirement restated as hard gates."
+        },
+        {
+          "autonomy": "autonomy:R3",
+          "behaviour": "On request, captures one named surface in the sandbox and returns the stop with its summary entry.",
+          "acceptance_criteria": "Every image at or below 1800 pixels wide; a summary entry present for each with original width, final width and downscaled flag."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Assembles the full multi-stop packet for the sprint's surfaces.",
+          "acceptance_criteria": "Every agreed stop present; no final width above 1800; synthetic content labelled; the document opens and renders for the reviewer."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.component_duplication_detection",
+      "name": "Component duplication and divergence detection",
+      "classification": "existing_application",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines what counts as a duplication worth fixing and what name reuse is legitimate.",
+          "acceptance_criteria": "Manager-approved definition distinguishing legitimate name reuse from real duplication."
+        },
+        {
+          "autonomy": "autonomy:R1",
+          "behaviour": "Runs the detector against fixtures containing a known duplicate pair and a known legitimate name reuse.",
+          "acceptance_criteria": "The duplicate is found; the legitimate reuse is not reported; a renamed copy is still detected structurally."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Reports duplication clusters with consolidation proposals and stated blast radius.",
+          "acceptance_criteria": "Every proposal names the files and the blast radius; any proposal exceeding the large-refactor threshold is marked for escalation rather than offered as a patch."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.manager_design_review_queue",
+      "name": "Manager-reachable design review and decision queue",
+      "classification": "manager_defined",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R2",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "States how this manager will reach his employee and what a recorded decision must contain, which HUMAN_OWNERSHIP_MAP.md:46 requires of this domain's Phase 1.",
+          "acceptance_criteria": "A written access plan exists naming either a scoped admin_users row or a specific alternative surface, and Mohammed Abdul Aleem confirms he can use it."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Presents queued findings and answers questions about them from the approved evidence, and records his decisions.",
+          "acceptance_criteria": "He opens the queue himself and records at least one decision attributable to his identity, verified server-side rather than by frontend visibility."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.visual_change_approval_gate",
+      "name": "Visual and brand change approval gate",
+      "classification": "manager_defined",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R2",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines what counts as a visual change, who approves each surface, and what the urgent fast path is.",
+          "acceptance_criteria": "Written, manager-approved classification and approver map; the fast path named or explicitly deferred."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Classifies proposed changes, attaches rendered before-and-after evidence, routes to the approver and records the outcome.",
+          "acceptance_criteria": "A seeded visual change cannot reach a merge without a recorded approval; a non-visual change is not blocked; the agent cannot approve its own change under any setting, proven by a negative test."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.ux_quality_exception_register",
+      "name": "UX quality standard and exception register",
+      "classification": "manager_defined",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R2",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Drafts the standard and the register's format, and takes the manager's rulings on each audit's thresholds.",
+          "acceptance_criteria": "A dated standard exists per surface class, with Mohammed Abdul Aleem recorded as its author of record, and every threshold either set or explicitly marked unknown."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Applies the register when reporting findings and answers which standard governs a surface.",
+          "acceptance_criteria": "No finding is raised against an accepted exception; every answer cites the register entry or the standard; an unruled surface class is reported as unruled rather than judged by default."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.dataviz_quality_audit",
+      "name": "Data-visualisation quality audit on product surfaces",
+      "classification": "proposed_new",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Decides ownership against the Assistant department and defines chart fitness for product surfaces.",
+          "acceptance_criteria": "A written ownership decision exists; the fitness rule set is named and is either reused from the existing agent or explicitly extended."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Audits the agreed charted surfaces and reports fitness, empty-render risk and legibility findings.",
+          "acceptance_criteria": "Every in-scope chart classified or reported undetermined; a seeded type mismatch and a seeded empty-render case are both caught."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.plain_language_interface_copy_audit",
+      "name": "Plain-language audit of interface copy",
+      "classification": "proposed_new",
+      "implementation_state": "partial",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Sets which surfaces owe plain language and what vocabulary is legitimate on each.",
+          "acceptance_criteria": "Manager-approved per-surface audience definition; admin exceptions named."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Audits in-scope interface copy and drafts replacements for human editing.",
+          "acceptance_criteria": "Every finding cites file and line; every replacement marked a draft; database-held copy reported as out of static scope rather than as clean."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.theme_and_dark_mode_readiness_assessment",
+      "name": "Theme and dark-mode readiness assessment",
+      "classification": "proposed_new",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R2",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Frames the question and names what evidence a credible readiness verdict needs.",
+          "acceptance_criteria": "A written assessment scope; no implementation work proposed or begun."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Answers the readiness question from the measured token and raw-colour evidence.",
+          "acceptance_criteria": "Every figure in the verdict traces to a measurement with its method stated, and unknowns are named as unknowns rather than estimated."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.stylesheet_architecture_consolidation_proposal",
+      "name": "Stylesheet architecture consolidation proposal",
+      "classification": "proposed_new",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R2",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "States the target architecture question and what a consolidation would have to preserve.",
+          "acceptance_criteria": "A written scope naming the stylesheets in play and the no-visual-change constraint."
+        },
+        {
+          "autonomy": "autonomy:R2",
+          "behaviour": "Produces the ownership map and the staged proposal from the measured evidence.",
+          "acceptance_criteria": "Every stage states its blast radius and whether it changes the rendered result; any stage above the large-refactor threshold is marked for escalation."
+        }
+      ]
+    },
+    {
+      "capability_id": "product_experience.empty_error_loading_state_inventory",
+      "name": "Empty, error and loading state inventory",
+      "classification": "proposed_new",
+      "implementation_state": "absent",
+      "requirement_validation_state": "draft",
+      "starting_autonomy": "autonomy:R0",
+      "max_permitted_autonomy": "autonomy:R4",
+      "human_decision": true,
+      "release_behaviour": [
+        {
+          "autonomy": "autonomy:R0",
+          "behaviour": "Defines the required pattern for each of the three states and which surfaces owe them.",
+          "acceptance_criteria": "Manager-approved pattern per state; the deliberately-blank exception named."
+        },
+        {
+          "autonomy": "autonomy:R4",
+          "behaviour": "Inventories the three states across the agreed surfaces, inducing each where possible.",
+          "acceptance_criteria": "Every surface records handled, unhandled or uninduced for each state; no uninduced state reported as handled."
+        }
+      ]
+    }
+  ],
   "authority": [
     {
       "capability_id": "product_experience.brand_design_system_sync_review",
@@ -331,11 +971,11 @@
     "known": true,
     "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
     "summary": {
-      "stories": 36,
-      "checked": 36,
+      "stories": 40,
+      "checked": 40,
       "verified": 6,
-      "awaiting_criteria": 30,
-      "outstanding_criteria": 41
+      "awaiting_criteria": 33,
+      "outstanding_criteria": 48
     },
     "stories": [
       {
@@ -347,13 +987,12 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.brand_design_system_sync_review and changes a file. Commit your work with a `Story: product_experience.CAP.brand_design_system_sync_review` trailer (or product_experience.CAP.brand_design_system_sync_review in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "The manager confirms the note format answers the question he actually has before merging."
         ],
-        "commit_sha": null
+        "commit_sha": "8bb4a177ba14ef696e1b791dc44683950674da9e"
       },
       {
         "story_id": "product_experience.CAP.bundle_and_render_performance_review",
@@ -438,6 +1077,63 @@
           "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
         ],
         "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4"
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
+        "title": "Design-token drift audit across every styled surface · 0.3 · waiting on the platform",
+        "status": "in_progress",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN` trailer (or product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN in the subject line) and push."
+        ],
+        "outstanding": [
+          "A change request exists against this domain naming the screen or the ruling needed, and the route it would live at.",
+          "The request does NOT argue that the capability should exist, because the product already does most of it.",
+          "A second candidate was started while this one waits, so the builder is not idle on a decision that is not theirs."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.L0-CHOOSE",
+        "title": "Design-token drift audit across every styled surface · 0.1 · pick one from the list",
+        "status": "in_progress",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L0-CHOOSE and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L0-CHOOSE` trailer (or product_experience.CAP.design_token_drift_audit.L0-CHOOSE in the subject line) and push."
+        ],
+        "outstanding": [
+          "One candidate was chosen from a list of four, and the record names which of the four sources it came from.",
+          "The choice is written down with one paragraph saying why this one before the other three.",
+          "The candidate was run past the product front door and the answer is recorded as one of in_app, partly, api_only or not_built, with the feature it matched when it matched one."
+        ],
+        "commit_sha": null
+      },
+      {
+        "story_id": "product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET",
+        "title": "Design-token drift audit across every styled surface · 0.2 · write the scope sheet",
+        "status": "in_progress",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET and changes a file. Commit your work with a `Story: product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET` trailer (or product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET in the subject line) and push."
+        ],
+        "outstanding": [
+          "The scope sheet names the person who will act on the output, by name rather than by role.",
+          "It states one threshold that decides whether the capability worked.",
+          "It names what the system already records that would produce that number, or says plainly that nothing does and that the measurement is part of the build."
+        ],
+        "commit_sha": null
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L1-BY-HAND",
@@ -624,13 +1320,12 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.multi_brand_surface_consistency_audit and changes a file. Commit your work with a `Story: product_experience.CAP.multi_brand_surface_consistency_audit` trailer (or product_experience.CAP.multi_brand_surface_consistency_audit in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "Mohammed Abdul Aleem and the Website domain's manager agree in writing which surfaces this domain audits."
         ],
-        "commit_sha": null
+        "commit_sha": "fa6a3d07d111c3b798c09d37712a23970f849192"
       },
       {
         "story_id": "product_experience.CAP.page_health_smoke_sweep",
@@ -828,11 +1523,29 @@
         "criteria_passed": 0,
         "criteria_total": 1,
         "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.CAP.wcag_aa_accessibility_audit and changes a file. Commit your work with a `Story: product_experience.CAP.wcag_aa_accessibility_audit` trailer (or product_experience.CAP.wcag_aa_accessibility_audit in the subject line) and push."
+          "None of the 1 acceptance criteria are marked as passing yet."
         ],
         "outstanding": [
           "A written, manager-approved standard per surface class; no audit has run."
+        ],
+        "commit_sha": "47b1ddd9170e3c83b2a9850f11b3fcddc432661b"
+      },
+      {
+        "story_id": "product_experience.GATE.R0.1",
+        "title": "R0 gate · 1 of 1 · a capability the agent does, watched",
+        "status": "in_progress",
+        "verification_state": "in_progress",
+        "verified": false,
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "reasons": [
+          "None of the 3 acceptance criteria are marked as passing yet.",
+          "No commit in the repo names product_experience.GATE.R0.1 and changes a file. Commit your work with a `Story: product_experience.GATE.R0.1` trailer (or product_experience.GATE.R0.1 in the subject line) and push."
+        ],
+        "outstanding": [
+          "A capability in this domain has reached the watched stage: the agent produced the outcome and a named human approved the run before it took effect.",
+          "Its output was compared against the by-hand run recorded earlier in the same path, and the differences are written down.",
+          "It is not a capability already counted toward another R0 gate story."
         ],
         "commit_sha": null
       },
@@ -858,7 +1571,7 @@
         "criteria_total": 3,
         "reasons": [],
         "outstanding": [],
-        "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899"
+        "commit_sha": "4e49a3aff925a829fa1e447ea17828b09e73ea61"
       },
       {
         "story_id": "product_experience.RESEARCH-2-AGENT-ANATOMY",
@@ -912,25 +1625,51 @@
         "story_id": "product_experience.STORY-000",
         "title": "STORY-000 · Build your Command Center",
         "status": "in_progress",
-        "verification_state": "in_progress",
+        "verification_state": "submitted",
         "verified": false,
-        "criteria_passed": 0,
+        "criteria_passed": 5,
         "criteria_total": 6,
         "reasons": [
-          "None of the 6 acceptance criteria are marked as passing yet.",
-          "No commit in the repo names product_experience.STORY-000 and changes a file. Commit your work with a `Story: product_experience.STORY-000` trailer (or product_experience.STORY-000 in the subject line) and push."
+          "5 of 6 acceptance criteria are marked as passing. Outstanding: Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
         ],
         "outstanding": [
-          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.",
-          "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
-          "Given the autonomy ladder panel, when it renders, then all ten rungs are present with the owner's wording, and each capability's ceiling is marked against the rung it stops at.",
-          "Given the autonomy ladder panel, when a capability's authority is shown, then the page shows the effective authority `effectiveAuthority()` returns rather than the level the capability record asks for, and names the `no_tool_grants` rule with the number of capabilities it currently constrains, saying so in words when that number is zero.",
-          "Given the governance panel, when a tool request is shown, then nothing on the page states or implies that filing it granted anything.",
-          "Trust -- no panel shows a number, a grant, a rung or a result this domain has not actually produced."
+          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
         ],
-        "commit_sha": null
+        "commit_sha": "a56004f4e6486cbdc5cd8246bc991b5faec1d8bf"
       }
     ]
+  },
+  "candidates": {
+    "known": true,
+    "reason": "No candidates have been put on the list yet for product_experience. An empty list means nobody has proposed anything, not that nothing qualifies.",
+    "scoped_to_domains": [
+      "product_experience"
+    ],
+    "summary": {
+      "candidates": 0,
+      "yours_to_move": 0,
+      "waiting_on_the_owner": 0,
+      "finished": 0,
+      "cleared_the_gate": 0
+    },
+    "candidates": []
+  },
+  "owed_by_product": {
+    "known": true,
+    "reason": "Nothing is waiting on the platform for you right now. Every candidate on your list is either yours to move or already through.",
+    "scoped_to_domains": [
+      "product_experience"
+    ],
+    "stages_counted": [
+      "platform_owed",
+      "screen_built"
+    ],
+    "summary": {
+      "owed": 0,
+      "waiting_for_a_screen_or_a_ruling": 0,
+      "built_and_not_yet_used": 0
+    },
+    "owed": []
   },
   "not_recorded": [
     {
