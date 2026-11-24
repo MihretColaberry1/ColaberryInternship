@@ -38,7 +38,7 @@ function diskFetch(snapshot = null, { sync = true } = {}) {
 
 async function realRows() {
   const d = await loadAgentDomainData({ fetchImpl: diskFetch() });
-  return { d, rows: capabilityRows(d.source.matrix, { authority: d.snapshot.sync.authority }) };
+  return { d, rows: capabilityRows(d.snapshot.sync.capabilities.rows, { authority: d.snapshot.sync.authority, research: d.source.matrix }) };
 }
 
 const snap = (entries) => ({ schema: SNAPSHOT_SCHEMA, captured_at: '2026-10-31T22:00:00Z', snapshots: entries });
@@ -46,8 +46,9 @@ const entry = (key, status, body) => ({ endpoint: ENDPOINTS[key], method: 'GET',
 
 // ---- Source file ----
 
-test('the source file loads with its provenance and 25 capabilities, all draft', async () => {
+test('the capability records load from the platform sync (25, all draft); the pinned file still loads with its provenance', async () => {
   const { d, rows } = await realRows();
+  assert.equal(d.snapshot.sync.capabilities.status, 'ok');
   assert.equal(d.source.status, 'ok');
   assert.equal(d.source.record.file, CAPABILITY_FILE);
   assert.equal(d.source.record.platform_commit.slice(0, 8), '9d9aa3c3');
@@ -55,9 +56,12 @@ test('the source file loads with its provenance and 25 capabilities, all draft',
   assert.ok(rows.every((r) => r.validation === 'draft'));
 });
 
-test('rows keep the order the research recorded them in', async () => {
-  const { d, rows } = await realRows();
-  assert.deepEqual(rows.map((r) => r.id), d.source.matrix.capabilities.map((c) => c.capability_id));
+test("rows keep the order the research recorded them in: the synced file's order, never re-sorted", async () => {
+  const { rows } = await realRows();
+  const json = JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8'));
+  assert.deepEqual(rows.map((r) => r.id), json.capabilities.map((c) => c.capability_id));
+  // authority[] is sorted by id, so a positional join would be wrong: the two orders differ.
+  assert.notDeepEqual(json.capabilities.map((c) => c.capability_id), json.authority.map((a) => a.capability_id));
 });
 
 test('authority comes from the platform row with the same capability_id, never from the research file or a default', async () => {
@@ -71,12 +75,13 @@ test('authority comes from the platform row with the same capability_id, never f
     assert.equal('authority' in r || 'approved' in r || 'hypothetical' in r, false, `${r.id} carries no calculated authority`);
   }
   // With no platform authority section, no row has authority at all: nothing is filled in.
-  for (const r of capabilityRows(d.source.matrix)) assert.equal(r.platform, null, r.id);
+  for (const r of capabilityRows(d.snapshot.sync.capabilities.rows)) assert.equal(r.platform, null, r.id);
 });
 
-test('human_decision is read as a strict boolean from the source file', async () => {
-  const { d, rows } = await realRows();
-  assert.equal(rows.filter((r) => r.human_decision).length, d.source.matrix.capabilities.filter((c) => c.human_decision === true).length);
+test('human_decision is read as a strict boolean from the synced capability records', async () => {
+  const { rows } = await realRows();
+  const json = JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8'));
+  assert.equal(rows.filter((r) => r.human_decision).length, json.capabilities.filter((c) => c.human_decision === true).length);
 });
 
 test('a missing source file is an error state, not an empty inventory', async () => {
@@ -116,13 +121,14 @@ test('with neither a snapshot nor the platform sync, all four endpoints are "not
   assert.deepEqual(Object.values(d.snapshot.endpoints).map((e) => e.state), ['not_captured', 'not_captured', 'not_captured', 'not_captured']);
 });
 
-test('with no snapshot, the real platform sync answers mine and requests; domain and coverage stay not captured', async () => {
+test('with no snapshot, the real platform sync answers mine, requests and the domain; /coverage is not in the sync', async () => {
   const d = await loadAgentDomainData({ fetchImpl: diskFetch() });
   assert.equal(d.snapshot.status, 'not_captured');
   assert.equal(d.snapshot.sync.status, 'synced');
   const { mine, requests, domain, coverage } = d.snapshot.endpoints;
   assert.deepEqual([mine.state, mine.origin, requests.state, requests.origin], ['ok', 'platform_sync', 'ok', 'platform_sync']);
-  assert.deepEqual([domain.state, coverage.state], ['not_captured', 'not_captured']);
+  assert.deepEqual([domain.state, domain.origin], ['ok', 'platform_sync']);
+  assert.equal(coverage.state, 'not_in_sync');
 });
 
 test('endpoint states: 200 ok, 403 refused, 401 refused, no response failed, 500 error, missing not captured', () => {
@@ -201,9 +207,9 @@ test('gaps: draft count, empty release_behaviour, unavailable fields and unready
   assert.deepEqual(gaps.drafts, { count: 25, total: 25 });
   assert.equal(gaps.no_behaviour.length, rows.filter((r) => r.behaviours.length === 0).length);
   assert.equal(gaps.unavailable, UNAVAILABLE_FIELDS);
-  // The platform sync answers mine and requests; the two capability endpoints are still not captured.
-  assert.deepEqual(gaps.endpoints_not_ready.map((e) => e.key), ['domain', 'coverage']);
-  assert.deepEqual(gaps.endpoints_synced.map((e) => e.key), ['mine', 'requests']);
+  // The platform sync answers mine, requests and the domain (capabilities[]); /coverage is not in it.
+  assert.deepEqual(gaps.endpoints_not_ready.map((e) => [e.key, e.state]), [['coverage', 'not_in_sync']]);
+  assert.deepEqual(gaps.endpoints_synced.map((e) => e.key).sort(), ['domain', 'mine', 'requests']);
   assert.equal(gaps.r8.rung, 'autonomy:R8');
 });
 

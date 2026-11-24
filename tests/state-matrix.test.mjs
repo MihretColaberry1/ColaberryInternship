@@ -49,12 +49,12 @@ test('"Today" renders exactly what the console loads, platform sync included', a
   assert.equal(states(today.domain(real.source, real)).governance, 'empty');
 });
 
-test('"nothing captured or synced" is the only real-data row where Panels 1 and 5 are "Not available"', async () => {
+test('"nothing captured or synced" is the only real-data row where Panels 1 to 5 are "Not available"', async () => {
   const real = await loadAgentDomainData({ fetchImpl: diskFetch });
   const none = states(SCENARIOS.find((s) => s.id === 'nothing-captured').domain(real.source, real));
-  assert.equal(none.employee, 'not_available');
-  assert.equal(none.governance, 'not_available');
-  assert.equal(none.inventory, 'ready');
+  for (const id of ['employee', 'inventory', 'ladder', 'behaviour', 'governance']) assert.equal(none[id], 'not_available', id);
+  // The pinned research file is loaded in this row, and is still not used in place of the synced records.
+  assert.equal(real.source.status, 'ok');
 });
 
 test('the state-matrix page labels both real-data rows as real and every other row as a fixture', async () => {

@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-18T00:49:59.903Z",
+  "captured_at": "2026-11-24T03:46:56.415Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -17,13 +17,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 146,
+          "nodes": 161,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         }
       ],
@@ -48,13 +48,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 765,
+          "nodes": 798,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         },
         {
@@ -99,13 +99,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 146,
+          "nodes": 161,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         }
       ],
@@ -130,13 +130,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 765,
+          "nodes": 798,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         },
         {
@@ -181,13 +181,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 146,
+          "nodes": 161,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         }
       ],
@@ -212,13 +212,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 765,
+          "nodes": 798,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         },
         {
@@ -263,13 +263,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 146,
+          "nodes": 161,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         }
       ],
@@ -294,13 +294,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 765,
+          "nodes": 798,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".console-intro > .muted:nth-child(2)",
             ".muted:nth-child(2) > .src-endpoint.src",
-            ".muted:nth-child(2) > .src-platform_sync.src"
+            ".console-intro > .muted:nth-child(2) > .src-platform_sync.src"
           ]
         },
         {
@@ -345,13 +345,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 48,
+          "nodes": 52,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".back",
-            "dl:nth-child(4) > dt:nth-child(1)",
-            "dl:nth-child(4) > dt:nth-child(3)"
+            "p:nth-child(3) > .src-platform_sync.src",
+            "p:nth-child(3) > .src-platform_sync.src > .src-detail"
           ]
         },
         {
@@ -380,13 +380,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 48,
+          "nodes": 52,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".back",
-            "dl:nth-child(4) > dt:nth-child(1)",
-            "dl:nth-child(4) > dt:nth-child(3)"
+            "p:nth-child(3) > .src-platform_sync.src",
+            "p:nth-child(3) > .src-platform_sync.src > .src-detail"
           ]
         },
         {
@@ -415,13 +415,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 7,
+          "nodes": 9,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".back",
-            "th:nth-child(1)",
-            "th:nth-child(2)"
+            ".src-platform_sync",
+            ".src-platform_sync > .src-detail"
           ]
         },
         {
@@ -449,13 +449,13 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 7,
+          "nodes": 9,
           "targets": [
             ".eyebrow",
             ".stamp",
             ".back",
-            "th:nth-child(1)",
-            "th:nth-child(2)"
+            ".src-platform_sync",
+            ".src-platform_sync > .src-detail"
           ]
         },
         {
@@ -573,7 +573,7 @@
           "level": "wcag_aaa",
           "impact": "serious",
           "help": "Elements must meet enhanced color contrast ratio thresholds",
-          "nodes": 1030,
+          "nodes": 1138,
           "targets": [
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(1)",
             ".matrix > thead > tr > th[scope=\"col\"]:nth-child(2)",

@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { installFakeDom, findAll, hasClass } from './fake-dom.mjs';
-import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_SCHEMA, readAuthority, readSnapshot } from '../command-center/agent-domain-data.js';
+import { CAPABILITY_FILE, PLATFORM_SYNC_FILE, SNAPSHOT_SCHEMA, readAuthority, readCapabilities, readSnapshot } from '../command-center/agent-domain-data.js';
 import { AUTHORITY_WORDS, ENDPOINTS, REGISTRY_ENTRY } from '../command-center/agent-domain-facts.js';
 import { agentLink, grantedToolsFor, toolGrantWords } from '../command-center/agent-domain-model.js';
 import { PRESENT } from '../command-center/agent-domain-redact.js';
@@ -37,12 +37,15 @@ const CASES = {
 };
 
 // The platform's real authority record, as the synced file carries it, attached to each case.
-const authority = async () => readAuthority(JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8')));
+const syncJson = async () => JSON.parse(await readFile(path.join(ROOT, PLATFORM_SYNC_FILE), 'utf8'));
+const authority = async () => readAuthority(await syncJson());
+// Panels 2-4's capability records, from the same synced file (since AF12.5).
+const capabilities = async () => readCapabilities(await syncJson());
 
 async function domainFor(snapshot) {
   return { status: 'loaded', source: { status: 'ok', matrix: await matrix(),
     record: { platform_commit: 'x'.repeat(40), git_blob: 'y'.repeat(40), platform_path: 'p' } },
-  snapshot: { ...snapshot, sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority: await authority() } } };
+  snapshot: { ...snapshot, sync: { status: 'synced', last_changed: null, verdict_reasons: {}, authority: await authority(), capabilities: await capabilities() } } };
 }
 
 async function render(caseKey) {

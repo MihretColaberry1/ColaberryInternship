@@ -56,7 +56,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories: your ticks and the platform verifier (36)",
+          "disclosure": "Stories: your ticks and the platform verifier (40)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -227,14 +227,14 @@
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints with no usable response (2)",
+          "disclosure": "Endpoints with no usable response (1)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints read from the platform sync (2)",
+          "disclosure": "Endpoints read from the platform sync (3)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -303,7 +303,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories: your ticks and the platform verifier (36)",
+          "disclosure": "Stories: your ticks and the platform verifier (40)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -474,14 +474,14 @@
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints with no usable response (2)",
+          "disclosure": "Endpoints with no usable response (1)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints read from the platform sync (2)",
+          "disclosure": "Endpoints read from the platform sync (3)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -548,7 +548,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories: your ticks and the platform verifier (36)",
+          "disclosure": "Stories: your ticks and the platform verifier (40)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -699,14 +699,14 @@
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints with no usable response (2)",
+          "disclosure": "Endpoints with no usable response (1)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints read from the platform sync (2)",
+          "disclosure": "Endpoints read from the platform sync (3)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -770,7 +770,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories: your ticks and the platform verifier (36)",
+          "disclosure": "Stories: your ticks and the platform verifier (40)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -909,14 +909,14 @@
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints with no usable response (2)",
+          "disclosure": "Endpoints with no usable response (1)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints read from the platform sync (2)",
+          "disclosure": "Endpoints read from the platform sync (3)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -980,7 +980,7 @@
         },
         {
           "panel": "inventory",
-          "disclosure": "Stories: your ticks and the platform verifier (36)",
+          "disclosure": "Stories: your ticks and the platform verifier (40)",
           "pass": true,
           "problems": [],
           "moved_down_only": [
@@ -1119,14 +1119,14 @@
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints with no usable response (2)",
+          "disclosure": "Endpoints with no usable response (1)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
         },
         {
           "panel": "gaps",
-          "disclosure": "Endpoints read from the platform sync (2)",
+          "disclosure": "Endpoints read from the platform sync (3)",
           "pass": true,
           "problems": [],
           "moved_down_only": []
@@ -1202,22 +1202,22 @@
     {
       "run": "console, phone, disclosures closed",
       "violations": [],
-      "nodes_passed": 242
+      "nodes_passed": 249
     },
     {
       "run": "console, phone, disclosures open",
       "violations": [],
-      "nodes_passed": 1767
+      "nodes_passed": 1773
     },
     {
       "run": "console, desktop, disclosures closed",
       "violations": [],
-      "nodes_passed": 242
+      "nodes_passed": 249
     },
     {
       "run": "console, desktop, disclosures open",
       "violations": [],
-      "nodes_passed": 1767
+      "nodes_passed": 1773
     }
   ],
   "button": {

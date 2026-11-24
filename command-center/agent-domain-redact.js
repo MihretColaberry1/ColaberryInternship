@@ -76,16 +76,21 @@ export function withholdNames(text, names) {
   });
 }
 
+/** A blocker whose text could not be checked for a name, because the name list did not load. */
+export const BLOCKER_WITHHELD = 'Withheld: the list of names this page must not show did not load, so this blocker was not checked and is not shown.';
+
 /**
  * A blocker line as this public page shows it, for capability and story pages alike:
  *   - text describing a person's admin-portal account records becomes MANAGER_ACCESS_TEXT (D4);
  *   - a staff member's internal record id is withheld;
- *   - the accountable manager's name is withheld (when the name list is known).
+ *   - the accountable manager's name is withheld.
+ * FAIL-CLOSED (Mihret's decision, 2026-11-23): with no name list (missing, empty or not loaded) the text
+ * cannot be checked, so it is withheld rather than shown as it is. MANAGER_ACCESS_TEXT is a fixed sentence
+ * that names no one, so it is still shown.
  */
 export function publicBlockerText(raw, names) {
   if (isManagerAccessText(raw)) return MANAGER_ACCESS_TEXT;
-  const b = withholdRecordIds(raw);
-  return withholdNames(b, names) ?? b;
+  return withholdNames(withholdRecordIds(raw), names) ?? BLOCKER_WITHHELD;
 }
 
 const IDENTITY_KEYS = new Set(['requested_by_identity', 'approved_by_identity']);

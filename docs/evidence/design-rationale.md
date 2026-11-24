@@ -97,8 +97,9 @@ screens comes from one function, `authorityView()`, so they cannot disagree, and
 
 ## 8. Every value says where it came from
 
-Tags read Endpoint, Source file, Platform code, Project plan or Unavailable. The capability panels
-explain why they show source-file values: the platform's endpoint does not return those records.
+Tags read Endpoint, Platform sync, Source file, Platform code, Project plan or Unavailable. Since
+2026-11-23 the capability panels show the platform's synced capability records (Platform sync); only each
+capability's required tools and blockers, which the synced file does not carry, are Source file values.
 Panels 1 and 5 read the platform's synced copy, or a reviewed, redacted snapshot. The page is public and cannot call admin
 endpoints, which is the access boundary working as intended (Ali Muwwakkil, 2026-11-02).
 

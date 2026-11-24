@@ -8,7 +8,7 @@
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
 import { GOVERNANCE_SNAPSHOT, REQUEST_GRANTS_NOTHING, REQUEST_RULE } from './agent-domain-facts.js';
-import { centralTime, lastChangedWords, platformTag, sourceFileTag, sourceTag } from './agent-domain-ui.js';
+import { centralTime, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag } from './agent-domain-ui.js';
 import { consolePanel, errorBlock, loadingBlock, notAvailable } from './console-ui.js';
 import { guardrailsSection, notesSection, pendingSignoffs } from './project-sections.js';
 import { recordedBy, requestStatus, toolGrantWords } from './agent-domain-model.js';
@@ -30,6 +30,9 @@ function grantSentence(link) {
 /** Free text someone typed: no record id and no name the page withholds elsewhere. */
 const publicText = (text, names) => (text == null ? null : withholdNames(withholdRecordIds(String(text)), names));
 
+/** A request title that exists but cannot be checked for a name, because the name list did not load. */
+export const TITLE_WITHHELD = 'Withheld until it can be checked for names: the list of names this page must not show did not load';
+
 /** Who decided, and when, in words that fit the status: a submitted or withdrawn request has no decision. */
 function decision(r) {
   const s = requestStatus(r.status);
@@ -40,7 +43,9 @@ function decision(r) {
 
 function requestTable(items, kindWords, names) {
   return table([
-    { label: 'Title', cell: (r) => publicText(r.title, names) ?? 'not captured' },
+    // A title that is absent is "not captured"; a title that exists but cannot be checked for a name (no
+    // name list) is withheld, and says so: it was captured, it is just not shown (2026-11-23).
+    { label: 'Title', cell: (r) => (r.title == null ? 'not captured' : publicText(r.title, names) ?? TITLE_WITHHELD) },
     { label: 'Status', cell: (r) => { const s = requestStatus(r.status); return badge(s.tone, s.words); } },
     { label: 'Proposed by', cell: (r) => r.requested_by_identity ?? GOVERNANCE_SNAPSHOT.people_words },
     { label: 'Proposed at', cell: (r) => (r.requested_at ? centralTime(r.requested_at) : 'not captured') },
@@ -108,9 +113,12 @@ const REFRESH_ACTION = Object.freeze({ href: '#/guide/refresh', label: 'How to r
 
 const UNKNOWN_LINK = Object.freeze({ state: 'unknown', reason: 'not_captured', tools_granted: null, tools_granted_count: null });
 
-export function renderGovernancePanel(groups, rows, { order, project, link = UNKNOWN_LINK, names = [] } = {}) {
+export function renderGovernancePanel(groups, rows, { order, project, link = UNKNOWN_LINK, names = [], research = true } = {}) {
   const state = governanceState(groups);
-  const tools = [...new Set(rows.flatMap((r) => r.required_tools))];
+  // required_tools comes only from the pinned source file (decision 1, 2026-11-23). Without that file the
+  // list is not available, which is said in words rather than shown as an empty list.
+  const toolsKnown = research && rows.every((r) => Array.isArray(r.required_tools));
+  const tools = toolsKnown ? [...new Set(rows.flatMap((r) => r.required_tools))] : [];
   const signoffs = project?.data ? pendingSignoffs(project.data, project.model) : [];
 
   let headline = REQUEST_RULE.statement;
@@ -154,7 +162,7 @@ export function renderGovernancePanel(groups, rows, { order, project, link = UNK
       ['Tool requests', count(groups, 'tool')],
       ['Waiting on a human (submitted)', count(groups, 'waiting')],
       ['Closed (approved, declined, withdrawn)', groups.state === 'ok' ? String(groups.decided.length + groups.withdrawn.length) : 'not captured'],
-      ['Tools the capabilities will need', `${tools.length} listed`],
+      ['Tools the capabilities will need', toolsKnown ? [`${tools.length} listed `, sourceFileTag()] : 'Not available: the pinned source file did not load'],
       ['Tools granted to the agent', toolGrantWords(link)],
       ['Sign-off waiting in this repo', signoffs.length ? signoffs.map((d) => `${d.id}: Accountable manager's R0 sign-off`).join('; ') : 'None'],
     ],
@@ -169,9 +177,10 @@ export function renderGovernancePanel(groups, rows, { order, project, link = UNK
         h('p', {}, platformTag(REQUEST_RULE.source.path), ' ', REQUEST_RULE.statement),
         disclosure ? h('p', { class: 'muted' }, 'The platform\'s note: ', disclosure) : null,
         h('ul', {}, ['submitted', 'approved', 'declined', 'withdrawn'].map((s) => h('li', {}, h('code', {}, s), ' ', requestStatus(s).words, '.')))] } : null,
-      { title: 'Tools the capabilities will need', count: tools.length, body: [
+      toolsKnown ? { title: 'Tools the capabilities will need', count: tools.length, body: [
         h('p', {}, sourceFileTag(), grantSentence(link), ' A tool not yet granted would need a tool request that a human decides.'),
-        h('ul', { class: 'tool-list' }, tools.map((t) => h('li', {}, h('code', {}, t), ' ', grantBadge(t, link))))] },
+        h('ul', { class: 'tool-list' }, tools.map((t) => h('li', {}, h('code', {}, t), ' ', grantBadge(t, link))))] }
+        : { title: 'Tools the capabilities will need', body: h('p', {}, unavailableTag(), " Not available: each capability's required tools come only from the pinned source file, which did not load. The platform's synced file does not carry them.") },
       project?.data ? { title: 'Guardrails waiting on a human', body: guardrailsSection(project.data, project.model) } : null,
       project?.data ? { title: 'Decisions recorded in this repo', body: notesSection(project.data.notes) } : null,
     ],

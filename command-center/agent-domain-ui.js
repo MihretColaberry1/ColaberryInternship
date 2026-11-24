@@ -5,7 +5,7 @@ import { badge } from './ui.js';
 import { formatCentral } from './model.js';
 import { PLATFORM_COMMIT } from './authority.js';
 import { PLATFORM_SYNC_FILE, SNAPSHOT_FILE } from './agent-domain-data.js';
-import { CAPABILITY_SOURCE_NOTE, ENDPOINTS, PANEL_ENDPOINTS } from './agent-domain-facts.js';
+import { CAPABILITY_SOURCE_NOTE, COVERAGE_NOT_IN_SYNC, ENDPOINTS, PANEL_ENDPOINTS } from './agent-domain-facts.js';
 
 const SOURCE_FILE_NAME = 'capabilities/product_experience.json';
 
@@ -25,13 +25,19 @@ export const sourceFileTag = () => sourceTag('source_file', `${SOURCE_FILE_NAME}
 export const platformTag = (path, commit = PLATFORM_COMMIT) => sourceTag('platform_code', `${path.split('/').pop()} @${commit}`);
 export const unavailableTag = () => sourceTag('unavailable', 'no verified source');
 
-/** The endpoint tags for panel n, from PANEL_ENDPOINTS, so no panel can forget to name one. */
-export const endpointTags = (n) => PANEL_ENDPOINTS[n].flatMap((k) => [sourceTag('endpoint', `GET ${ENDPOINTS[k]}`), ' ']);
+/**
+ * The endpoint tags for panel n, from PANEL_ENDPOINTS, so no panel can forget to name one. `paths` is the
+ * snapshot's own labels (readSourcePaths) over ENDPOINTS, so a panel names what the platform says it read.
+ */
+export const endpointTags = (n, paths = ENDPOINTS) => PANEL_ENDPOINTS[n].flatMap((k) => [sourceTag('endpoint', `GET ${paths[k] ?? ENDPOINTS[k]}`), ' ']);
 
-/** Panels 2-4: they name the per-domain endpoint, but its response does not carry their values. */
-export function capabilitySourceNote() {
+/** The tag for a capability value: the platform's synced copy of the per-domain endpoint. */
+export const capabilityTag = (paths = ENDPOINTS) => valueTag(paths.domain ?? ENDPOINTS.domain, { origin: 'platform_sync' });
+
+/** Panels 2-4: where their capability records come from, and which two fields still come from the pinned file. */
+export function capabilitySourceNote(paths = ENDPOINTS) {
   const { source, statement } = CAPABILITY_SOURCE_NOTE;
-  return h('p', { class: 'muted source-note' }, platformTag(source.path, source.commit), ' ', statement);
+  return h('p', { class: 'muted source-note' }, capabilityTag(paths), ' ', platformTag(source.path, source.commit), ' ', statement);
 }
 
 export function draftBadge(state) {
@@ -51,6 +57,11 @@ export function endpointNotice(path, e) {
   if (e.state === 'ok') return null;
   if (e.state === 'loading') {
     return h('div', { class: 'state state-loading', 'aria-busy': 'true' }, tag, h('p', {}, 'Loading…'));
+  }
+  if (e.state === 'not_in_sync') {
+    return h('div', { class: 'state state-not-captured' }, tag,
+      h('p', { class: 'state-title' }, 'Not available: not in the platform\'s synced file'),
+      h('p', {}, platformTag(COVERAGE_NOT_IN_SYNC.source.path, COVERAGE_NOT_IN_SYNC.source.commit), ' ', COVERAGE_NOT_IN_SYNC.statement));
   }
   if (e.state === 'not_captured') {
     return h('div', { class: 'state state-not-captured' }, tag,

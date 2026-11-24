@@ -9,10 +9,10 @@ import { badge, table } from './ui.js';
 import { AUTONOMY_STAGES, autonomyIndex } from './authority.js';
 import { AUTHORITY_WORDS, ENDPOINTS, R0_DEFAULT_HEADLINE, R8_UNREACHABLE, TOOL_RULE } from './agent-domain-facts.js';
 import { authorityView, ladderCell, platformLadderRow, toolRuleStatus } from './agent-domain-model.js';
-import { endpointTags, lastChangedWords, platformTag, sourceFileTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
+import { endpointTags, lastChangedWords, platformTag, sourceTag, unavailableTag, valueTag } from './agent-domain-ui.js';
 import { PLATFORM_SYNC_FILE } from './agent-domain-data.js';
 import { consolePanel, loadingBlock, errorBlock, notAvailable } from './console-ui.js';
-import { capabilityHref } from './panel-inventory.js';
+import { capabilityError, capabilityHref, capabilityNotAvailable } from './panel-inventory.js';
 
 export const rungHref = (stage) => `#/rung/${encodeURIComponent(stage)}`;
 
@@ -21,8 +21,13 @@ const CELL = {
   above_ceiling: 'unreachable', unreachable_by_fact: 'unreachable by fact', no_ceiling: 'no ceiling recorded',
 };
 
-/** The tag for a value from the platform's own authority record, as synced into this repository. */
-export const authorityTag = () => valueTag(ENDPOINTS.domain, { origin: 'platform_sync' });
+/**
+ * The tag for a value from the platform's own authority record, as synced into this repository. The
+ * snapshot names no separate source for authority[]; it is derived from the capability records, so it
+ * carries the capability endpoint's label (the snapshot's own `sources.capabilities` when present).
+ */
+const pathsOf = (sync) => ({ ...ENDPOINTS, ...(sync?.paths ?? {}) });
+export const authorityTag = (sync = null) => valueTag(pathsOf(sync).domain, { origin: 'platform_sync' });
 
 /** Rows must already carry the platform's ceiling (platformLadderRow): the grid draws what it is given. */
 export function ladderGrid(rows) {
@@ -42,8 +47,8 @@ export function ladderGrid(rows) {
 
 /** One line saying where the authority values came from, and when the platform last rewrote them. */
 export function authorityReadLine(sync) {
-  return h('p', { class: 'reads' }, authorityTag(),
-    ` The platform's own authority record (authority[] and authority_rule) in its synced copy of GET ${ENDPOINTS.domain}, `
+  return h('p', { class: 'reads' }, authorityTag(sync),
+    ` The platform's own authority record (authority[] and authority_rule) in its synced copy of GET ${pathsOf(sync).domain}, `
     + `${lastChangedWords(sync?.last_changed ?? null)}. Read from this repository as the platform wrote it; this page did not call `
     + 'the endpoint and does not recalculate anything.');
 }
@@ -60,9 +65,9 @@ export function toolRuleVerdict(s) {
 }
 
 /** Criterion 4: the platform's rule, its verdict, the counts behind it, and the platform's own note. */
-export function toolRuleBlock(s) {
+export function toolRuleBlock(s, sync = null) {
   return h('div', { class: 'tool-rule', role: 'note' },
-    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, TOOL_RULE.reason), ' ', authorityTag(), ' ', platformTag(TOOL_RULE.source.path, TOOL_RULE.source.commit)),
+    h('p', { class: 'state-title' }, 'The tool rule ', h('code', {}, TOOL_RULE.reason), ' ', authorityTag(sync), ' ', platformTag(TOOL_RULE.source.path, TOOL_RULE.source.commit)),
     h('p', {}, s.rule),
     h('p', {}, h('strong', {}, toolRuleVerdict(s))),
     h('ul', {},
@@ -133,8 +138,11 @@ function ladderState(rows, sourceState, authority) {
   return rows.length === 0 ? 'empty' : 'ready';
 }
 
-function stateBody(state, { sourceError, authority }) {
+function stateBody(state, { sourceState, sourceError, authority }) {
   if (state === 'loading') return loadingBlock();
+  // The capability records come first: without them there is nothing to place on the ladder.
+  if (sourceState === 'not_available') return capabilityNotAvailable();
+  if (sourceState === 'error') return capabilityError(sourceError);
   if (state === 'not_available') {
     return notAvailable({
       missing: `The platform's authority record (authority[] and authority_rule) in ${PLATFORM_SYNC_FILE}.`,
@@ -144,8 +152,7 @@ function stateBody(state, { sourceError, authority }) {
     });
   }
   if (state === 'error') {
-    const what = authority && authority.status !== 'ok' ? "The platform's authority record could not be used." : 'The capability source file could not be read.';
-    return errorBlock({ what, why: authority?.error ?? sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } });
+    return errorBlock({ what: "The platform's authority record could not be used.", why: authority?.error ?? sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } });
   }
   return null;
 }
@@ -166,14 +173,14 @@ export function renderLadderPanel(rows, rungs, { order, sourceState = 'ready', s
       ['Your employee\'s rung', ['Unknown: no source records an agent\'s rung on this ladder ', unavailableTag()]],
       ['autonomy:R8', 'Unreachable by fact: no agent handoff exists'],
     ] : null,
-    body: ready ? [toolRuleBlock(status)] : stateBody(state, { sourceError, authority }),
+    body: ready ? [toolRuleBlock(status, sync)] : stateBody(state, { sourceState, sourceError, authority }),
     action: ready ? { href: capabilityHref(rows[0].id), label: "Open a capability's authority record" } : null,
-    reads: [endpointTags(3), authorityTag(), ' ', platformTag('autonomyLadder.ts'), ' ', sourceFileTag(), ' ', platformTag(R8_UNREACHABLE.source.path)],
+    reads: [endpointTags(3, pathsOf(sync)), authorityTag(sync), ' ', platformTag('autonomyLadder.ts'), ' ', platformTag(R8_UNREACHABLE.source.path)],
     details: ready ? [
       // Folded so the ladder panel ends near its row neighbours (Aleem's re-review of PR #1, 2026-11-13).
       { title: TEN_RUNGS_TITLE, count: rungs.length, body: [rungList(rows, rungs)] },
       { title: "Each capability's authority", count: rows.length, body: [authorityReadLine(sync),
-        h('p', { class: 'muted source-note' }, sourceFileTag(), ' Capability names and starting rungs come from the pinned research file. ',
+        h('p', { class: 'muted source-note' }, authorityTag(sync), " Capability names and starting rungs come from the platform's synced capability records. ",
           sourceTag('unavailable', 'no verified source'), ' Human confirmation is a separate platform record (AgentDomainCapabilityConfirmation) that the platform does not expose yet.'),
         authorityTable(rows)] },
       { title: 'Each capability against the ladder, with its ceiling', count: rows.length, body: [

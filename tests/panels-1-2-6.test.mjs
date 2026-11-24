@@ -217,7 +217,10 @@ test('Panel 6 names the two platform exposure gaps, and no longer says the autho
   const { gaps } = render(domain, project);
   assert.match(gaps.text, /Human confirmation of each capability is a separate platform record \(AgentDomainCapabilityConfirmation/);
   assert.match(gaps.text, /never infers it from another field, approved_autonomy included/);
-  assert.match(gaps.text, /no route serves them yet, so they are read from the pinned capability file/);
+  // The second exposure gap was the per-rung behaviours until AF12.5 put them in the synced file; it is
+  // now the /coverage rows, which the synced file names but does not carry.
+  assert.doesNotMatch(gaps.text, /no route serves them yet/);
+  assert.match(gaps.text, /names GET \/api\/admin\/agent-domains-mine\/product_experience\/coverage but carries none of its rows/);
   assert.doesNotMatch(gaps.text, /data-integration limitation|does not display them yet/);
   assert.match(gaps.text, /^6What is not available.*8 things this console cannot show or cannot claim/);
 });

@@ -1,12 +1,14 @@
 // Panel "Your capability inventory" (brief panel 2): what am I actually building?
-// Capability rows come from the pinned platform source file (the per-domain endpoint does not return
-// them); the /coverage cross-check needs a captured snapshot. The project's own stories, releases and
+// Capability rows are the platform's synced copy of GET .../agent-domains-mine/<key> (capabilities[] in
+// .colaberry/agent-domain.json), in the order it holds them. The snapshot names /coverage but carries none
+// of its rows, so that cross-check stays blank unless captured. The project's own stories, releases and
 // requirements, from .colaberry/, are carried here from the old nine tabs.
 import { h } from './dom.js';
 import { badge, table } from './ui.js';
 import { ENDPOINTS } from './agent-domain-facts.js';
-import { capabilitySourceNote, draftBadge, endpointNotice, endpointRead, endpointTags, sourceFileTag } from './agent-domain-ui.js';
-import { consolePanel, errorBlock, loadingBlock } from './console-ui.js';
+import { PLATFORM_SYNC_FILE } from './agent-domain-data.js';
+import { capabilitySourceNote, capabilityTag, draftBadge, endpointNotice, endpointRead, endpointTags } from './agent-domain-ui.js';
+import { consolePanel, errorBlock, loadingBlock, notAvailable } from './console-ui.js';
 import { projectTotals, requirementsSection, scheduleSection, storiesSection, timelineSection } from './project-sections.js';
 import { ticksAheadOfVerifier } from './verification-model.js';
 
@@ -14,10 +16,24 @@ export const capabilityHref = (id) => `#/capability/${encodeURIComponent(id)}`;
 const th = (label, source) => [label, h('span', { class: 'th-src' }, source)];
 
 const CHECK_TEXT = {
-  match: ['ok', 'Matches source file'], differs: ['error', 'Differs from source file'], missing: ['warn', 'Not in endpoint response'],
-  not_captured: ['neutral', 'Not captured yet'], loading: ['neutral', 'Loading…'], refused: ['error', 'Refused'],
-  failed: ['error', 'Not read'], error: ['error', 'Not read'],
+  match: ['ok', 'Matches the synced record'], differs: ['error', 'Differs from the synced record'], missing: ['warn', 'Not in endpoint response'],
+  not_captured: ['neutral', 'Not captured yet'], not_in_sync: ['neutral', 'Not in the synced file'], loading: ['neutral', 'Loading…'],
+  refused: ['error', 'Refused'], failed: ['error', 'Not read'], error: ['error', 'Not read'],
 };
+
+/** Panels 2-4 share these words for a missing or broken capability section. */
+export function capabilityNotAvailable() {
+  return notAvailable({
+    missing: `The platform's capability records (capabilities[] in ${PLATFORM_SYNC_FILE}).`,
+    waitingFor: `The platform to sync ${PLATFORM_SYNC_FILE} into this repository with its capabilities section. The pinned research file is not used in its place.`,
+    willShow: 'One row per capability, in the order research recorded them, with its states, rungs, human-decision mark and per-rung behaviours.',
+    action: { href: '#/guide/refresh', label: 'How to refresh the data' },
+  });
+}
+
+export function capabilityError(why) {
+  return errorBlock({ what: "The platform's capability records could not be used.", why, action: { href: '#/guide/refresh', label: 'How to refresh the data' } });
+}
 
 function countBy(rows, key) {
   const counts = new Map();
@@ -28,14 +44,14 @@ function countBy(rows, key) {
 function capabilityTable(rows, checks) {
   return table([
     { label: 'Capability', cell: (r) => h('a', { href: capabilityHref(r.id) }, r.name) },
-    { label: th('Classification', 'source file'), cell: (r) => h('code', {}, r.classification) },
-    { label: th('Implementation', 'source file'), cell: (r) => h('code', {}, r.implementation_state) },
-    { label: th('Validation', 'source file'), cell: (r) => draftBadge(r.validation) },
-    { label: th('Starting rung', 'source file'), cell: (r) => h('code', {}, r.starting) },
-    { label: th('Ceiling (proposed)', 'source file'), cell: (r) => h('code', {}, r.ceiling) },
-    { label: th('Human decision', 'source file'), cell: (r) => (r.human_decision ? badge('warn', '★ Human decides, always') : 'No') },
+    { label: th('Classification', 'platform sync'), cell: (r) => h('code', {}, r.classification) },
+    { label: th('Implementation', 'platform sync'), cell: (r) => h('code', {}, r.implementation_state) },
+    { label: th('Validation', 'platform sync'), cell: (r) => draftBadge(r.validation) },
+    { label: th('Starting rung', 'platform sync'), cell: (r) => h('code', {}, r.starting) },
+    { label: th('Ceiling (proposed)', 'platform sync'), cell: (r) => h('code', {}, r.ceiling) },
+    { label: th('Human decision', 'platform sync'), cell: (r) => (r.human_decision ? badge('warn', '★ Human decides, always') : 'No') },
     { label: th('/coverage check', 'endpoint'), cell: (r) => badge(...CHECK_TEXT[checks.get(r.id)?.state ?? 'not_captured']) },
-  ], rows, 'The source file holds no capabilities.');
+  ], rows, 'The platform\'s synced file holds no capabilities.');
 }
 
 function projectDetails(project, names) {
@@ -63,7 +79,7 @@ function aheadWords(project) {
     + (a.confirmedTotal == null ? 'no platform verifier record yet' : `platform verifier ${a.confirmed} of ${a.confirmedTotal}`)).join('. ');
 }
 
-export function renderInventoryPanel(rows, checks, coverage, { order, sourceState = 'ready', sourceError, project, names = [] } = {}) {
+export function renderInventoryPanel(rows, checks, coverage, { order, sourceState = 'ready', sourceError, project, names = [], paths = ENDPOINTS } = {}) {
   const state = sourceState !== 'ready' ? sourceState : rows.length === 0 ? 'empty' : 'ready';
   const drafts = rows.filter((r) => r.validation === 'draft').length;
   const humans = rows.filter((r) => r.human_decision).length;
@@ -72,13 +88,13 @@ export function renderInventoryPanel(rows, checks, coverage, { order, sourceStat
 
   const headline = state === 'ready'
     ? `${rows.length} capabilities, ${drafts === rows.length ? 'all' : drafts} draft: none has been agreed by anyone yet.`
-    : state === 'empty' ? 'The source file holds no capabilities.' : null;
+    : state === 'empty' ? 'The platform\'s synced file holds no capabilities.' : null;
   return consolePanel({
     id: 'inventory', order, state, headline,
     title: 'Your capability inventory',
     question: 'What am I actually building?',
     glance: state === 'ready' ? [
-      ['Capabilities', [String(rows.length), ' ', sourceFileTag()]],
+      ['Capabilities', [String(rows.length), ' ', capabilityTag(paths)]],
       ['Validation', `${drafts} of ${rows.length} draft`],
       ['A human decides, always', `${humans} of ${rows.length}`],
       ['Implementation', countBy(rows, 'implementation_state')],
@@ -86,14 +102,14 @@ export function renderInventoryPanel(rows, checks, coverage, { order, sourceStat
       ['Verified by the platform', totals ? `${totals.stories} plan stories` : 'project plan not loaded'],
       ['Ticks ahead of verifier', aheadWords(project)],
     ] : null,
-    body: state === 'error'
-      ? errorBlock({ what: 'The capability source file could not be read.', why: sourceError, action: { href: '#/guide/refresh', label: 'How to refresh the data' } })
-      : state === 'loading' ? loadingBlock() : capabilitySourceNote(),
+    body: state === 'error' ? capabilityError(sourceError)
+      : state === 'not_available' ? capabilityNotAvailable()
+        : state === 'loading' ? loadingBlock() : capabilitySourceNote(paths),
     action: state === 'ready' && firstDraft ? { href: capabilityHref(firstDraft.id), label: 'Review a draft capability' } : null,
-    reads: [endpointTags(2), sourceFileTag()],
+    reads: [endpointTags(2, paths), capabilityTag(paths)],
     details: [
       state === 'ready' ? { title: 'All capabilities, in the order research recorded them', count: rows.length, body: [
-        endpointNotice(ENDPOINTS.coverage, coverage) ?? endpointRead(ENDPOINTS.coverage, coverage),
+        endpointNotice(paths.coverage, coverage) ?? endpointRead(paths.coverage, coverage),
         capabilityTable(rows, checks)] } : null,
       // Decision D4: titles pass through withholdNames; with no name list loaded they show as story ids.
       ...projectDetails(project, names),

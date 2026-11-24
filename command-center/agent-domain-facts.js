@@ -5,16 +5,37 @@ import { PLATFORM_COMMIT } from './authority.js';
 
 export const DOMAIN_KEY = 'product_experience';
 
+/**
+ * The endpoints the panels name (criterion 1). `domain` and `coverage` are the self-scoped twins the
+ * platform built for builders (AF12.5): its snapshot names exactly these in `sources.capabilities` and
+ * `sources.capability_ladder`, and the page prefers the snapshot's own labels at runtime
+ * (`readSourcePaths`). These constants are the fallback when no snapshot is present.
+ */
 export const ENDPOINTS = Object.freeze({
   mine: '/api/admin/agent-domains-mine',
-  domain: `/api/admin/agent-domains/${DOMAIN_KEY}`,
-  coverage: `/api/admin/agent-domains/${DOMAIN_KEY}/coverage`,
+  domain: `/api/admin/agent-domains-mine/${DOMAIN_KEY}`,
+  coverage: `/api/admin/agent-domains-mine/${DOMAIN_KEY}/coverage`,
   requests: '/api/admin/agent-domain-change-requests-mine',
 });
 
 /**
+ * The two routes the STORY-000 brief names. Both are `requireSection('program')`, and the
+ * product_experience role holds only `dashboard` and `brands` (mgmtRoles.ts at df5397a5), so they answer
+ * 403 to this domain's builder even with a valid sign-in. The platform added the `-mine` twins above for
+ * exactly that reason (agentDomainRoutes.ts at df5397a5). Named here only to explain the switch.
+ */
+export const BRIEF_ROUTES = Object.freeze({
+  domain: `/api/admin/agent-domains/${DOMAIN_KEY}`,
+  coverage: `/api/admin/agent-domains/${DOMAIN_KEY}/coverage`,
+  source: { kind: 'platform_code', path: 'backend/src/routes/admin/agentDomainRoutes.ts', commit: 'df5397a5' },
+  statement: `The STORY-000 brief names GET /api/admin/agent-domains/${DOMAIN_KEY} and its /coverage. Both need the platform's `
+    + "'program' section, which this domain's builder role does not hold, so they answer 403. The platform's self-scoped twins "
+    + '(the -mine routes) serve the same capability records to the domain\'s own builder, and the platform\'s snapshot names them.',
+});
+
+/**
  * The endpoints each panel reads, by panel number (criterion 1: every panel names them). Capability
- * fields (panels 2-4) are assigned to the per-domain endpoint, as the platform's own snapshot does
+ * fields (panels 2-4) come from the platform's synced copy of the per-domain endpoint
  * (CAPABILITY_SOURCE_NOTE). Panel 6 reports on all four.
  */
 export const PANEL_ENDPOINTS = Object.freeze({
@@ -31,14 +52,16 @@ export const PANEL_ENDPOINTS = Object.freeze({
 const cite = (path, commit = PLATFORM_COMMIT) => ({ kind: 'platform_code', path, commit });
 
 /**
- * Why panels 2-4 name the per-domain endpoint yet show source-file values. Read at platform commit
- * 992e0e01 (2026-11-02), later than PLATFORM_COMMIT, because the snapshot module is newer.
+ * Where panels 2-4 get their capability records. Since AF12.5 (platform commit 41808ee2, 2026-11-15) the
+ * platform's snapshot carries `capabilities[]`, the same projection GET .../agent-domains-mine/<key>
+ * returns, release_behaviour[] included (agentDomainSnapshot.ts, read at df5397a5). The page reads that
+ * copy; it never calls the endpoint. Two fields the snapshot does not carry stay on the pinned file.
  */
 export const CAPABILITY_SOURCE_NOTE = Object.freeze({
-  source: cite('backend/src/services/agentDomain/agentDomainSnapshot.ts', '992e0e01'),
-  statement: `The platform names GET ${ENDPOINTS.domain} as the source of capability records. That route's `
-    + 'response does not include the capability records (agentDomainRoutes.ts at 992e0e01), so the values '
-    + 'in this panel come from the pinned source file instead.',
+  source: cite('backend/src/services/agentDomain/agentDomainSnapshot.ts', 'df5397a5'),
+  statement: "Capability records are the platform's synced copy of this endpoint (capabilities[] in .colaberry/agent-domain.json), "
+    + 'read from this repository; this page did not call the endpoint. The snapshot does not carry each capability\'s required '
+    + 'tools or blockers, so those come from the pinned source file and are tagged "Source file".',
 });
 
 /**
@@ -119,14 +142,31 @@ export const R0_DEFAULT_HEADLINE = Object.freeze({
 });
 
 /**
- * Per-rung behaviours: the platform holds all of them in its release ladder and capability records, but
- * no route serves them yet (the platform owner's confirmation). Until one does, the page reads them from
- * the pinned capability file and says so; it never makes a second copy.
+ * Per-rung behaviours. Until AF12.5 no route served them and the page read them from the pinned file. The
+ * platform's snapshot now carries them in capabilities[].release_behaviour[] (agentDomainSnapshot.ts at
+ * df5397a5), so they are its synced copy. Text naming the accountable manager is withheld (fail-closed).
  */
 export const BEHAVIOUR_EXPOSURE = Object.freeze({
-  statement: 'The platform holds these behaviours in its release ladder and capability records, but no route serves them yet, '
-    + 'so they are read from the pinned capability file.',
+  statement: "These behaviours are the platform's synced copy (capabilities[].release_behaviour[] in .colaberry/agent-domain.json). "
+    + 'None is approved and none has evidence recorded against it.',
 });
+
+/**
+ * The /coverage rows. The snapshot names the route (`sources.capability_ladder`) but carries none of its
+ * rows (agentDomainSnapshot.ts at df5397a5), so the /coverage check is left blank unless captured.
+ */
+export const COVERAGE_NOT_IN_SYNC = Object.freeze({
+  source: cite('backend/src/services/agentDomain/agentDomainSnapshot.ts', 'df5397a5'),
+  statement: "The platform's snapshot names this endpoint but carries none of its rows, so the /coverage check is left blank "
+    + 'and nothing is assumed in its place.',
+});
+
+/**
+ * Behaviour text names the accountable manager in places. This public page withholds the name, using the
+ * pinned file's `accountable_human` only as a list of names to withhold (never shown). Without that list
+ * the page cannot check the text, so it withholds the text itself (Mihret's decision, 2026-11-23).
+ */
+export const NAMES_UNAVAILABLE_TEXT = 'Withheld: the list of names this page must not show did not load, so this text was not checked and is not shown.';
 
 /** agentDomainCommandCenterStory.ts: why autonomy:R8 cannot be reached. */
 export const R8_UNREACHABLE = Object.freeze({

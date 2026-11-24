@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-18T00:49:59.903Z",
+  "captured_at": "2026-11-24T03:46:56.415Z",
   "base_url": "http://127.0.0.1:8765/",
   "tools": {
     "playwright-core": "1.48.2",
@@ -25,9 +25,9 @@
     },
     "nothing-captured": {
       "employee": "not_available",
-      "inventory": "ready",
+      "inventory": "not_available",
       "ladder": "not_available",
-      "behaviour": "ready",
+      "behaviour": "not_available",
       "governance": "not_available",
       "gaps": "ready"
     },
@@ -57,26 +57,26 @@
     },
     "sync-invalid": {
       "employee": "error",
-      "inventory": "ready",
+      "inventory": "error",
       "ladder": "error",
-      "behaviour": "ready",
+      "behaviour": "error",
       "governance": "error",
       "gaps": "ready"
     },
     "source-missing": {
-      "employee": "not_available",
-      "inventory": "error",
-      "ladder": "error",
-      "behaviour": "error",
-      "governance": "not_available",
+      "employee": "ready",
+      "inventory": "ready",
+      "ladder": "ready",
+      "behaviour": "ready",
+      "governance": "empty",
       "gaps": "ready"
     },
     "source-empty": {
-      "employee": "not_available",
+      "employee": "ready",
       "inventory": "empty",
-      "ladder": "not_available",
+      "ladder": "empty",
       "behaviour": "empty",
-      "governance": "not_available",
+      "governance": "empty",
       "gaps": "ready"
     }
   }
