@@ -165,15 +165,17 @@
       "criteria": [
         {
           "text": "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet.",
-          "passed": false
+          "passed": true,
+          "evidence": "Written, dated sign-off by Mohammed Abdul Aleem on 2026-11-13, comment on PR #2: https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6850977052 (\"With this recorded, set the R0 criterion to passed citing this comment\"). Further decisions on 2026-11-17: https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6948682312. Both recorded in docs/definitions/design_token_drift_audit.R0.md (Sign-off record). No audit scan had run when the sign-off was given, and none has run since."
         }
       ],
       "files_touched": [
+        ".colaberry/progress.json",
         "docs/definitions/design_token_drift_audit.R0.md"
       ],
       "tests_added": [],
-      "notes": "R0 definition drafted for sign-off: admin-portal scope (Ali's Q1 recommendation), six-outcome classification, 11 colour values shared by two tokens each (classified exact-ambiguous), allow-list rules A1-A5, 7 decisions D1-D7. No scan run. Criterion NOT passed: Mohammed Abdul Aleem has not signed.",
-      "updated_at": "2026-10-30T00:00:00Z",
+      "notes": "R0 signed by Mohammed Abdul Aleem on 2026-11-13 (PR #2 comment); six further decisions on 2026-11-17 (A2 whole-word rule, D1 app shell, D6 report only, D2 static record, scan report location, chart gaps under D7). All recorded in the sign-off record of docs/definitions/design_token_drift_audit.R0.md. No audit scan has run. Still open before the scan, not yet answered by Aleem: L4 criterion timing, what 'by hand' means for L1, and upstream vs vendored tokens. Only this R0 criterion is marked passed; the identical first criterion of L4-AGENT-WATCHED stays false.",
+      "updated_at": "2026-11-25T04:22:03Z",
       "verification": {
         "state": "in_progress",
         "criteria_passed": 0,

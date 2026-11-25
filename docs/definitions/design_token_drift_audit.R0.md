@@ -2,11 +2,12 @@
 
 **Capability:** `product_experience.design_token_drift_audit` · **Autonomy:** R0 (definition only)
 **Accountable manager:** Mohammed Abdul Aleem · **DRI:** Ali Muwwakkil
-**Prepared by:** Mihret Netsereab · first draft 2026-10-30 · revision 2, 2026-10-30 · **revision 3, 2026-11-02, completed 2026-11-04**
-**Status:** **draft, ready for review, not signed.** This document is the thing the R0 criterion
-asks Mohammed Abdul Aleem to sign. Until Aleem's sign-off is recorded in [Sign-off](#sign-off),
-the criterion stays unpassed and the capability stays `draft`. It can be reviewed and signed by
-email or confirmed meeting notes; no admin portal access is needed.
+**Prepared by:** Mihret Netsereab · first draft 2026-10-30 · revision 2, 2026-10-30 · **revision 3, 2026-11-02, completed 2026-11-04** · **signed by Mohammed Abdul Aleem, 2026-11-13; further decisions 2026-11-17**
+**Status:** **signed.** Mohammed Abdul Aleem signed this definition on 2026-11-13 in a written,
+dated comment on PR #2 [S29]. The R0 criterion is satisfied by that sign-off, recorded before any
+scan has run. Aleem added six decisions on 2026-11-17 [S31]. The first manual scan follows under
+R0, once three questions in "Decisions (2026-11-17)" are answered. Aleem's decisions are in the
+[sign-off record](#sign-off-record), the [decision table](#decisions) and §8.
 
 Each claim is tagged **Verified** (checked against a repository while writing this),
 **Story** (stated in the capability record), **Reported** (stated by someone, not recorded in a
@@ -15,6 +16,10 @@ repository), **Proposal** (my recommendation, waiting on a human decision) or **
 **Every Proposal is also Mihret Netsereab's working decision,** listed in [§8](#8-open-questions-and-the-working-decisions-that-keep-the-work-moving)
 and the [decision table](#decisions). It lets the preparation work continue under Ali Muwwakkil's
 guidance [S27]. **It is not Aleem's approval, and it is not platform policy.**
+
+**Since 2026-11-13, Aleem's decisions replace the working decisions wherever Aleem decided.** They
+are labelled "Aleem's decision (2026-11-13) [S29]" or "(2026-11-17) [S31]" and are **Verified**: read directly from Aleem's
+comment on GitHub. The working decisions stay in the text as history.
 
 **Repositories read, read-only. Nothing in them was changed:**
 - the platform, `ColaberryEnterprise_AI_LeadershipAccelerator`, at commit `c96f6a68` (merged
@@ -63,6 +68,68 @@ Mihret's working decisions, with Aleem's approval pending:
 - **Ali's list doesn't shrink the sign-off.** It names what's still genuinely open. Aleem's
   sign-off still covers the whole scope, including D1, D3, D4, D6 and D7 (§8, Sign-off).
 
+### Sign-off (2026-11-13)
+
+Mohammed Abdul Aleem signed this definition in a written, dated comment on PR #2 at 5:03 AM CST
+on 2026-11-13 [S29]: "this comment is my written, dated sign-off on `design_token_drift_audit.R0.md`
+as merged." Aleem agreed to or acknowledged every decision D0–D9 and answered OQ1–OQ7. Aleem also
+corrected the record: "the 2 November technical guidance in revision 3 is Ali's. My decisions
+start here."
+
+What Aleem's sign-off adds to the working decisions:
+- **A2 is a rule, not a file list** (§4).
+- **D6: preview strings are in scope** (§4).
+- **D2: the root font size is read from the platform's CSS,** not assumed (2.3).
+- **D9: the legacy-reference count is the retirement backlog for the legacy layer** (3.4).
+- **OQ1: `Colaberry-DS-School-Final` is the canonical upstream. OQ5: the platform team owns the
+  vendored copy's edits** (Ali is their DRI), and permanent changes go upstream (§5).
+- **The first report puts gaps first** (§6).
+
+Two points to confirm with Aleem before the first scan. They are recorded here, not decided:
+- **A2 and `Mark`:** a check of file names only in the platform frontend (local clone at
+  `c96f6a68`, 2026-11-13) shows that `Mark` also matches `Marketing…` files such as
+  `AdminMarketingCalendarPage.tsx`. Those are admin pages, not brand marks. Whether the rule means
+  the whole word `Mark` is **Unknown**.
+- **D6 "on their own line":** whether that line is ratcheted is **Unknown**.
+
+Both points were answered on 2026-11-17 (next section).
+
+### Decisions (2026-11-17)
+
+Aleem answered six questions in a written, dated comment on PR #2 at 6:57 AM CST on 2026-11-17
+[S31]. Aleem's short form: "1 whole-word; 2 include as shared; 3 report only; 4 static is fine; 5 evidence file now, criterion added by Ali; 6 D7." They are copied in full
+in the [sign-off record](#sign-off-record), and each is recorded in its section:
+
+| # | Topic | Recorded in |
+|---|---|---|
+| 1 | A2: the whole-word rule; `CoryMark.tsx` reported for confirmation | §4 (A2), §6 |
+| 2 | D1: `ScrollToTop.tsx`, `RouteLoading.tsx` and `analytics.ts` included as shared | §2.1 |
+| 3 | D6: preview strings report only, not ratcheted, with counts | §4 (D6), §6 |
+| 4 | D2: the static root font-size record | §2.3, §3.1, §7.1 |
+| 5 | Where the scan report goes; a criterion drafted for Ali | §6 |
+| 6 | Chart gaps under D7, tagged `dataviz` | §4 (A1), §5, §6 |
+
+Aleem closed: "With these recorded, run the first scan and bring me the report, gaps first."
+
+**Three questions remain open before the first scan** (recorded here on 2026-11-17; **not yet
+asked** on PR #2, so Aleem has not answered them; not decided here):
+1. **L4 timing.** The platform added the story `product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED`.
+   Its first criterion is word for word the R0 criterion: "Mohammed Abdul Aleem signs off a written
+   scope and exception list; no scan has run against the repo yet." Once the first scan runs, that
+   can never again be truly ticked. Only the R0 criterion was approved as passed [S29].
+   **Unknown:** whether Aleem approves ticking L4's first criterion now, on the 2026-11-13 sign-off.
+2. **What "by hand" means.** The platform's story `…L1-BY-HAND` asks for the capability to be done
+   by hand, once, with a run log, and says a later step opened early (L3 tool request, L4 agent) is
+   what the ladder prevents. **Unknown:** whether read-only search commands run by Mihret, with every
+   classification decided and logged by Mihret, count as "by hand", and whether any helper script
+   is allowed before an L3 tool request.
+3. **Upstream or vendored tokens.** `Colaberry-DS-School-Final` PR #1 merged at 6:59 AM CST on
+   2026-11-17 (DS commit `cb43315d`). It moves `--action-bg` from `--red-500` to `--red-600` and
+   `--action-green-bg` from `--green-600` to `--green-800`. The platform's vendored copy (checked
+   at platform `69fac665`, 7:11 AM CST on 2026-11-17) still has the old values. D0 makes the
+   effective cascade (what renders) the contract, while the 13 November note says "Classify against
+   the tokens as merged". **Unknown:** which one the scan classifies against where they differ.
+
 ---
 
 ## What R0 is, and what it is not
@@ -89,10 +156,11 @@ has run against the repo yet."* [S1]
 - **The application counts in this document are the story's figures from 2026-10-09:** 4,492 hex
   literals in `.tsx`, 1,778 in CSS other than `tokens.css`, 488 `rgb()`/`rgba()` and 8,219 inline
   `style={{ }}` [S2]. They are raw occurrence counts, **not violation counts**. How many are real
-  violations is **Unknown** until this definition is signed. Those figures also predate this
+  violations is **Unknown** until the first scan runs under this signed definition. Those figures also predate this
   revision's scope, for example the exclusion of `frontend/src/colaberry/`.
-- **Working decisions don't unblock the scan.** Mihret's working decisions (§8) let preparation
-  continue. The scan stays blocked until Aleem's sign-off is recorded [S1].
+- **The scan was blocked until Aleem's sign-off was recorded [S1].** Working decisions never
+  unblocked it. The sign-off was recorded on 2026-11-13 [S29], and the first manual scan follows
+  that record.
 - **Nothing here grants a tool, runs an agent or changes the product.**
 
 ---
@@ -221,8 +289,8 @@ answered.
 **So D0 is presented to Aleem as confirmed technical guidance to acknowledge, not as an open
 choice** (Mihret's working decision). The "DS only" and "`tokens.css` only" alternatives are no
 longer offered, because Ali confirmed that either would misclassify what renders. Aleem can still
-disagree in writing, and that answer would be recorded. **Aleem's acknowledgement of D0 is still
-pending.**
+disagree in writing, and that answer would be recorded. **Aleem acknowledged D0 on 2026-11-13
+[S29]:** "The effective three-layer cascade, in load order, is the contract."
 
 ---
 
@@ -245,6 +313,10 @@ definition has to state it and Aleem has to sign it. Neither source defines "the
 - Shared findings are reported, but no substitution is proposed for them in the first release,
   because repainting a shared component also repaints non-admin pages.
 - Widening to all 445 pages is a later decision with its own sign-off.
+
+**Aleem's decision (2026-11-17) [S31], D1 (app shell):** **D1: include `ScrollToTop.tsx`, `RouteLoading.tsx` and `analytics.ts` as shared.** They render on admin pages, and the loading screen is the first thing a person sees on one. Tag them shared: reported, not patched, as D1 says.
+The three files render around admin pages but are not reachable from `adminRoutes.tsx` (found in a
+read-only trace at platform `8fb3ab90`, 2026-11-13; to be re-checked at the scan commit).
 
 *Alternative Aleem may prefer:* only files under `pages/admin/` and `components/admin/`.
 
@@ -292,13 +364,21 @@ The outcome names "a colour **or spacing** value" [S1].
   both layers (**Verified**):
   - DS (`spacing.css:8-21`): 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96 and 128 px;
   - legacy: 0.25, 0.5, 1, 1.5, 2 and 3 rem. That is 4, 8, 16, 24, 32 and 48 px, **assuming a
-    16 px root font size (Unknown, not verified)**. Every legacy step is also a DS step.
+    16 px root font size** (Unknown on 2026-10-30; recorded on 2026-11-17, below). Every legacy step is also a DS step.
+    **Aleem's decision (2026-11-13) [S29], D2:** "read the platform's root font size from its CSS rather than assuming
+    16 px, and record what you find."
+    **Aleem's decision (2026-11-17) [S31], D2:** the static record is acceptable. **Recorded:** "no root font size declared in platform CSS, scripts, Bootstrap 5.3.8 or index.html; rem converted at the browser default of 16 px; not measured on a running page." (static
+    reading at platform `8fb3ab90`; to be re-checked at the scan commit, because `responsive.css`
+    changed by platform `69fac665`).
 
   With 14 steps and a 4 px grid (DS `BRAND.md:184`), spacing is reported as its own **separate
   line**, so it can be driven down independently of colour. **It is not ratcheted yet.** How
   spacing gaps (off-scale values) are handled is Aleem's decision (OQ7, §5), and Ali left it to
   Aleem [S28]. Until Aleem answers, the spacing line is **reported, not ratcheted** (Mihret's
   working decision).
+
+  **Aleem's decision (2026-11-13) [S29], D2 and OQ7:** "Spacing is reported, not ratcheted." Spacing gaps are
+  reported, not ratcheted, and no new spacing token is proposed in the first pass.
 - **Spacing values that match more than one token (Proposal, part of D3).** Because every legacy
   step equals a DS step, six values have two names each:
 
@@ -315,14 +395,18 @@ The outcome names "a colour **or spacing** value" [S1].
   scale". So **the proposed rule is to prefer the DS name (`--space-N`)** and classify the match
   as `exact`. That gives the same answer as the colour rule (DS first), but needs no property
   role. If OQ2 or OQ3 is answered "legacy layer", this flips to the legacy name. Until D3 is
-  signed, these matches are `exact-ambiguous`.
+  signed, these matches are `exact-ambiguous`. **D3 was signed on 2026-11-13 [S29],** so they take
+  the DS `--space-N` name.
 - **Zero values (Proposal, rule A6).** A plain `0`, with or without a unit (`0`, `0px`, `0rem`),
   in a spacing property is **not a violation**. `--space-0` exists (DS `spacing.css:8`), so
   without this rule every `padding: 0` and `margin: 0` would be reported as an `exact` match.
   Zero has no brand meaning to drift from, and replacing it with a token wouldn't change what
   renders.
 - **Not in scope yet:** font sizes, radii, shadows, motion and z-index. They have tokens, but the
-  outcome names only colour and spacing. Adding them later is a scope change.
+  outcome names only colour and spacing. Adding them later is a scope change. **Pass two (future
+  scope, Aleem, 2026-11-08 [S30]): radius and shadow,** because the DS layer changed the radii
+  from 4/8/12 to 8/12/16 px, which is visible drift. That needs its own scope change and sign-off.
+  It is not part of this R0.
 - **Theme (Proposal):** classify against **light-theme** effective values. The DS also declares
   `[data-theme="dark"]` values, and some admin components touch `data-theme`
   (`VisitorSankeyFlow.tsx`, `journeyPalette.ts`). **Whether admin pages ever render dark is
@@ -337,7 +421,8 @@ The outcome names "a colour **or spacing** value" [S1].
   **How dark-only values are counted (Mihret's working decision):** they stay `unclassified`, as
   Ali advised, but with the tag `dark-only`. They're reported on **their own line, outside the
   ratcheted drift count** (3.2, 6). Counting them as drift before dark mode is classified would
-  inflate the number with values nobody has judged.
+  inflate the number with values nobody has judged. **Aleem's decision (2026-11-13) [S29], D2:** agreed. "Light theme
+  only, with dark-only values on their own line."
 
 ### 2.4 What an inline `style={{ }}` is
 
@@ -371,7 +456,8 @@ definition.** Whether it should be counted at all is OQ4 (3.4).
   following `var()` chains.
 - Hex is compared case-insensitively, and 3/4-digit hex is expanded.
 - `rgb(r, g, b)` equals the hex with the same channels. Alpha must match exactly for an exact match.
-- `rem` converts to px at 16 px per rem (an **assumption**, see 2.3).
+- `rem` converts to px at **16 px**, the browser default, because no root font size is declared
+  (Aleem's D2 [S29], record accepted 2026-11-17 [S31]; see 2.3).
 - **A `var(--token, #hex)` fallback (Proposal):** it is not a violation if the fallback equals the
   token's effective value. If it differs, it is reported as `stale-fallback`. *Hypothetical
   example:* `var(--color-primary-light, #C20E1E)` would be stale, because the effective value is
@@ -440,6 +526,9 @@ the role:
 names for admin code effectively retires the legacy layer, and that is an architecture direction
 (OQ2/OQ3).
 
+**Aleem's decision (2026-11-13) [S29], D3:** agreed. "Colour takes the DS semantic token by property role,
+otherwise `exact-ambiguous`. Spacing takes the DS `--space-N` name."
+
 ### 3.4 Legacy token references (decision D9, OQ4)
 
 The V2 public code forbids legacy names (`caseStudyTokens.test.ts:7-9`). The admin code still uses
@@ -449,6 +538,9 @@ them, and the bridge makes them render DS values.
 line**: not drift, not ratcheted. A legacy-only name is one that `tokens.css` declares and the DS
 layer doesn't. If the answer to OQ2/OQ4 is that the DS layer is the contract, this line becomes
 the migration backlog.
+
+**Aleem's decision (2026-11-13) [S29], D9 and OQ4:** agreed. Legacy token references are "counted and
+informational, not ratcheted. Treat that count as the retirement backlog for the legacy layer."
 
 ### 3.5 Design E drift from the DS (Verified; not scanned)
 
@@ -465,8 +557,10 @@ code defect.
 
 **Proposal for D4:** a colour is `near` a token when the CIEDE2000 difference is **≤ 2.0** and
 alpha matches. Near matches are never auto-substituted [S1]. Spacing has no "near": a value is
-either on the 2.3 scale (`exact`, or `exact-ambiguous` for the six two-name values until D3 is
-signed) or a `gap`. Zero is covered by A6.
+either on the 2.3 scale (`exact`; since D3 was signed on 2026-11-13 [S29], the six two-name values take
+the DS `--space-N` name) or a `gap`. Zero is covered by A6.
+
+**Aleem's decision (2026-11-13) [S29], D4:** agreed. "CIEDE2000 at or under 2.0, alpha equal."
 
 ### 3.7 Reconciliation items: a separate list, not a violation (Ali's advice [S28])
 
@@ -489,24 +583,28 @@ work from a drift fix".
 
 ## 4. Exception list (allow-list), decision D5
 
-No agreed allow-list exists [S2]. Each rule needs Aleem's tick before it counts. A struck rule is not
+Before 2026-11-13 no agreed allow-list existed [S2]. **Aleem agreed A1, A3, A4, A5 and A6, and
+approved A2 as a rule, on 2026-11-13 [S29].** Each rule needed Aleem's tick before it counted. A struck rule is not
 applied, and its occurrences are reported.
 
 | ID | Rule | Why | Source |
 |---|---|---|---|
-| **A1** | **Data visualisation. Revised.** Colour literals passed to chart elements (`recharts` [S12]) are **classified, not excluded**. They're matched against the DS chart palette (`--chart-1…8`, `--seq-1…6`, `--div-*`, upstream `colors.css:74-89`), which `BRAND.md:153-154` says charts must use. They are counted in a **separate dataviz line, outside the ratcheted drift count**, until OQ6 is answered. A chart literal that matches no chart token is reported as a dataviz gap. Whether it's decided under D7 or by `dataviz_quality_audit` depends on OQ6. | The first draft assumed chart colour sat outside the token contract. The DS defines chart tokens, so it doesn't. But the dataviz capability says chart palettes "are governed by the dataviz guidance, not by the product token set" [S13], and whether that guidance *is* this palette is unknown. | [S3][S13], DS `BRAND.md:153-154` |
-| **A2** | **Brand marks.** Fills and strokes inside named logo and brand-mark components. **The file list is Aleem's to supply.** Nothing is excluded under A2 until it is named. | The brand rule says "Never recolor the cherries" (DS `BRAND.md:135`). Logo colours are fixed, not UI tokens. | [S3] |
+| **A1** | **Data visualisation. Revised.** Colour literals passed to chart elements (`recharts` [S12]) are **classified, not excluded**. They're matched against the DS chart palette (`--chart-1…8`, `--seq-1…6`, `--div-*`, upstream `colors.css:74-89`), which `BRAND.md:153-154` says charts must use. They are counted in a **separate dataviz line, outside the ratcheted drift count**, as Aleem confirmed in OQ6 (2026-11-13) [S29]. A chart literal that matches no chart token is reported as a dataviz gap. **Aleem's decision (2026-11-17) [S31]:** **Chart gaps: D7, so I decide them.** Tag each chart finding `dataviz` in the report, so `dataviz_quality_audit` can reuse the list rather than count the same literals again. | The first draft assumed chart colour sat outside the token contract. The DS defines chart tokens, so it doesn't. But the dataviz capability says chart palettes "are governed by the dataviz guidance, not by the product token set" [S13], and whether that guidance *is* this palette is unknown. | [S3][S13], DS `BRAND.md:153-154` |
+| **A2** | **Brand marks: Aleem's decision (2026-11-17) [S31].** **A2: use your whole-word rule.** Match Logo, Logomark, Wordmark, Brand Mark, or a name ending in the word Mark, case-sensitive. A match is allow-listed only after I confirm it. My rule was too loose: it would have hidden 17 Marketing and brand-management screens from the audit. For `CoryMark.tsx`, show its fills in the report under A2, and I will confirm or reject it there. **Superseded:** the 2026-11-13 rule matched any name containing `Logo`, `Brand`, `Wordmark` or `Mark` [S29]; it is replaced by the rule above. | The brand rule says "Never recolor the cherries" (DS `BRAND.md:135`). Logo colours are fixed, not UI tokens. | [S3], [S29], [S31] |
 | **A3** | **Code samples and documentation strings.** Literals in comments, doc text and example code shown to the user. | They don't paint the UI. | [S3] |
 | **A4** | **Upstream-owned design folders:** `apps/*/src/assets/design/` and, **under D8**, `frontend/src/colaberry/`. Excluded entirely (2.2). | Owned upstream. Rewriting them here diverges from, or is overwritten by, the source. | [S3][S8], 1.3 |
 | **A5** | **Neutral keywords:** `transparent`, `currentColor`, `inherit`, `initial`, `unset`. | Not colour values. | Proposal |
 | **A6** | **Zero spacing:** `0`, `0px`, `0rem` in a spacing property (2.3). | Zero has no brand meaning, and tokenising it wouldn't change what renders. Without this rule `--space-0` (DS `spacing.css:8`) would turn every `padding: 0` into a finding. | Proposal |
 
-**A case that needs Aleem's ruling (decision D6):** HTML and CSS built as strings for a preview frame,
-for example the `frameHtml` helper in `studioKit.tsx` [S14]. Until Aleem rules, these occurrences are
-`unclassified` and count as drift.
+**Preview strings (decision D6):** HTML and CSS built as strings for a preview frame, for example
+the `frameHtml` helper in `studioKit.tsx` [S14]. **Aleem's decision (2026-11-13) [S29]: in scope.** "Preview
+strings such as `frameHtml` render to a person, so a preview that drifts shows the wrong design.
+Classify them like any other style and report them on their own line." Whether that line is
+ratcheted was asked of Aleem. **Aleem's decision (2026-11-17) [S31], D6:** **D6: report only, not ratcheted.** Preview strings are generated content and often email HTML, where CSS custom properties are not reliable. Keep them on their own line with counts, so we have a baseline before anything is ratcheted.
 
 **Who keeps the list up to date** is open (interview Q6's follow-up [S15]). **Proposal:** every
-change to A1–A6 is a new entry here, signed by Aleem.
+change to A1–A6 is a new entry here, signed by Aleem. Aleem's approval path (2026-11-13) [S29]
+confirms that exceptions and allow-lists need Aleem's written approval.
 
 ---
 
@@ -523,7 +621,11 @@ grouped by value with counts and files. For each one Aleem picks one of:
 2. map it to an existing token;
 3. add an allow-list rule.
 
-**Spacing gaps (OQ7, Aleem's decision pending).** A spacing value that isn't on the 2.3 scale, for
+**Aleem's decision (2026-11-13) [S29], D7:** agreed. "I decide colour and spacing gaps and keep the gap list."
+**Aleem's decision (2026-11-17) [S31], chart gaps:** under D7, so Aleem decides them too, and each chart finding is tagged
+`dataviz` (§4, A1).
+
+**Spacing gaps (OQ7, decided by Aleem on 2026-11-13 [S29]).** A spacing value that isn't on the 2.3 scale, for
 example `14px`, is a **spacing gap**. It's reported in the spacing line with its value, count and
 files, the same way colour gaps are. It is never auto-substituted. How spacing gaps should be
 handled is **Aleem's decision** (OQ7); Ali left it to Aleem [S28]. The choices include:
@@ -532,12 +634,19 @@ handled is **Aleem's decision** (OQ7); Ali left it to Aleem [S28]. The choices i
 - treating recurring values as a reason to add spacing tokens.
 
 Until Aleem answers, spacing gaps are **reported but not ratcheted**, and no spacing token is
-proposed (Mihret's working decision).
+proposed (Mihret's working decision). **Aleem's decision (2026-11-13) [S29], OQ7:** "report spacing gaps, do not ratchet
+them, and propose no new spacing token in the first pass. Each gap comes to me as a design
+decision."
 
 **Revision 2 adds one constraint:** a new token now has to go into a specific layer. Adding it to
 the DS layer means either changing upstream (owned by the design-system repository) or adding
 another local edit to the vendored copy (OQ5). Adding it to `tokens.css` grows the layer the V2
 code calls "older". **Where new tokens go depends on OQ1, OQ2 and OQ5.**
+
+**Aleem's decisions (2026-11-13) [S29], OQ1 and OQ5:** `Colaberry-DS-School-Final` is the canonical
+upstream: "New design-system tokens go there." And: "The platform team owns edits made in the
+platform's vendored copy; Ali is their DRI. Anything meant to be permanent is proposed upstream to
+`Colaberry-DS-School-Final`, which I own."
 
 ---
 
@@ -552,17 +661,28 @@ code calls "older". **Where new tokens go depends on OQ1, OQ2 and OQ5.**
 3. **A drift count shaped like the copy-lint baseline:** a per-file map of exact counts that can
    only go down, with a zero entry deleted [S16]. There is **one ratcheted line**:
    - **colour drift** = `exact` + `exact-ambiguous` + `near` + `gap` + `unclassified` (not
-     counting `dark-only`).
+     counting `dark-only` or preview strings).
 
-   Four lines are **reported but not ratcheted**:
-   - **spacing drift**, made up the same way, including spacing gaps, until Aleem answers OQ7 (§5);
+   Five lines are **reported but not ratcheted**:
+   - **spacing drift**, made up the same way, including spacing gaps: not ratcheted, per Aleem's OQ7 (§5);
    - **dark-only** values (2.3), until dark mode is classified [S28];
    - **dataviz** (A1);
    - **legacy references** (D9).
-4. **A gap list for Aleem** (section 5), with unknown values left as unknown [S1].
+   - **preview strings** (D6), with counts: report only, not ratcheted (Aleem, 2026-11-17 [S31]).
+4. **A gap list for Aleem** (section 5), with unknown values left as unknown [S1]. **Gaps come
+   first in the report** (Aleem, 2026-11-13 [S29]: "Bring the report to me, gaps first.").
 4a. **A reconciliation list** (3.7), reported under its own heading, separate from the violation
    inventory and the drift counts.
 4b. **A coverage statement:** "Light theme only. Dark theme: not classified in this pass." [S28]
+4c. **An A2 candidate list:** every file the 2026-11-17 A2 rule matches, with its fills, for Aleem
+   to confirm or reject. None is allow-listed until Aleem confirms it; `CoryMark.tsx` is the first
+   (Aleem, 2026-11-17 [S31]).
+4d. **A preview-strings line** (D6), reported on its own line [S29].
+4e. **A `dataviz` tag** on every chart finding, so `dataviz_quality_audit` can reuse the list
+   (Aleem, 2026-11-17 [S31]).
+4f. **Where the report goes (Aleem's decision (2026-11-17) [S31]):** **Scan report.** Commit it to this repository under `docs/evidence/design-token-drift-audit/`, with the platform commit it read. Draft one acceptance criterion, "first scan report reviewed and gaps decided by the accountable manager", and send it to Ali to add to the capability's stories. The criteria are his to add. The report goes ahead whether or not the criterion exists yet. The platform's story `…L1-BY-HAND` also
+   asks for a run log (date, elapsed time, each step, every judgment call, and how the work differed
+   from its recorded workflow), so the report folder holds that run log too.
 5. **A denominator on every count:** "N findings across F of M in-scope files scanned".
 6. **A contract snapshot:** the per-layer declaration counts and the effective value of every token
    used in classification, so a reviewer can check a finding against the contract as it was at
@@ -583,7 +703,8 @@ Each condition becomes a negative test before any tool is granted.
 | Load order in `index.tsx` | `global.css` (:22) before `colaberry/styles.css` (:24) before `brand-bridge.css` (:25) | **Stop.** A reordered cascade changes every effective value. |
 | Import chain | `global.css:1` imports `tokens.css`; `colaberry/styles.css:6-10` imports the five DS files | **Stop.** |
 | Every `var()` in the contract resolves | No unresolved reference. **Measured 2026-10-30: 0 unresolved** across the light-theme `:root` blocks of the seven contract files [S26] | **Stop** and list the unresolved names. |
-| Vendored DS against the upstream named in OQ1 | Known today: `colors.css`, `spacing.css`, `fonts.css` differ (1.3) | **Report, don't stop.** Any change from the known differences is listed in the output. |
+| Vendored DS against `Colaberry-DS-School-Final` (OQ1, Aleem 2026-11-13 [S29]) | Known today: `colors.css`, `spacing.css`, `fonts.css` differ (1.3) | **Report, don't stop.** Any change from the known differences is listed in the output. The report names the DS commit compared against. Aleem's note says to read the DS repo's `main` until its PR #1 (the button-contrast fix) merges [S29]. |
+| Root font size read from the platform's CSS (Aleem's D2 [S29]) | **Recorded 2026-11-17 [S31]:** "no root font size declared in platform CSS, scripts, Bootstrap 5.3.8 or index.html; rem converted at the browser default of 16 px; not measured on a running page." (at platform `8fb3ab90`) | **Stop** if the scan commit adds a root font-size declaration; record it and ask Aleem. |
 
 ### 7.2 During and after the scan
 
@@ -622,8 +743,10 @@ So each open question below keeps three things separate:
     Aleem, even though Ali didn't list them. (This reading is Mihret's; Ali didn't say the list
     was complete.)
   - **One question is on neither list:** who owns the vendored copy's local edits (OQ5). Ali
-    didn't answer it and didn't assign it to Aleem. **Who decides it is Unknown.**
-- **Aleem's approval**: **pending on every row.**
+    didn't answer it and didn't assign it to Aleem. **Who decides it is Unknown.** **Aleem answered
+    it on 2026-11-13 [S29]:** the platform team owns those edits, and Ali is their DRI.
+- **Aleem's approval**: **given on every row on 2026-11-13 [S29].** Aleem's answer replaces the
+  working decision wherever they differ.
 
 **What a working decision can and cannot do** (Mihret's working decision, following [S27]):
 - It **can** be used to prepare work: refining this definition, designing the scan and its
@@ -637,20 +760,20 @@ So each open question below keeps three things separate:
 
 | # | Question | Why it matters | Blocks | Mihret's working decision, and why | Ali's advice | Aleem's approval |
 |---|---|---|---|---|---|---|
-| **OQ1** | Is `Colaberry-DS-School-Final` or `colaberry-design-system` the canonical upstream? Their tokens are identical today, but the platform's history names the second (`PROGRESS.md:7364`). | Decides what the vendored copy is checked against (7.1) and where new tokens go (5) | 7.1, D7 | **Use `Colaberry-DS-School-Final` as the reference for the 7.1 divergence check.** It's the repository Aleem shared, and its token files are byte-identical to the other one today (1.3), so the choice changes no value. Revisit if the two ever differ. | Not needed. Both repos are under the `aleemcolaberry` account. **Ali (2026-11-02, [S28]): this is Aleem's call**, a question about which repository we agree to follow. | **Pending** |
-| **OQ2** | Which token set is the audit's contract: the effective three-layer cascade, the DS layer only, or `tokens.css` only? | Every classification depends on it. Today's platform rules disagree (1.4) | Everything in 3–7 | **The effective three-layer cascade** (1.4). It's what renders (1.1–1.2). Either single layer would misclassify values the bridge reassigns. | **Answered technically 2026-11-02 [S28]:** the three-layer cascade is the contract, in load order (1.1). Whether the legacy layer is being retired: not answered. | **Acknowledgement pending** (D0) |
-| **OQ3** | When a fix is proposed for admin code, should it name a DS semantic token (`--text-muted`) or a legacy name (`--color-text-light`)? | Decides the D3 precedence order, and so whether the patch is near-empty | D3 | **Colour: a DS semantic token chosen by property role, otherwise `exact-ambiguous`. Spacing: the DS `--space-N` name** (3.3, 2.3). The DS says to use semantic tokens [S24], the admin shell already reads DS tokens (1.4), and the fix list stays small enough to review. | **Requested:** legacy names or DS names for admin code. | **Pending** (D3) |
-| **OQ4** | Does a remaining reference to a legacy-only token name count as drift? | Decides whether D9 stays informational or becomes ratcheted | D9 | **No. It's counted as a separate informational line, not ratcheted** (3.4). Through the bridge, most legacy names render DS values, so they aren't visual drift, and ratcheting them would be a migration decision this audit shouldn't make. | **Not answered:** Ali left this to Aleem [S28]. | **Pending** (D9) |
-| **OQ5** | Who owns the local edits in `frontend/src/colaberry/`, and should that folder be excluded like `apps/*`? | Decides D8, and whether gaps can be fixed by editing the vendored copy | D8, D7 | **Exclude the folder from the inventory** (2.2). It's a copy of an upstream system, for the same reason the story excludes `apps/*`. **Who owns the local edits stays Unknown.** Code ownership isn't something Mihret can decide. | **Received 2026-11-02 [S28]:** keep the folder excluded; audit what we author; record authored-vs-vendored mismatches as reconciliation items (3.7). Who maintains the local edits: not answered, and not assigned to Aleem either. **Who decides it is Unknown.** | **Pending** (D8) |
-| **OQ6** | Is the DS chart palette (`--chart-*`, `--seq-*`, `--div-*`) the "dataviz guidance" the `dataviz_quality_audit` capability refers to? | Decides whether A1's dataviz line joins the ratcheted count | A1 | **Classify chart literals against the DS chart palette, and keep them in the separate dataviz line outside the ratchet** (A1). The DS says charts use this palette [S24]. Keeping them outside the ratchet means a wrong assumption adds no false drift. | **Not answered:** Ali left chart classification to Aleem [S28]. | **Pending** (A1, under D5) |
-| **OQ7** | How should spacing gaps be handled? An off-scale spacing value (for example `14px`) could count as drift and be ratcheted, be reported as information only, or be a reason to add spacing tokens. | Decides whether the spacing line is ratcheted, and whether the spacing scale grows | D2, D7 | **Report spacing gaps on the spacing line, but don't ratchet it, and propose no new spacing token** (2.3, §5, 6). Spacing is in scope by the capability's outcome [S1], so it must be visible. Not ratcheting it means a wrong guess about the scale adds no false drift while Aleem decides. | **Not answered:** Ali left spacing gaps to Aleem [S28]. | **Pending** (D2, D7) |
+| **OQ1** | Is `Colaberry-DS-School-Final` or `colaberry-design-system` the canonical upstream? Their tokens are identical today, but the platform's history names the second (`PROGRESS.md:7364`). | Decides what the vendored copy is checked against (7.1) and where new tokens go (5) | 7.1, D7 | **Use `Colaberry-DS-School-Final` as the reference for the 7.1 divergence check.** It's the repository Aleem shared, and its token files are byte-identical to the other one today (1.3), so the choice changes no value. Revisit if the two ever differ. | Not needed. Both repos are under the `aleemcolaberry` account. **Ali (2026-11-02, [S28]): this is Aleem's call**, a question about which repository we agree to follow. | **Aleem (2026-11-13) [S29]:** "`Colaberry-DS-School-Final` is the canonical upstream. New design-system tokens go there." |
+| **OQ2** | Which token set is the audit's contract: the effective three-layer cascade, the DS layer only, or `tokens.css` only? | Every classification depends on it. Today's platform rules disagree (1.4) | Everything in 3–7 | **The effective three-layer cascade** (1.4). It's what renders (1.1–1.2). Either single layer would misclassify values the bridge reassigns. | **Answered technically 2026-11-02 [S28]:** the three-layer cascade is the contract, in load order (1.1). Whether the legacy layer is being retired: not answered. | **Aleem (2026-11-13) [S29]:** answered by D0, acknowledged. |
+| **OQ3** | When a fix is proposed for admin code, should it name a DS semantic token (`--text-muted`) or a legacy name (`--color-text-light`)? | Decides the D3 precedence order, and so whether the patch is near-empty | D3 | **Colour: a DS semantic token chosen by property role, otherwise `exact-ambiguous`. Spacing: the DS `--space-N` name** (3.3, 2.3). The DS says to use semantic tokens [S24], the admin shell already reads DS tokens (1.4), and the fix list stays small enough to review. | **Requested:** legacy names or DS names for admin code. | **Aleem (2026-11-13) [S29]:** answered by D3, agreed. |
+| **OQ4** | Does a remaining reference to a legacy-only token name count as drift? | Decides whether D9 stays informational or becomes ratcheted | D9 | **No. It's counted as a separate informational line, not ratcheted** (3.4). Through the bridge, most legacy names render DS values, so they aren't visual drift, and ratcheting them would be a migration decision this audit shouldn't make. | **Not answered:** Ali left this to Aleem [S28]. | **Aleem (2026-11-13) [S29]:** "no. Informational, as D9." |
+| **OQ5** | Who owns the local edits in `frontend/src/colaberry/`, and should that folder be excluded like `apps/*`? | Decides D8, and whether gaps can be fixed by editing the vendored copy | D8, D7 | **Exclude the folder from the inventory** (2.2). It's a copy of an upstream system, for the same reason the story excludes `apps/*`. **Who owns the local edits stays Unknown.** Code ownership isn't something Mihret can decide. | **Received 2026-11-02 [S28]:** keep the folder excluded; audit what we author; record authored-vs-vendored mismatches as reconciliation items (3.7). Who maintains the local edits: not answered, and not assigned to Aleem either. **Who decides it is Unknown.** | **Aleem (2026-11-13) [S29]:** "excluded, as D8. The platform team owns edits made in the platform's vendored copy; Ali is their DRI. Anything meant to be permanent is proposed upstream to `Colaberry-DS-School-Final`, which I own." |
+| **OQ6** | Is the DS chart palette (`--chart-*`, `--seq-*`, `--div-*`) the "dataviz guidance" the `dataviz_quality_audit` capability refers to? | Decides whether A1's dataviz line joins the ratcheted count | A1 | **Classify chart literals against the DS chart palette, and keep them in the separate dataviz line outside the ratchet** (A1). The DS says charts use this palette [S24]. Keeping them outside the ratchet means a wrong assumption adds no false drift. | **Not answered:** Ali left chart classification to Aleem [S28]. | **Aleem (2026-11-13) [S29]:** "yes. The DS chart palette is the data-visualisation guidance. Classify chart literals against it, outside the ratchet." |
+| **OQ7** | How should spacing gaps be handled? An off-scale spacing value (for example `14px`) could count as drift and be ratcheted, be reported as information only, or be a reason to add spacing tokens. | Decides whether the spacing line is ratcheted, and whether the spacing scale grows | D2, D7 | **Report spacing gaps on the spacing line, but don't ratchet it, and propose no new spacing token** (2.3, §5, 6). Spacing is in scope by the capability's outcome [S1], so it must be visible. Not ratcheting it means a wrong guess about the scale adds no false drift while Aleem decides. | **Not answered:** Ali left spacing gaps to Aleem [S28]. | **Aleem (2026-11-13) [S29]:** "report spacing gaps, do not ratchet them, and propose no new spacing token in the first pass. Each gap comes to me as a design decision." |
 
 ---
 
 ## Sign-off
 
-**Not signed. Aleem's approval is pending on every decision.** Mohammed Abdul Aleem remains the
-accountable manager. Only a formal change by whoever owns the capability record could change that,
+**Signed on 2026-11-13 [S29].** Aleem gave a written, dated decision on every row D0–D9 and
+answered OQ1–OQ7, before any scan ran. Mohammed Abdul Aleem remains the accountable manager. Only a formal change by whoever owns the capability record could change that,
 and who that is is **Unknown**. Ali Muwwakkil's recommendations [S4] and guidance [S27], and
 Mihret's working decisions (§8), are inputs to this sign-off, not a substitute for it.
 D0, D2 (OQ7), D3, D5 (A1), D7, D8 and D9 depend on the open questions in §8, so Aleem can answer
@@ -676,18 +799,18 @@ each question and its decision row together. Ali's 2026-11-02 list of questions 
 
 ### Decisions
 
-| # | Decision | Mihret's working decision (in effect for preparation only) | Ali can advise on | Aleem's approval (pending) |
+| # | Decision | Mihret's working decision (in effect for preparation only) | Ali can advise on | Aleem's approval (2026-11-13 [S29]; 2026-11-17 [S31]) |
 |---|---|---|---|---|
-| D0 | The token contract (OQ2) | Effective three-layer cascade, in load order (1.1, 1.4) | **Confirmed by Ali 2026-11-02: the cascade, in load order** [S28] (**Reported**). Presented for acknowledgement, not as a choice | ☐ acknowledged ☐ disagree: ______ |
-| D1 | Which surfaces | Files reachable from `adminRoutes.tsx`; shared files reported, not patched | Already recommended the admin portal (**Reported**, [S4]) | ☐ agree ☐ change: ______ |
-| D2 | Which values | Colour ratcheted. Spacing reported but **not ratcheted until OQ7** is answered. Light theme only; `dark-only` values on their own line, outside the ratchet | **Ali advised 2026-11-02: light only, dark unclassified and said so** [S28]. Root font size still open | ☐ agree ☐ change: ______ |
-| D3 | Same value, several tokens (OQ3) | Colour: DS semantic token by property role, else `exact-ambiguous`. Spacing: DS `--space-N` | Legacy or DS names for admin code | ☐ agree ☐ other order: ______ |
-| D4 | "Near" threshold | CIEDE2000 ≤ 2.0, alpha equal | (none) | ☐ agree ☐ value: ______ |
-| D5 | Allow-list rules A1–A6 | A1, A3, A4, A5 and A6 as listed. **A2 stays empty: nothing is excluded as a brand mark until Aleem names the files** | Product-surface chart ownership (A1, OQ6) | ☐ A1 ☐ A2 (files: ______) ☐ A3 ☐ A4 ☐ A5 ☐ A6 |
-| D6 | Styles built as preview strings | `unclassified` until ruled | How `frameHtml` output is used | ☐ in scope ☐ allow-list as A7 |
-| D7 | Who decides gaps and keeps the list | Aleem decides gaps: colour gaps, and spacing gaps under OQ7. Until then, colour gaps stay in the ratcheted colour count and spacing gaps are reported only | None on who decides. Ali left spacing gaps to Aleem [S28] | ☐ agree ☐ name: ______ |
-| D8 | Vendored `frontend/src/colaberry/` (OQ5) | Excluded, upstream-owned; mismatches are reconciliation items (3.7). Owner of the local edits Unknown, and **who decides it is Unknown** | **Ali advised 2026-11-02: excluded** [S28]. Who maintains the local edits still open | ☐ agree ☐ in scope |
-| D9 | Legacy token references (OQ4) | Counted, informational, not ratcheted | Whether legacy names should be migrated | ☐ agree ☐ ratchet ☐ ignore |
+| D0 | The token contract (OQ2) | Effective three-layer cascade, in load order (1.1, 1.4) | **Confirmed by Ali 2026-11-02: the cascade, in load order** [S28] (**Reported**). Presented for acknowledgement, not as a choice | ☑ acknowledged. "The effective three-layer cascade, in load order, is the contract." |
+| D1 | Which surfaces | Files reachable from `adminRoutes.tsx`; shared files reported, not patched | Already recommended the admin portal (**Reported**, [S4]) | ☑ agree Plus 2026-11-17 [S31]: `ScrollToTop.tsx`, `RouteLoading.tsx` and `analytics.ts` included as shared, "reported, not patched". |
+| D2 | Which values | Colour ratcheted. Spacing reported but **not ratcheted until OQ7** is answered. Light theme only; `dark-only` values on their own line, outside the ratchet | **Ali advised 2026-11-02: light only, dark unclassified and said so** [S28]. Root font size still open | ☑ agree. "For rem conversion, read the platform's root font size from its CSS rather than assuming 16 px, and record what you find." 2026-11-17 [S31]: the static root font-size record is acceptable (§2.3). |
+| D3 | Same value, several tokens (OQ3) | Colour: DS semantic token by property role, else `exact-ambiguous`. Spacing: DS `--space-N` | Legacy or DS names for admin code | ☑ agree |
+| D4 | "Near" threshold | CIEDE2000 ≤ 2.0, alpha equal | (none) | ☑ agree |
+| D5 | Allow-list rules A1–A6 | A1, A3, A4, A5 and A6 as listed. **A2 stays empty: nothing is excluded as a brand mark until Aleem names the files** | Product-surface chart ownership (A1, OQ6) | ☑ A1 ☑ A2 (as a rule, quoted in §4) ☑ A3 ☑ A4 ☑ A5 ☑ A6 2026-11-17 [S31]: A2 replaced by the whole-word rule; a match is allow-listed only after Aleem confirms it. |
+| D6 | Styles built as preview strings | `unclassified` until ruled | How `frameHtml` output is used | ☑ in scope. "Classify them like any other style and report them on their own line." 2026-11-17 [S31]: "report only, not ratcheted", on its own line with counts. |
+| D7 | Who decides gaps and keeps the list | Aleem decides gaps: colour gaps, and spacing gaps under OQ7. Until then, colour gaps stay in the ratcheted colour count and spacing gaps are reported only | None on who decides. Ali left spacing gaps to Aleem [S28] | ☑ agree. "I decide colour and spacing gaps and keep the gap list." 2026-11-17 [S31]: chart gaps are decided under D7, tagged `dataviz`. |
+| D8 | Vendored `frontend/src/colaberry/` (OQ5) | Excluded, upstream-owned; mismatches are reconciliation items (3.7). Owner of the local edits Unknown, and **who decides it is Unknown** | **Ali advised 2026-11-02: excluded** [S28]. Who maintains the local edits still open | ☑ agree |
+| D9 | Legacy token references (OQ4) | Counted, informational, not ratcheted | Whether legacy names should be migrated | ☑ agree. "Treat that count as the retirement backlog for the legacy layer." |
 
 The scan's technical mechanics, the normalisation rules (§3.1), the outputs (§6) and the stop
 conditions (§7), are also Mihret's working decisions. Ali can advise on them. Aleem can review
@@ -697,13 +820,63 @@ them, but they have no separate row.
 
 | Date (Central) | Channel | Decisions covered | Aleem's words (quote, or a summary Aleem confirmed) | Where the original is kept | Recorded by |
 |---|---|---|---|---|---|
-| (none) | (none) | (none) | *No response recorded yet.* | (none) | (none) |
+| 5:03 AM CST, 2026-11-13 | Comment on PR #2 from the `aleemcolaberry` GitHub account | D0–D9, OQ1–OQ7, and Mihret's four questions of 2026-11-11 | "this comment is my written, dated sign-off on `design_token_drift_audit.R0.md` as merged." Aleem's decisions are copied in full below. | https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6850977052 | Mihret Netsereab (drafted 2026-11-13; committed 2026-11-24) |
+| 6:57 AM CST, 2026-11-17 | Comment on PR #2 from the `aleemcolaberry` GitHub account | A2, D1 (app shell), D6, D2 (record), the scan report, chart gaps | "These are my written, dated decisions; copy them into the sign-off record with this link, as with the 13 November ones." Aleem's six decisions are copied in full below. | https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6948682312 | Mihret Netsereab (drafted 2026-11-17; committed 2026-11-24) |
 
-When every row D0–D9 has a recorded decision from Aleem, the R0 criterion in
-`.colaberry/progress.json` can be set to `passed: true`, citing this file and the sign-off record.
-**Not before. Working decisions never count toward it.**
+**Aleem's decisions, copied from the comment [S29].** Only the parts about this definition are
+copied. The rest of the comment covers Aleem's priorities for other assignments.
+
+> **Decisions**
+> - **D0:** acknowledged. The effective three-layer cascade, in load order, is the contract.
+> - **D1:** agree. Files reachable from `adminRoutes.tsx`; shared files reported, not patched.
+> - **D2:** agree. Colour is ratcheted. Spacing is reported, not ratcheted. Light theme only, with dark-only values on their own line. For rem conversion, read the platform's root font size from its CSS rather than assuming 16 px, and record what you find.
+> - **D3:** agree. Colour takes the DS semantic token by property role, otherwise `exact-ambiguous`. Spacing takes the DS `--space-N` name.
+> - **D4:** agree. CIEDE2000 at or under 2.0, alpha equal.
+> - **D5:** A1, A3, A4, A5 and A6 agreed. **A2 is approved as a rule:** brand marks are fixed assets and are never recoloured. Fills and strokes inside components or files whose names contain `Logo`, `Brand`, `Wordmark` or `Mark`, and SVG files in logo or brand asset folders, are allow-listed under A2. A literal brand colour anywhere else is drift. List every file the rule matches in the scan output under A2, so the list is on the record.
+> - **D6:** in scope. Preview strings such as `frameHtml` render to a person, so a preview that drifts shows the wrong design. Classify them like any other style and report them on their own line.
+> - **D7:** agree. I decide colour and spacing gaps and keep the gap list.
+> - **D8:** agree. `frontend/src/colaberry/` is excluded, and authored-against-vendored mismatches are reconciliation items.
+> - **D9:** agree. Legacy token references are counted and informational, not ratcheted. Treat that count as the retirement backlog for the legacy layer.
+>
+> **Open questions**
+> - **OQ1:** `Colaberry-DS-School-Final` is the canonical upstream. New design-system tokens go there.
+> - **OQ2 and OQ3:** answered by D0 and D3.
+> - **OQ4:** no. Informational, as D9.
+> - **OQ5:** excluded, as D8. The platform team owns edits made in the platform's vendored copy; Ali is their DRI. Anything meant to be permanent is proposed upstream to `Colaberry-DS-School-Final`, which I own.
+> - **OQ6:** yes. The DS chart palette is the data-visualisation guidance. Classify chart literals against it, outside the ratchet.
+> - **OQ7:** report spacing gaps, do not ratchet them, and propose no new spacing token in the first pass. Each gap comes to me as a design decision.
+>
+> **Your four questions of 11 November**
+> 1. **Scope:** the platform frontend's admin surfaces reachable from `adminRoutes.tsx` (D1), light theme, against `Colaberry-DS-School-Final` (OQ1).
+> 2. **Rules:** colour against the DS semantic tokens by role (D3), near-matches by CIEDE2000 ≤ 2.0 (D4), spacing reported only (D2, OQ7).
+> 3. **Exceptions:** A1 to A6 as above, A2 as a rule; the vendored folder excluded (D8).
+> 4. **Is the definition right:** yes, with the decisions above.
+>
+> With this recorded, set the R0 criterion to passed citing this comment, and run the first scan pass. Bring the report to me, gaps first.
+>
+> Note on the design system: the action-button contrast defect is fixed in aleemcolaberry/Colaberry-DS-School-Final#1. Primary buttons become red-600 (4.73:1) and leaf buttons green-800 (6.48:1). Classify against the tokens as merged; until that PR merges, the scan reads `main`.
+
+**Aleem's decisions of 2026-11-17, copied from the comment [S31].** Only the parts about this
+definition are copied; the closing note about PR #1 is left out.
+
+> **Short form:** 1 whole-word; 2 include as shared; 3 report only; 4 static is fine; 5 evidence file now, criterion added by Ali; 6 D7.
+>
+> 1. **A2: use your whole-word rule.** Match Logo, Logomark, Wordmark, Brand Mark, or a name ending in the word Mark, case-sensitive. A match is allow-listed only after I confirm it. My rule was too loose: it would have hidden 17 Marketing and brand-management screens from the audit. For `CoryMark.tsx`, show its fills in the report under A2, and I will confirm or reject it there.
+> 2. **D1: include `ScrollToTop.tsx`, `RouteLoading.tsx` and `analytics.ts` as shared.** They render on admin pages, and the loading screen is the first thing a person sees on one. Tag them shared: reported, not patched, as D1 says.
+> 3. **D6: report only, not ratcheted.** Preview strings are generated content and often email HTML, where CSS custom properties are not reliable. Keep them on their own line with counts, so we have a baseline before anything is ratcheted.
+> 4. **D2: the static record is acceptable.** Record it as: "no root font size declared in platform CSS, scripts, Bootstrap 5.3.8 or index.html; rem converted at the browser default of 16 px; not measured on a running page." No running environment is needed for the first pass.
+> 5. **Scan report.** Commit it to this repository under `docs/evidence/design-token-drift-audit/`, with the platform commit it read. Draft one acceptance criterion, "first scan report reviewed and gaps decided by the accountable manager", and send it to Ali to add to the capability's stories. The criteria are his to add. The report goes ahead whether or not the criterion exists yet.
+> 6. **Chart gaps: D7, so I decide them.** Tag each chart finding `dataviz` in the report, so `dataviz_quality_audit` can reuse the list rather than count the same literals again.
+>
+> With these recorded, run the first scan and bring me the report, gaps first.
+
+Every row D0–D9 now has a recorded decision from Aleem, so the R0 criterion in
+`.colaberry/progress.json` is set to `passed: true`, citing [S29] and this record. It was recorded
+before any scan ran. Working decisions did not count toward it.
 
 ### If approval is delayed (Mihret's working decision, following [S27])
+
+**No longer needed: Aleem's sign-off was received on 2026-11-13 [S29].** Kept as history.
 
 1. **Day 0:** Mihret emails Aleem a short summary, a link to this file and the decision table, and
    asks for a reply within **5 business days**. Partial answers are welcome, and a 20-minute call
@@ -730,7 +903,17 @@ When every row D0–D9 has a recorded decision from Aleem, the R0 criterion in
 - Moving past R0 needs a trust threshold (interview Q5), which hasn't been asked yet [S15].
 - The capability's dependency "tokens.css remaining the single token authority" [S3] is not met
   (1.4). The capability record should be corrected by whoever maintains it. This document does
-  not edit it.
+  not edit it. Aleem asked on 2026-11-08 that this be raised with Ali [S30].
+- **Before the first scan** (recorded here, not done yet):
+  - answered on 2026-11-17 [S31]: A2's `Mark`, the D6 ratchet, the root font-size record (D2), the
+    app shell (D1) and chart gaps (D7);
+  - **still open, not yet answered by Aleem:** the three questions in "Decisions (2026-11-17)":
+    L4 timing, what "by hand" means, and upstream or vendored tokens;
+  - re-pin the platform to the commit the scan reads, and re-check the contract counts, load order,
+    reachability, root font size and A2 matches there: by platform `69fac665` the vendored
+    `colors.css`, `spacing.css` and `fonts.css` changed, as did `index.tsx`, `App.tsx`,
+    `responsive.css` and `adminRoutes.tsx`;
+  - name the `Colaberry-DS-School-Final` commit used (DS `main` is `cb43315d` since PR #1 merged).
 
 ---
 
@@ -769,3 +952,6 @@ means `aleemcolaberry/Colaberry-DS-School-Final`, read through the GitHub API on
 | S26 | Effective-cascade figures: 330 names; 69 distinct hex values and 32 shared (both minimums: 3 `rgba()`/`color-mix()` colour tokens not counted); 21 + 6 legacy names reassigned; 0 unresolved `var()` references | Computed 2026-10-30 by resolving the light-theme `:root` blocks of the contract files in S17 (no application code read) |
 | S27 | Ali Muwwakkil's guidance on not waiting indefinitely and on documenting the preparer's own decisions (**Reported**) | Email from Ali Muwwakkil to Mihret Netsereab dated 2026-10-27, as relayed by Mihret on 2026-10-30. Not in this repository |
 | S28 | Ali Muwwakkil's answers on the token cascade, the vendored folder, reconciliation items and the light theme (**Reported**) | Email from Ali Muwwakkil to Mihret Netsereab (copied to Aleem), 2026-11-02 at 1:05 PM as shown in Mihret's mail client, relayed by Mihret the same day. Not in this repository. Load order re-read at platform `ebe81e68` (`frontend/src/index.tsx:22-26`; `styles/global.css:1`) |
+| S29 | Mohammed Abdul Aleem's written, dated sign-off: D0–D9, OQ1–OQ7, answers to Mihret's four questions of 2026-11-11 (**Verified**: read directly on GitHub) | Comment on PR #2 from the `aleemcolaberry` account, 5:03 AM CST on 2026-11-13: https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6850977052 |
+| S30 | Mohammed Abdul Aleem's review of revision 3: endorses the cascade and precedence rule; asks for radius and shadow in pass two, A2 as a principle, D9 as the retirement backlog, and the capability record's dependency raised with Ali (**Verified**: read directly on GitHub) | Comment on PR #2 from the `aleemcolaberry` account, 10:08 PM CST on 2026-11-08: https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6731994192 |
+| S31 | Mohammed Abdul Aleem's six written, dated decisions before the first scan: A2 whole-word rule, D1 app shell, D6 report only, D2 static record, the scan report, chart gaps under D7 (**Verified**: read directly on GitHub) | Comment on PR #2 from the `aleemcolaberry` account, 6:57 AM CST on 2026-11-17: https://github.com/MihretColaberry1/ColaberryInternship/pull/2#issuecomment-6948682312 |
