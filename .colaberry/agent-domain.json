@@ -972,10 +972,10 @@
     "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
     "summary": {
       "stories": 40,
-      "checked": 40,
-      "verified": 6,
-      "awaiting_criteria": 33,
-      "outstanding_criteria": 48
+      "checked": 39,
+      "verified": 7,
+      "awaiting_criteria": 32,
+      "outstanding_criteria": 47
     },
     "stories": [
       {
@@ -1065,18 +1065,14 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit",
         "title": "Design-token drift audit across every styled surface",
-        "status": "in_progress",
-        "verification_state": "in_progress",
-        "verified": false,
-        "criteria_passed": 0,
-        "criteria_total": 1,
-        "reasons": [
-          "None of the 1 acceptance criteria are marked as passing yet."
-        ],
-        "outstanding": [
-          "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
-        ],
-        "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4"
+        "status": "complete",
+        "verification_state": null,
+        "verified": true,
+        "criteria_passed": null,
+        "criteria_total": null,
+        "reasons": [],
+        "outstanding": [],
+        "commit_sha": null
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
@@ -1569,9 +1565,11 @@
         "verified": true,
         "criteria_passed": 3,
         "criteria_total": 3,
-        "reasons": [],
+        "reasons": [
+          "Verified, and it stays verified — the current read of your repo no longer shows it complete. Verification is recorded here on the platform, not in your repo, so nothing you do to the repo can take it away."
+        ],
         "outstanding": [],
-        "commit_sha": "4e49a3aff925a829fa1e447ea17828b09e73ea61"
+        "commit_sha": "13b9a1b1440d323eed5fbcd7e1f5afb492416899"
       },
       {
         "story_id": "product_experience.RESEARCH-2-AGENT-ANATOMY",

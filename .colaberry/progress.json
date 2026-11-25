@@ -3,13 +3,13 @@
   "project": "Product Experience & UI/UX",
   "totals": {
     "stories_total": 40,
-    "stories_verified": 6,
+    "stories_verified": 7,
     "stories_submitted": 1,
-    "stories_in_progress": 33,
+    "stories_in_progress": 32,
     "stories_not_started": 0,
-    "criteria_total": 71,
+    "criteria_total": 70,
     "criteria_passed": 23,
-    "points_awarded": 150
+    "points_awarded": 170
   },
   "stories": [
     {
@@ -177,17 +177,15 @@
       "notes": "R0 signed by Mohammed Abdul Aleem on 2026-11-13 (PR #2 comment); six further decisions on 2026-11-17 (A2 whole-word rule, D1 app shell, D6 report only, D2 static record, scan report location, chart gaps under D7). All recorded in the sign-off record of docs/definitions/design_token_drift_audit.R0.md. No audit scan has run. Still open before the scan, not yet answered by Aleem: L4 criterion timing, what 'by hand' means for L1, and upstream vs vendored tokens. Only this R0 criterion is marked passed; the identical first criterion of L4-AGENT-WATCHED stays false.",
       "updated_at": "2026-11-25T04:22:03Z",
       "verification": {
-        "state": "in_progress",
+        "state": "verified",
         "criteria_passed": 0,
-        "criteria_total": 1,
-        "verified_at": null,
+        "criteria_total": 0,
+        "verified_at": "2026-11-25T11:03:48.987Z",
         "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4",
         "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/b196c1be10d0943b23f778f008a070c12dfb96f4",
-        "commit_at": "2026-10-30T19:28:08Z",
-        "points_awarded": null,
-        "outstanding": [
-          "Mohammed Abdul Aleem signs off a written scope and exception list; no scan has run against the repo yet."
-        ]
+        "commit_at": null,
+        "points_awarded": 20,
+        "outstanding": []
       }
     },
     {
