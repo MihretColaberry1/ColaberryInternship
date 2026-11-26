@@ -972,7 +972,7 @@
     "disclosure": "A criterion counts as passing when it is marked in `.colaberry/progress.json` in this repository. The verifier reads that file on every sync and records what it found. A story showing 0 of N is not a rejection: nothing has been claimed yet.",
     "summary": {
       "stories": 40,
-      "checked": 39,
+      "checked": 40,
       "verified": 7,
       "awaiting_criteria": 32,
       "outstanding_criteria": 47
@@ -1066,13 +1066,13 @@
         "story_id": "product_experience.CAP.design_token_drift_audit",
         "title": "Design-token drift audit across every styled surface",
         "status": "complete",
-        "verification_state": null,
+        "verification_state": "verified",
         "verified": true,
-        "criteria_passed": null,
-        "criteria_total": null,
+        "criteria_passed": 1,
+        "criteria_total": 1,
         "reasons": [],
         "outstanding": [],
-        "commit_sha": null
+        "commit_sha": "b196c1be10d0943b23f778f008a070c12dfb96f4"
       },
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
