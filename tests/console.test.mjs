@@ -15,6 +15,7 @@ import { loadProjectData } from '../command-center/data.js';
 import { buildOverviewModel } from '../command-center/model.js';
 import { PANEL_ORDER, renderConsole } from '../command-center/console.js';
 import { TEN_RUNGS_TITLE } from '../command-center/panel-ladder.js';
+import { ticksAheadOfVerifier } from '../command-center/verification-model.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -193,16 +194,21 @@ const panelChildren = (panel) => panel.children.filter((c) => !hasClass('panel-d
 const firstDisclosure = (panel) => findAll(findAll(panel, hasClass('panel-details'))[0], hasClass('disclosure'))[0];
 const summaryOf = (d) => findAll(d, (el) => el.tagName === 'SUMMARY')[0].textContent;
 
-test('Panel 6: the eight gaps sit in the first closed disclosure, with the headline and four glance counts still visible', async () => {
+// The count is read from the data, not written in: seven fixed gaps, plus one for each story ticked
+// ahead of the platform verifier. It was eight until the platform sync of 2026-11-24 recorded STORY-000
+// at 5 of 6, matching its ticks; tests/panels-1-2-6.test.mjs keeps the "ahead" wording under a fixture.
+test('Panel 6: every gap sits in the first closed disclosure, with the headline and four glance counts still visible', async () => {
   const { domain, project } = await realInputs();
   const gaps = byId(renderPanels(domain, project)).gaps;
   const holder = firstDisclosure(gaps);
-  assert.equal(summaryOf(holder), 'Things this console cannot show or claim (8)');
+  const ahead = ticksAheadOfVerifier(project.model.rows);
+  const count = 7 + ahead.length;
+  assert.equal(summaryOf(holder), `Things this console cannot show or claim (${count})`);
   assert.equal(holder.getAttribute('open'), null, 'the disclosure starts closed');
-  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, 8, 'all eight gaps are listed');
-  assert.match(holder.textContent, /Your ticks are ahead of the platform verifier for product_experience\.STORY-000/);
+  assert.equal(findAll(findAll(holder, hasClass('gap-list'))[0], (el) => el.tagName === 'LI').length, count, 'every gap is listed');
+  for (const a of ahead) assert.ok(holder.textContent.includes(`Your ticks are ahead of the platform verifier for ${a.id}`), a.id);
   for (const c of panelChildren(gaps)) assert.equal(findAll(c, hasClass('gap-list')).length, 0, 'no gap list outside the disclosures');
-  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, /^8 things this console cannot show or cannot claim/);
+  assert.match(findAll(gaps, hasClass('panel-headline'))[0].textContent, new RegExp(`^${count} things this console cannot show or cannot claim`));
   assert.deepEqual(findAll(findAll(gaps, hasClass('glance'))[0], (el) => el.tagName === 'DT').map((dt) => dt.textContent),
     ['Endpoints with no usable response', 'Endpoints from the sync', 'Fields with no verified source', 'Ticks ahead of verifier']);
 });

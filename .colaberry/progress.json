@@ -1237,7 +1237,8 @@
       "criteria": [
         {
           "text": "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read.",
-          "passed": false
+          "passed": true,
+          "evidence": "All six panels render in the brief's order on the real data at main 1ae288a (2026-11-25): Panels 1 to 4 and 6 Ready, Panel 5 Empty because no requests are filed. Each panel names what it read as whole tags: Panel 1 GET /api/admin/agent-domains-mine; Panels 2 to 4 GET /api/admin/agent-domains-mine/product_experience, read from the platform's synced .colaberry/agent-domain.json (25 capability records, 25 authority rows); Panel 2 also names .../product_experience/coverage and says in words that the synced file carries none of its rows; Panel 6 names all four. Panel 5 reads no endpoint: it names the synced file's governance section and the platform code that fills it, because no endpoint serves those rows to this page. The brief's /api/admin/agent-domains/product_experience routes need a role this domain does not hold (403); the platform's sync reads the self-scoped -mine routes and names them in sources. Tests: console.test.mjs 'six panels render in the brief order...' and 'criterion 1: each panel names, as whole tags, every endpoint the brief assigns it'; criterion-1-sync.test.mjs (8 tests). node --test tests/*.test.mjs: 262 of 262."
         },
         {
           "text": "Given a panel whose endpoint returned nothing, when it renders, then it says so in words and is visibly distinct from a panel that is still loading.",
