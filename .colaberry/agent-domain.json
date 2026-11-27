@@ -973,9 +973,9 @@
     "summary": {
       "stories": 40,
       "checked": 40,
-      "verified": 7,
+      "verified": 8,
       "awaiting_criteria": 32,
-      "outstanding_criteria": 47
+      "outstanding_criteria": 46
     },
     "stories": [
       {
@@ -1579,7 +1579,9 @@
         "verified": true,
         "criteria_passed": 3,
         "criteria_total": 3,
-        "reasons": [],
+        "reasons": [
+          "Verified, and it stays verified — the current read of your repo no longer shows it complete. Verification is recorded here on the platform, not in your repo, so nothing you do to the repo can take it away."
+        ],
         "outstanding": [],
         "commit_sha": "b1c324004a3ab4b8e89e3d20d074256fc810e80c"
       },
@@ -1622,17 +1624,13 @@
       {
         "story_id": "product_experience.STORY-000",
         "title": "STORY-000 · Build your Command Center",
-        "status": "in_progress",
-        "verification_state": "submitted",
-        "verified": false,
-        "criteria_passed": 5,
+        "status": "complete",
+        "verification_state": "verified",
+        "verified": true,
+        "criteria_passed": 6,
         "criteria_total": 6,
-        "reasons": [
-          "5 of 6 acceptance criteria are marked as passing. Outstanding: Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
-        ],
-        "outstanding": [
-          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
-        ],
+        "reasons": [],
+        "outstanding": [],
         "commit_sha": "a56004f4e6486cbdc5cd8246bc991b5faec1d8bf"
       }
     ]

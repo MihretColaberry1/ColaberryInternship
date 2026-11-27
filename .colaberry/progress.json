@@ -3,13 +3,13 @@
   "project": "Product Experience & UI/UX",
   "totals": {
     "stories_total": 40,
-    "stories_verified": 7,
-    "stories_submitted": 1,
+    "stories_verified": 8,
+    "stories_submitted": 0,
     "stories_in_progress": 32,
     "stories_not_started": 0,
     "criteria_total": 71,
-    "criteria_passed": 24,
-    "points_awarded": 170
+    "criteria_passed": 25,
+    "points_awarded": 190
   },
   "stories": [
     {
@@ -1294,17 +1294,15 @@
       "notes": "Criteria 2-6 confirmed against the code and tests at commit a56004f (node --test tests/*.test.mjs, 155 of 155). Criterion 1 left false: Panels 1, 2 and 6 read the platform's synced copy of their endpoints (.colaberry/agent-domain.json), but Panels 3 to 5 (capability inventory, autonomy ladder, per-rung behaviour) show values from the pinned research file, because GET /api/admin/agent-domains/product_experience and /coverage are not in the synced file and have not been captured. Each panel names its endpoint, but those three did not read it. Mohammed Abdul Aleem reviews the page; ticking these lines is not his sign-off.",
       "updated_at": null,
       "verification": {
-        "state": "submitted",
-        "criteria_passed": 5,
+        "state": "verified",
+        "criteria_passed": 6,
         "criteria_total": 6,
-        "verified_at": null,
+        "verified_at": "2026-11-27T16:05:42.191Z",
         "commit_sha": "a56004f4e6486cbdc5cd8246bc991b5faec1d8bf",
         "commit_url": "https://github.com/MihretColaberry1/ColaberryInternship/commit/a56004f4e6486cbdc5cd8246bc991b5faec1d8bf",
         "commit_at": "2026-11-04T05:14:43Z",
-        "points_awarded": null,
-        "outstanding": [
-          "Given the Command Center, when it is opened, then all six panels render and each one names the endpoint it read."
-        ]
+        "points_awarded": 20,
+        "outstanding": []
       }
     }
   ]
