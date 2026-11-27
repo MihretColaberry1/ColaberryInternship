@@ -1077,7 +1077,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-ASK-FOR-A-SCREEN",
         "title": "Design-token drift audit across every styled surface · 0.3 · waiting on the platform",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1115,7 +1115,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L0-SCOPE-SHEET",
         "title": "Design-token drift audit across every styled surface · 0.2 · write the scope sheet",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1134,7 +1134,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L1-BY-HAND",
         "title": "Design-token drift audit across every styled surface · 1 · do it by hand",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1152,7 +1152,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L2-IN-THE-APP",
         "title": "Design-token drift audit across every styled surface · 2 · do it in the app",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1170,7 +1170,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L3-TOOL-REQUEST",
         "title": "Design-token drift audit across every styled surface · 3 · request the tool",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
@@ -1189,7 +1189,7 @@
       {
         "story_id": "product_experience.CAP.design_token_drift_audit.L4-AGENT-WATCHED",
         "title": "Design-token drift audit across every styled surface · 4 · agent does it, watched",
-        "status": "in_progress",
+        "status": "not_started",
         "verification_state": "in_progress",
         "verified": false,
         "criteria_passed": 0,
