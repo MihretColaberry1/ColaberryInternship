@@ -73,7 +73,8 @@ unchanged ([Sign-off](#sign-off)).
    focus ring drops to **1.73:1**, and buttons, tabs, `<summary>` and the contact-form inputs lose
    their authored focus style.
 5. **Two reported findings, not fixed here:** the `colaberry-app` sync source differs from the
-   reference and fails it on five measured pairs (G10); the reference contradicts itself in
+   reference and falls short of it on five measured checks, one of which depends on a surface
+   not yet traced (G10); the reference contradicts itself in
    places, and revision 3 says which files it follows (G11, [Appendix](#appendix-where-the-reference-contradicts-itself-g11)).
 6. **Mapping labels.** Every comparison between a platform token and a reference token says whether
    the mapping is **Confirmed** (by consumer code or the platform's own measurement), **Partly
@@ -172,8 +173,10 @@ plus the platform's own React app.
 
 **The platform frontend imports none of the `apps/*` design folders.** A search of `frontend/src`
 at `7806162d` for `assets/design` and `colaberry-enterprise-design` finds only comments, in
-`PROVENANCE.md`, `enterprise-brand.css` and `theme/deliveryBrandThemes.ts`. The last two are
-**hand-kept copies** of those folders' values (§1.6). The frontend's synced design system is
+`PROVENANCE.md`, `enterprise-brand.css` and `theme/deliveryBrandThemes.ts`.
+`deliveryBrandThemes.ts` is a **hand-kept copy** of those folders' values, and
+`enterprise-brand.css` re-creates the enterprise system's roles from the Colaberry ramp (§1.6).
+The frontend's synced design system is
 `frontend/src/colaberry`, the `colaberry-app` target above.
 
 **Where the reference sits.** None of the six registry entries points at
@@ -192,8 +195,8 @@ upstream [S4] `syncDesignSystems.js:184-196`.
   moved or what they moved to.
 - **It compares against the sync source, never the reference.** `OK` means the vendored copy
   matches its registered upstream. It says nothing about whether that upstream meets
-  DS-School-Final. `colaberry-app` reports `OK` while failing the reference on five measured pairs
-  (G10).
+  DS-School-Final. `colaberry-app` reports `OK` while falling short of the reference on five
+  measured checks (G10).
 - **Failure model:** a brand that fails is skipped and logged `FAIL`. The brands that succeeded are
   still written, and the process exits 1 [S4] `:15-20`, `:230-239`, `:249`.
 - **Two newer behaviours that change what a diff can contain** [S3][S4]:
@@ -260,10 +263,17 @@ Each managed folder holds `.design-sync-manifest.json`, the list of files the sy
   `:root` (`--bg #0C141B`, `--fg #E8F0F6`, `--accent #5CA7DA`). The backend test
   `deliveryBrandThemes.test.ts` pins the AI Flotation (`:65`) and Enterprise (`:101`) copies to
   their vendored files, but **no assertion compares the Refactored copy** (Verified at `7806162d`).
-- **Frontend enterprise palette.** `frontend/src/styles/enterprise-brand.css:13-30` hand-copies the
-  enterprise system's roles for the public site [S22].
+- **Frontend enterprise palette.** `frontend/src/styles/enterprise-brand.css` isn't a copy of the
+  vendored file's values. It re-creates the enterprise system's semantic roles for the public site
+  (`.cbv2-shell`), *"named as the enterprise system names them"*, with values taken from the
+  Colaberry ramp the app already loads (`:86-92`); `:13-30` explain why it can't import the
+  vendored folder [S22]. A change to the enterprise tokens wouldn't reach it.
 - **The Hire copy.** If PR #2342 is merged, the Refactored and Hire design folders, identical
   in revision 2, diverge. Nothing syncs the Hire copy [S14].
+- **A documentation copy.** `docs/hire-refactored/profile-upgrade-demo/assets/design/tokens/colors.css`
+  is byte-identical to the Refactored and Hire `tokens/colors.css` at `7806162d`. It's a demo under
+  `docs/`, not built into the container (`nginx/Dockerfile` copies only `apps/`), so it strands no
+  served page. It is named so a reader doesn't take it for a third live copy [S14].
 
 ---
 
@@ -516,7 +526,7 @@ true:
 | G7 | The token-to-surface map doesn't exist [S1]. **Authored CSS `var()` use can be found statically** (§2.3 item 2). Component classes used in HTML aren't mapped | Consumers from `var()` use are required (§3 item 5). Class-level impact goes under needs-a-human-eye | Later autonomy levels |
 | G8 | The workflow comment expects two files and thirty seconds. The open PR has 48 files and has been open 79 days with no review (§2.1) | Informational only. Whether PR #2342 is reviewed is not this capability's decision | Aleem / platform owners |
 | G9 | `hire-refactored-public` holds an unmanaged copy of the Refactored design folder, not in the registry and with no manifest [S14] | The note names unmanaged copies of any changed folder (§3 item 8, I11) | Aleem (design ownership, per [S14] `:18-20`) / platform owners |
-| G10 | **New. The `colaberry-app` sync source isn't the reference, and fails it on five measured pairs.** It syncs from `colaberry-design-system` (last pushed 2026-06-25), not DS-School-Final. Because the sync compares only with its own source, it reports `OK` and no sync pull request will ever surface the difference. Detail in §6.1 | **Reported finding.** The note carries it as a technical discrepancy whenever a Colaberry target appears, and changes nothing: not the registry, not the vendored copy, not upstream (§7) | Platform owners and Aleem. Aleem has said he will correct red-500 himself, per the platform's own test [S23] (**Reported** there) |
+| G10 | **New. The `colaberry-app` sync source isn't the reference, and falls short of it on five measured checks** (four of the reference's matrix pairs and its grey-text rule; one result depends on a surface not yet traced). It syncs from `colaberry-design-system` (last pushed 2026-06-25), not DS-School-Final. Because the sync compares only with its own source, it reports `OK` and no sync pull request will ever surface the difference. Detail in §6.1 | **Reported finding.** The note carries it as a technical discrepancy whenever a Colaberry target appears, and changes nothing: not the registry, not the vendored copy, not upstream (§7) | Platform owners and Aleem. Aleem has said he will correct red-500 himself, per the platform's own test [S23] (**Reported** there) |
 | G11 | **New. The reference contradicts itself in places.** `BRAND.md`, `SKILL.md`, `package.json`, a component prompt, `tokens.json` and `brand-profile/colaberry-training.brand.json` disagree with `CLAUDE.md` and `tokens/colors.css` on eight points ([Appendix](#appendix-where-the-reference-contradicts-itself-g11)) | **Reported finding.** Working decision (Proposal): `CLAUDE.md` and `tokens/colors.css` win, because they are what the reference's own lint and deploy gate enforce [S18][S25]. The note says so in its footer (§3). Conflicts are listed, not resolved | Aleem (reference owner) |
 
 ### 6.1 G10 in detail: `colaberry-app` against the reference (Verified at `7806162d` and `13b17e5c`)
@@ -527,16 +537,23 @@ platform-only tokens (`:30-38`), `brand-bridge.css` reads the status tokens with
 (`:36-42`), and `enterprise-brand.css` re-points only the action tokens, only inside `.cbv2-shell`
 (`:108-113`), and says it leaves the status and focus tokens alone on purpose (`:68-80`) [S22].
 
-**The pairs are the reference's own** (`contrast-matrix.html:41-43`, `NONTEXT` list) [S20]; light
-theme on white unless stated.
+**Where each check comes from.** Every row except `--text-subtle` is a pair from the reference's
+own non-text list (`contrast-matrix.html:43`, `NONTEXT`) [S20]. **`--text-subtle` is not a matrix
+pair:** that row applies the reference's text rule instead (`CLAUDE.md` §2.2: grey text is
+neutral-600 or darker, 4.5:1) [S18]. Light theme, on the surface named, unless stated.
 
-| Token (reference pair) | Platform value → ratio | Reference value → ratio | Threshold | Mapping |
+**What "Partly verified" means here.** The platform consumer shows the token used in the same role
+as the reference, but the surface actually behind the element wasn't traced. Where the row's
+surface is white, the lightest surface there is, a failure there also holds on every other light
+surface. Where it isn't, the result can change with the surface, and the row says so.
+
+| Token (and which check) | Platform value → ratio | Reference value → ratio | Threshold | Mapping |
 |---|---|---|---|---|
 | `--action-bg` under `--text-on-accent` (button label) | red-500 `#FB2832`: **3.85** | red-600 `#E5121D`: 4.73 | 4.5:1 | **Confirmed.** `.cb-btn` and `CompanionDeck.tsx:240` paint `--action-fg` on `--action-bg`; the platform's own test pins 3.85 on four surfaces and 3.13 on hover [S23] |
-| `--text-subtle` (text) | neutral-500 `#8C8C8C`: **3.36** | neutral-600 `#6B6B6B`: 5.33 | 4.5:1 | **Partly verified.** Used as `color` (e.g. `CompanyMomentumDashboard.tsx:170`); the surface behind it was not traced, so the ratio assumes white |
-| `--status-warning` on `--surface-page` (warning icon) | amber-500 `#E8920C`: **2.46** | amber-600 `#B86F08`: 3.95 | 3:1 | **Confirmed.** Painted as a status dot (`CaseStudyIntakeQueue.tsx:26`); the reference names it the icon tone |
-| `--status-success` on `--surface-sunken` (success icon) | green-600 `#5BA63C`: **2.67** | green-700 `#468A2E`: 3.76 | 3:1 | **Confirmed.** Status dot (`CaseStudyIntakeQueue.tsx:25`); the reference cites this exact failure, *"`--green-600` 2.7:1 on sunken"* [S18] |
-| `--focus-ring` on `--surface-page` | blue-500 at 45%: **1.87** (dark: blue-300 at 50%, 2.49) | blue-500 at 80%: 3.37 (dark: 90%, 5.50) | 3:1 | **Confirmed.** `box-shadow: var(--focus-ring)` in the vendored components (e.g. `Button.jsx:21`) |
+| `--text-subtle` as text, on white (**text rule, §2.2; not a matrix pair**) | neutral-500 `#8C8C8C`: **3.36** | neutral-600 `#6B6B6B`: 5.33 | 4.5:1 | **Partly verified.** Used as `color` (e.g. `CompanyMomentumDashboard.tsx:170`); the surface behind it wasn't traced. Measured on white, so the failure holds on any light surface |
+| `--status-warning` on `--surface-page` (matrix pair: warning icon) | amber-500 `#E8920C`: **2.46** | amber-600 `#B86F08`: 3.95 | 3:1 | **Partly verified.** Same role: painted as a status dot (`CaseStudyIntakeQueue.tsx:26`), and the reference names `--status-*` the icon tone. The surface behind the dot wasn't traced. Measured on white, so the failure holds on any light surface |
+| `--status-success` on `--surface-sunken` (matrix pair: success icon) | green-600 `#5BA63C`: **2.67** | green-700 `#468A2E`: 3.76 | 3:1 | **Partly verified.** Same role: a status dot (`CaseStudyIntakeQueue.tsx:25`); the reference cites this exact failure, *"`--green-600` 2.7:1 on sunken"* [S18]. The surface behind the dot wasn't traced, and **the result depends on it: 2.67 on sunken fails, 3.02 on white passes.** This row reports the reference's pair, not a surface the platform is known to render |
+| `--focus-ring` on `--surface-page` (matrix pair: focus ring) | blue-500 at 45%: **1.87** (dark: blue-300 at 50%, 2.49) | blue-500 at 80%: 3.37 (dark: 90%, 5.50) | 3:1 | **Partly verified.** Same role: `box-shadow: var(--focus-ring)` in the vendored components (e.g. `Button.jsx:21`). The surface around each focused element wasn't traced. Measured on white, so the light-theme failure holds on any light surface |
 | `--border-control`, `--control-track` | **absent** (no definition, no consumer) | neutral-500: 3.36 | 3:1 | Not applicable: no platform token to map. Which border the platform's inputs use was not traced |
 | `--status-info`, `--status-danger` on `--surface-page` | blue-500: 4.91; red-600: 4.73 | the same values | 3:1 | Assumed (same name and value). Pass either way |
 
@@ -689,10 +706,10 @@ nothing here is resolved, and no change to the reference is proposed.
 | # | Topic | Says one thing | Enforced side says |
 |---|---|---|---|
 | C1 | White text on cherry | `BRAND.md:281`: *"White button text passes on cherry (3.9:1)"* at large/bold sizes | `CLAUDE.md` §2.2: *"never on `--red-500`"*; `tokens/colors.css:175`: `--action-bg` is red-600 |
-| C2 | Red-500 as a fill behind content | `BRAND.md:178`: an icon tile on `var(--red-500)` | `CLAUDE.md` §2.2, as C1 |
+| C2 | Icon-tile fill | `BRAND.md:178`: an icon tile with `style="background:var(--red-500)"` | `CLAUDE.md` §6.5 (`:403-407`): icon tiles (`.ico`, `.cb-icon-tile`) use **tonal semantic pairs**. The reference's lint flags exactly this pattern: `scraps/rwd-lint.html:101`, *"§6.5 icon tile filled with a raw ramp"* |
 | C3 | Card hover lift | `BRAND.md:218`: *"Lifts 6px"* | `CLAUDE.md:489-492`: 3px, *"never more than 4 px"* |
 | C4 | Green text grade | `SKILL.md:21`: *"green-700+ for body text"* | `CLAUDE.md` §2.2: green text is green-800; green-500/600/700 are never text |
-| C5 | Icon set | `SKILL.md:21`: *"Lucide icons"* | `CLAUDE.md:634`: RemixIcon instead of Lucide |
+| C5 | Icon set | `SKILL.md:21`: *"Lucide icons"* | `CLAUDE.md` §6.5 (`:403-404`): the RemixIcon line set, self-hosted. **Not fully settled in the code:** the repository still ships `assets/vendor/lucide.min.js`, 8 other tracked files reference Lucide, `CLAUDE.md:631-634` counts Lucide in today's React-page budget with RemixIcon as the next cut, and the lint has no Lucide rule. So this row is a rule-versus-guide conflict, not a lint-enforced one |
 | C6 | Component count | `package.json:4`: *"20 accessible components"* | `components/core/` holds 25 components |
 | C7 | Link placeholder | `components/core/Button.prompt.md:8`: `<Button variant="link" href="#">` | `CLAUDE.md:175`: *"never `href="#"`"* |
 | C8 | Stale token exports | `tokens.json:6` *"generated": "2026-06-17"*; dark focus ring at 50% (`:330`); no `surface-hover*`. `brand-profile/colaberry-training.brand.json:96`: dark focus ring *"50%"* | `tokens/colors.css:297`: dark focus ring at 90%; `surface-hover*` defined |
@@ -722,17 +739,17 @@ last read at about 8:35 PM CST on 2026-11-27.
 | S11 | Workflow run history: the latest 30 runs all succeeded, newest 10:48 AM CST on 2026-11-27 | `gh run list --workflow design-system-sync.yml` on the platform repo |
 | S12 | Contrast ratios in §2.3 and §6.1 | WCAG relative-luminance formula (the same in 2.1 and 2.2), with `color-mix(… transparent)` composited in sRGB over the stated surface; computed from hex values in the cited `colors.css` files, in a scratch script outside this repository |
 | S13 | Refactored design folder history: vendored with a manifest, then removed, then replaced by hand on 2026-09-08 | Platform commits `21cf07f5`, `c1148763`, `bd42012d` (GitHub API file lists and commit messages) |
-| S14 | `hire-refactored-public`: unmanaged copy of the Refactored design folder, not in the registry, no manifest; "design ownership across all Colaberry brands sits with Aleem" | Platform at `fee57d51`: `apps/hire-refactored-public/src/assets/tokens.css:7-17` (unsynced, "LOOKS vendored"), `:18-20` (design ownership), `:26-29` (imports); `tokens/colors.css` blob identical to `apps/refactored-public`'s |
+| S14 | `hire-refactored-public`: unmanaged copy of the Refactored design folder, not in the registry, no manifest; "design ownership across all Colaberry brands sits with Aleem" | Platform at `fee57d51`: `apps/hire-refactored-public/src/assets/tokens.css:7-17` (unsynced, "LOOKS vendored"), `:18-20` (design ownership), `:26-29` (imports); `tokens/colors.css` blob identical to `apps/refactored-public`'s. At `7806162d`: the same blob (`7e40e58b`) at `apps/refactored-public/…`, `apps/hire-refactored-public/…` and `docs/hire-refactored/profile-upgrade-demo/assets/design/tokens/colors.css`; `nginx/Dockerfile:22-34` copies and builds only `apps/` |
 | S15 | Maru exists, disabled, no tools granted; the first draft's blocker line flagged as outdated | This repo, branch `story-000-command-center-revision`, commit `fbc7521`: [`docs/definitions/multi_brand_surface_consistency_audit.R0.md`](https://github.com/MihretColaberry1/ColaberryInternship/blob/fbc7521d4adab9978be55de3962114e5ad22560b/docs/definitions/multi_brand_surface_consistency_audit.R0.md) §4 (B1) and §4.1. Not on `main` |
 | S16 | The story is marked "CANDIDATE -- not started, not assigned"; the four-step ladder; the drift audit's opened steps | This repo: plan sync `0549de8` (2026-11-13); [`docs/stories/product_experience.CAP.design_token_drift_audit.L1-BY-HAND.md`](../stories/product_experience.CAP.design_token_drift_audit.L1-BY-HAND.md) |
 | S17 | Aleem's direction to use `Colaberry-DS-School-Final` as the final Colaberry Design System for this agent (**Reported**) | Meeting between Aleem and Mihret Netsereab on 2026-11-27, as relayed by Mihret the same day. Not in this repository and not a written sign-off |
-| S18 | Reference rules: contrast minimums and token rules (§2.2), contrast measured and the matrix contract (§2.6), focus (§3 item 7), recording exceptions, *"silence is not acceptance"*, fonts (§8.3), hover lift, enforcement (§9) | Reference at `13b17e5c`: `CLAUDE.md:81-115`, `:141-158`, `:183-187`, `:266-270`, `:637-657`, `:489-492`, `:690-733` |
+| S18 | Reference rules: contrast minimums and token rules (§2.2), contrast measured and the matrix contract (§2.6), focus (§3 item 7), recording exceptions, *"silence is not acceptance"*, fonts (§8.3), hover lift, iconography and icon tiles (§6.5), page budgets, enforcement (§9) | Reference at `13b17e5c`: `CLAUDE.md:81-115`, `:141-158`, `:183-187`, `:266-270`, `:637-657`, `:489-492`, `:403-407`, `:631-634`, `:690-733` |
 | S19 | Reference token values: ramps, `--action-bg` red-600, `--text-subtle` neutral-600, `--border-control`, `--control-track`, `--status-success` green-700, `--status-warning` amber-600, light and dark focus rings | Reference at `13b17e5c`: `tokens/colors.css:23-24`, `:37`, `:60-61`, `:70-71`, `:148`, `:168`, `:175`, `:204`, `:211`, `:220`, `:225`, `:297` |
 | S20 | The reference's pair lists (text × surface, and non-text with thresholds); the contrast audit pass that produced them | Reference at `13b17e5c`: `guidelines/cards/contrast-matrix.html:41-43`; `AUDIT.md:116-152` (Pass 7) |
 | S21 | The reference moves: `aaecaa00` "filled buttons meet WCAG AA 4.5:1 for their white labels" (5:02 AM CST on 2026-11-13) and `6bcebd2` sync import (9:24 AM CST on 2026-11-20); its brand profile slug `colaberry-training` | Reference: commits `aaecaa00`, `6bcebd2`; `brand-profile/colaberry-training.brand.json:2` |
-| S22 | `colaberry-app`: vendored copy and what renders it; import order; platform-only tokens; bridge; public-site scope; hand-kept copies of `apps/*` values; consumers cited in §6.1 | Platform at `7806162d`: `frontend/src/colaberry/tokens/colors.css:97-153`, `:161-203`; `frontend/src/colaberry/PROVENANCE.md`; `frontend/src/index.tsx:25-31`; `frontend/src/styles/colaberry-platform-tokens.css:30-38`; `brand-bridge.css:36-42`; `enterprise-brand.css:13-30`, `:68-80`, `:108-113`; `frontend/src/theme/deliveryBrandThemes.ts:103-118`; `backend/src/__tests__/deliveryBrandThemes.test.ts:65`, `:101`; `frontend/src/components/portal/CompanionDeck.tsx:240`; `components/capability/CompanyMomentumDashboard.tsx:170`; `components/admin/ourServices/CaseStudyIntakeQueue.tsx:25-26`; `components/admin/commercialization/statusVocabulary.tsx:29`, `:41`, `:59`; `frontend/src/colaberry/components/core/Button.jsx:21`. Upstream `aleemcolaberry/colaberry-design-system` last pushed 7:56 AM CDT on 2026-06-25 (GitHub API) |
+| S22 | `colaberry-app`: vendored copy and what renders it; import order; platform-only tokens; bridge; public-site scope and its re-created enterprise roles; hand-kept copies of `apps/*` values; consumers cited in §6.1 | Platform at `7806162d`: `frontend/src/colaberry/tokens/colors.css:97-153`, `:161-203`; `frontend/src/colaberry/PROVENANCE.md`; `frontend/src/index.tsx:25-31`; `frontend/src/styles/colaberry-platform-tokens.css:30-38`; `brand-bridge.css:36-42`; `enterprise-brand.css:13-30`, `:68-80`, `:86-92`, `:108-113`; `frontend/src/theme/deliveryBrandThemes.ts:103-118`; `backend/src/__tests__/deliveryBrandThemes.test.ts:65`, `:101`; `frontend/src/components/portal/CompanionDeck.tsx:240`; `components/capability/CompanyMomentumDashboard.tsx:170`; `components/admin/ourServices/CaseStudyIntakeQueue.tsx:25-26`; `components/admin/commercialization/statusVocabulary.tsx:29`, `:41`, `:59`; `frontend/src/colaberry/components/core/Button.jsx:21`. Upstream `aleemcolaberry/colaberry-design-system` last pushed 7:56 AM CDT on 2026-06-25 (GitHub API) |
 | S23 | The platform's own measurement: white on `--action-bg` 3.85:1 on four surfaces and 3.13:1 on hover, pinned as known failures; *"Aleem owns the design system and has said he will correct red-500 himself"*; reported by Aleem on 2026-11-09 | Platform at `7806162d`: `frontend/src/styles/__tests__/actionContrast.test.ts:7-52`, `:180-195` |
 | S24 | Refactored focus and form rules before and after the merge; which pages use which elements | Platform at `7806162d`: `apps/refactored-public/src/assets/design/styles.css:3-8`, `base/base.css:52-57`, `base/components.css:180-189`, `tokens/colors.css:16-17`, `:22`, `:25-26`, `:37`, `:44-54`. At `da7b69d1`: `styles.css:4-11`, `css/components.css:6`, `:14-15`, `tokens/colors.css:6-16`, `:26-30`; `contact/index.html:75-83`; the 10 HTML pages and `assets/ui.js` searched for `<button`, `role="tab"`, `<summary`, `<input`, `.b-btn`, `.b-input` |
-| S25 | The reference's self-contradictions (Appendix) | Reference at `13b17e5c`: `BRAND.md:178`, `:218`, `:281`; `SKILL.md:21`; `package.json:4`; `components/core/` (25 components); `components/core/Button.prompt.md:8`; `tokens.json:6`, `:330`; `brand-profile/colaberry-training.brand.json:96`; `CLAUDE.md:175`, `:634` |
+| S25 | The reference's self-contradictions (Appendix) | Reference at `13b17e5c`: `BRAND.md:178`, `:218`, `:281`; `SKILL.md:21`; `package.json:4`; `components/core/` (25 components); `components/core/Button.prompt.md:8`; `tokens.json:6`, `:330`; `brand-profile/colaberry-training.brand.json:96`; `CLAUDE.md:175`, `:403-407`, `:631-634`; `scraps/rwd-lint.html:101` (raw-ramp icon-tile finding; no Lucide rule anywhere in the file); `assets/vendor/lucide.min.js` and 8 other tracked files referencing Lucide |
 | S26 | The reference fed only the Colaberry brands | Platform at `7806162d`: `apps/ai-flotation-public/src/assets/design/DESIGN_SYSTEM.md:11` |
 | S27 | Ali Muwwakkil's guidance on not waiting indefinitely and on documenting the preparer's own decisions (**Reported**) | Email from Ali Muwwakkil to Mihret Netsereab dated 2026-10-27, as relayed by Mihret on 2026-10-30. Not in this repository. Same source as the drift-audit definition's S27 |
